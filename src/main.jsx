@@ -11,16 +11,26 @@ import UserDashboard from "./Components/Dashboard/User/UserDashboard.jsx";
 import Error from "./Error.jsx";
 import Root from "./Components/Dashboard/Root.jsx";
 import Login from "./Components/Pages/login.jsx";
+import Terms from "./Components/TermsandCondition/Terms.jsx";
+import Privacy from "./Components/PrivacyandPolicy/Privacy.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
   },
-    {
+  {
     path: "/login",
-    element:<Login></Login>,
+    element: <Login></Login>,
   },
-   {
+  {
+    path: "/terms",
+    element: <Terms></Terms>,
+  },
+    {
+    path: "/privacy",
+    element: <Privacy></Privacy>,
+  },
+  {
     path: "/dashboard",
     element: <Root />,
     errorElement: <Error></Error>,
@@ -31,26 +41,12 @@ const router = createBrowserRouter([
       },
       {
         path: "admin",
-        element: (
-         
-            <AdminDashboard />
-         
-        ),
+        element: <AdminDashboard />,
       },
-  {
+      {
         path: "user",
-        element: (
-         
-            <UserDashboard/>
-         
-        ),
+        element: <UserDashboard />,
       },
-      
-
-  
-   
-    
-    
     ],
   },
 ]);
