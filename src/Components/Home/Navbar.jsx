@@ -194,14 +194,14 @@ const Navbar = () => {
           <div className="mt-4 flex flex-col gap-4">
             <Link
               to="/login"
-              className="montserrat md:text-base px-5 py-2.5 text-sm font-medium text-[#4B5563]"
+              className="outfit md:text-base px-5 py-2.5 text-sm font-medium text-[#4B5563]"
             >
               Sign in
             </Link>
             <div className="w-full justify-center flex">
               <Link
                 to="/signup"
-                className="montserrat md:text-base w-[50%] text-center items-center justify-center rounded-lg  to-[#080F24] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white"
+                className="outfit md:text-base w-[50%] text-center items-center justify-center rounded-lg  to-[#080F24] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white"
               >
                 Get Started
               </Link>
