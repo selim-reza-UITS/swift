@@ -50,7 +50,7 @@ const Banner = () => {
         {/* img */}
       </div>
       <div className=" mt-10 container   mx-auto">
-        <div className="flex flex-col lg:flex-row  items-center  gap-10 w-1/2 mx-auto ">
+        <div className="flex flex-col md:flex-row  items-center  gap-10 w-1/2 mx-auto ">
           <img src={first} alt="illustration" className="" />
           <img src={second} alt="illustration" className="" />
           <img src={third} alt="illustration" className="" />
