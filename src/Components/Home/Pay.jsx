@@ -46,8 +46,9 @@ const Pay = () => {
             max={300}
             value={managers}
             onChange={(e) => setManagers(Number(e.target.value))}
-            className="w-full mt-2"
+            className="w-full mt-2  accent-[#38BDF8] rounded-lg shadow-inner "
           />
+
           <div className="flex justify-between text-xs text-[#CBD5E1]  ">
             <p>1</p>
             <p>300</p>
@@ -69,7 +70,7 @@ const Pay = () => {
             step={1000}
             value={fee}
             onChange={(e) => setFee(Number(e.target.value))}
-            className="w-full mt-2"
+            className="w-full mt-2 accent-[#38BDF8]  "
           />
           <div className="flex justify-between text-xs text-[#CBD5E1]  ">
             <p>$5K</p>
@@ -78,7 +79,7 @@ const Pay = () => {
         </div>
 
         {/* Annual ROI */}
-        <div className=" border border-t-0 border-b-0 border-r-0 border-r-white   text-white flex flex-col items-center justify-center  px-6 ">
+        <div className=" lg:border border-t-0 border-b-0 border-r-0 border-r-white   text-white flex flex-col items-center justify-center  px-6 ">
           <p className="text-xs mb-1 text-[#CBD5E1]">
             Your Annual ROI with Arviso
           </p>

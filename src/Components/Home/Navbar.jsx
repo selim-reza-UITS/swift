@@ -65,7 +65,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className="bg-white container mx-auto  rounded-full  text-white ">
+      <nav className="bg-white container mx-auto  rounded-full  text-white p-1">
         <div className="container mx-auto flex justify-between items-center 2xl:py-2 px-6">
           {/*  Left: Logo */}
           <div className="text-xl md:text-xl lg:text-2xl font-extrabold flex items-center gap-2">
@@ -76,7 +76,7 @@ const Navbar = () => {
           </div>
 
           {/* Center: Navigation Menu (Large Screen) */}
-          <ul className="hidden lg:flex gflex items-center gap-20  list-none poppins  font-bold text-lg text-[#8B5CF6] ">
+          <ul className="hidden lg:flex  items-center gap-20  list-none poppins  font-bold text-lg text-[#8B5CF6] ">
             {menuItems.map(({ name, id }) => (
               <li key={id}>
                 <button
@@ -97,12 +97,6 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center gap-6">
             <NavLink
               to="/login"
-              className=" montserrat   md:text-base px-5 py-2.5 text-sm font-medium text-[#4B5563] "
-            >
-              Sign in
-            </NavLink>
-            <NavLink
-              to="/signUp"
               className=" md:text-base rounded-xl  bg-[#6366F1] hover:bg-transparent hover:text-black  border hover:border-[#5c5edf] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 hover:scale-105"
             >
               Get Started
@@ -175,8 +169,8 @@ const Navbar = () => {
         {/*  Mobile Menu */}
       </nav>
       {isOpen && (
-        <div className="lg:hidden mt-4  bg-[#a0d2ff] rounded-tl-2xl rounded-br-2xl text-center p-4  container mx-auto m-4 absolute z-50">
-          <ul className="flex flex-col gap-4">
+        <div className="lg:hidden h-screen   text-white bg-[#8B5CF6] text-center p-4  container mx-auto  absolute z-50">
+          <ul className="flex flex-col justify-end gap-4">
             {menuItems.map(({ name, id }) => (
               <li key={id}>
                 <button
@@ -192,16 +186,10 @@ const Navbar = () => {
             ))}
           </ul>
           <div className="mt-4 flex flex-col gap-4">
-            <Link
-              to="/login"
-              className="outfit md:text-base px-5 py-2.5 text-sm font-medium text-[#4B5563]"
-            >
-              Sign in
-            </Link>
             <div className="w-full justify-center flex">
               <Link
-                to="/signup"
-                className="outfit md:text-base w-[50%] text-center items-center justify-center rounded-lg  to-[#080F24] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white"
+                to="/login"
+                className="outfit md:text-base w-[50%] text-center items-center justify-center rounded-lg  to-[#080F24] px-3  sm:px-5 sm:py-2.5 text-sm font-medium text-white"
               >
                 Get Started
               </Link>

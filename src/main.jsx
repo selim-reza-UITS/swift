@@ -13,6 +13,7 @@ import Root from "./Components/Dashboard/Root.jsx";
 import Login from "./Components/Pages/login.jsx";
 import Terms from "./Components/TermsandCondition/Terms.jsx";
 import Privacy from "./Components/PrivacyandPolicy/Privacy.jsx";
+import Forgot from "./Components/Pages/Forgot.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,9 +27,13 @@ const router = createBrowserRouter([
     path: "/terms",
     element: <Terms></Terms>,
   },
-    {
+  {
     path: "/privacy",
     element: <Privacy></Privacy>,
+  },
+  {
+    path: "/forgot",
+    element: <Forgot></Forgot>,
   },
   {
     path: "/dashboard",

@@ -2,6 +2,7 @@ import { useState } from "react";
 import loginImage from "../../assets/loginpage.png";
 import login from "../../assets/login-banner.png"; // Assuming you have a login image
 import logo from "../../assets/loginlogo.png";
+import { NavLink } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -77,12 +78,14 @@ export default function Login() {
                 />
               </div>
 
-              <div className="flex justify-between text-base text-[#7C3AED] outfit">
-                <span></span>
-                <a href="#" className="hover:underline">
-                  Forgot Password?
-                </a>
-              </div>
+              <NavLink to="/forgot">
+                <div className="flex justify-between text-base text-[#7C3AED] outfit">
+                  <span></span>
+                  <a href="#" className="hover:underline">
+                    Forgot Password?
+                  </a>
+                </div>
+              </NavLink>
               <div className="w-1/2 mx-auto ">
                 <button
                   type="submit"
