@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 
-
-
-
 import getRole from "../../utils/role";
 
 const Header = () => {
@@ -13,7 +10,7 @@ const Header = () => {
   //   const { data, isLoading, error, refetch } = useGetStudentProfileQuery();
   const role = getRole();
   return (
-    <div className="flex items-center border-b  border-b-[#E8E8E8] justify-between p-6 bg-white dark:bg-white text-[#020202] dark:text-white">
+    <div className="flex items-center border-b  border-b-[#161E2F] justify-between p-6 bg-[#161E2F] dark:bg-white text-white dark:text-white">
       {/* Title */}
       <div></div>
 

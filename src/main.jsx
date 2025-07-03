@@ -14,6 +14,7 @@ import Login from "./Components/Pages/login.jsx";
 import Terms from "./Components/TermsandCondition/Terms.jsx";
 import Privacy from "./Components/PrivacyandPolicy/Privacy.jsx";
 import Forgot from "./Components/Pages/Forgot.jsx";
+import SetNew from "./Components/Pages/SetNew.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/forgot",
     element: <Forgot></Forgot>,
+  },
+    {
+    path: "/set",
+    element: <SetNew></SetNew>,
   },
   {
     path: "/dashboard",

@@ -79,7 +79,7 @@ const Pay = () => {
         </div>
 
         {/* Annual ROI */}
-        <div className=" lg:border border-t-0 border-b-0 border-r-0 border-r-white   text-white flex flex-col items-center justify-center  px-6 ">
+        <div className=" lg:border lg:border-t-0 lg:border-b-0 lg:border-r-0 lg:border-r-white   text-white flex flex-col items-center justify-center  px-6 ">
           <p className="text-xs mb-1 text-[#CBD5E1]">
             Your Annual ROI with Arviso
           </p>

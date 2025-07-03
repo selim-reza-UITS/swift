@@ -7,7 +7,6 @@ import AdminSidebar from "./Sidebar/AdminSidebar";
 import UserSidebar from "./Sidebar/UserSidebar";
 import Header from "./Header";
 
-
 const Root = () => {
   const navigate = useNavigate();
   const location = useLocation(); // To check the current pathname
@@ -34,7 +33,7 @@ const Root = () => {
       case "Admin":
         return <AdminDashboard />;
       case "User":
-        return <UserDashboard/>;
+        return <UserDashboard />;
 
       default:
         return <div>Unauthorized or invalid role</div>;
@@ -45,7 +44,7 @@ const Root = () => {
   const isDashboardRoot = location.pathname === "/dashboard";
 
   return (
-    <div className="flex h-screen bg-white dark:bg-white">
+    <div className="flex h-screen bg-[#101725] dark:bg-[#101725]">
       {/* Sidebar - Fixed Position */}
       <div className="w-[280px] fixed left-0 top-0 h-screen">
         {role === "Admin" && <AdminSidebar />}
@@ -58,7 +57,7 @@ const Root = () => {
         <Header />
 
         {/* Render Child Routes or Default Dashboard */}
-        <main className="flex-1 bg-[#F9FAFC] dark:bg-white p-4 overflow-y-auto">
+        <main className="flex-1 bg-[#101725] dark:bg-[#101725]  p-4 overflow-y-auto">
           {isDashboardRoot ? renderDefaultDashboard() : <Outlet />}
         </main>
       </div>
