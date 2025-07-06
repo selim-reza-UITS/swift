@@ -15,6 +15,9 @@ import Terms from "./Components/TermsandCondition/Terms.jsx";
 import Privacy from "./Components/PrivacyandPolicy/Privacy.jsx";
 import Forgot from "./Components/Pages/Forgot.jsx";
 import SetNew from "./Components/Pages/SetNew.jsx";
+import SuperAdminDashboard from "./Components/Dashboard/SuperAdmin/SuperAdminDashboard.jsx";
+import IntekSpecialistDashboard from "./Components/Dashboard/IntekSpecialist/IntekSpecialistDashboard.jsx";
+import CaseMangerDashboard from "./Components/Dashboard/CaseManager/CaseMangerDashboard.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -36,7 +39,7 @@ const router = createBrowserRouter([
     path: "/forgot",
     element: <Forgot></Forgot>,
   },
-    {
+  {
     path: "/set",
     element: <SetNew></SetNew>,
   },
@@ -54,8 +57,16 @@ const router = createBrowserRouter([
         element: <AdminDashboard />,
       },
       {
-        path: "user",
-        element: <UserDashboard />,
+        path: "superadmin",
+        element: <SuperAdminDashboard></SuperAdminDashboard>,
+      },
+      {
+        path: "caseManager",
+        element: <CaseMangerDashboard></CaseMangerDashboard>,
+      },
+      {
+        path: "intekSpecialist",
+        element: <IntekSpecialistDashboard></IntekSpecialistDashboard>,
       },
     ],
   },

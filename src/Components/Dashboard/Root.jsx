@@ -6,6 +6,12 @@ import UserDashboard from "./User/UserDashboard";
 import AdminSidebar from "./Sidebar/AdminSidebar";
 import UserSidebar from "./Sidebar/UserSidebar";
 import Header from "./Header";
+import CaseMangerSidebar from "./Sidebar/CaseMangerSidebar";
+import SuperAdminSidebar from "./Sidebar/SuperAdminSidebar";
+import IntekSpecialistSidebar from "./Sidebar/IntekSpecialistSidebar";
+import SuperAdminDashboard from "./SuperAdmin/SuperAdminDashboard";
+import CaseMangerDashboard from "./CaseManager/CaseMangerDashboard";
+import IntekSpecialistDashboard from "./IntekSpecialist/IntekSpecialistDashboard";
 
 const Root = () => {
   const navigate = useNavigate();
@@ -21,7 +27,7 @@ const Root = () => {
 
   if (role === null) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex items-center justify-center h-screen">
         Loading...
       </div>
     );
@@ -32,8 +38,12 @@ const Root = () => {
     switch (role) {
       case "Admin":
         return <AdminDashboard />;
-      case "User":
-        return <UserDashboard />;
+      case "SuperAdmin":
+        return <SuperAdminDashboard></SuperAdminDashboard>;
+      case "CaseManager":
+        return <CaseMangerDashboard></CaseMangerDashboard>;
+      case "IntekSpecialist":
+        return <IntekSpecialistDashboard></IntekSpecialistDashboard>;
 
       default:
         return <div>Unauthorized or invalid role</div>;
@@ -47,8 +57,13 @@ const Root = () => {
     <div className="flex h-screen bg-[#101725] dark:bg-[#101725]">
       {/* Sidebar - Fixed Position */}
       <div className="w-[280px] fixed left-0 top-0 h-screen">
+        {role === "SuperAdmin" && <SuperAdminSidebar></SuperAdminSidebar>}
+
         {role === "Admin" && <AdminSidebar />}
-        {role === "User" && <UserSidebar></UserSidebar>}
+        {role === "CaseManager" && <CaseMangerSidebar></CaseMangerSidebar>}
+        {role === "IntekSpecialist" && (
+          <IntekSpecialistSidebar></IntekSpecialistSidebar>
+        )}
       </div>
 
       {/* Main Content */}
