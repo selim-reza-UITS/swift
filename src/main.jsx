@@ -10,7 +10,7 @@ import AdminDashboard from "./Components/Dashboard/Admin/AdminDashboard.jsx";
 import UserDashboard from "./Components/Dashboard/User/UserDashboard.jsx";
 import Error from "./Error.jsx";
 import Root from "./Components/Dashboard/Root.jsx";
-import Login from "./Components/Pages/login.jsx";
+
 import Terms from "./Components/TermsandCondition/Terms.jsx";
 import Privacy from "./Components/PrivacyandPolicy/Privacy.jsx";
 import Forgot from "./Components/Pages/Forgot.jsx";
@@ -18,6 +18,7 @@ import SetNew from "./Components/Pages/SetNew.jsx";
 import SuperAdminDashboard from "./Components/Dashboard/SuperAdmin/SuperAdminDashboard.jsx";
 import IntekSpecialistDashboard from "./Components/Dashboard/IntekSpecialist/IntekSpecialistDashboard.jsx";
 import CaseMangerDashboard from "./Components/Dashboard/CaseManager/CaseMangerDashboard.jsx";
+import Login from "./Components/Pages/Login.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,18 +53,22 @@ const router = createBrowserRouter([
         index: true,
         element: <DashboardContent />,
       },
-      {
-        path: "admin",
-        element: <AdminDashboard />,
-      },
+      // just superadmin  role  route will be here
       {
         path: "superadmin",
         element: <SuperAdminDashboard></SuperAdminDashboard>,
       },
+      // just admin role route will be here
+      {
+        path: "admin",
+        element: <AdminDashboard />,
+      },
+      // all case manager role route will be there
       {
         path: "caseManager",
         element: <CaseMangerDashboard></CaseMangerDashboard>,
       },
+      //all intek specialist role route will be there
       {
         path: "intekSpecialist",
         element: <IntekSpecialistDashboard></IntekSpecialistDashboard>,
