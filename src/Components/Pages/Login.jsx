@@ -2,12 +2,12 @@ import { useState } from "react";
 import loginImage from "../../assets/loginpage.png";
 import login from "../../assets/login-banner.png"; // Assuming you have a login image
 import logo from "../../assets/loginlogo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
     let role = "";
@@ -25,6 +25,7 @@ export default function Login() {
     localStorage.setItem("userEmail", email);
 
     setMessage(`Logged in as ${role}`);
+    navigate("/dashboard")
   };
 
   return (
