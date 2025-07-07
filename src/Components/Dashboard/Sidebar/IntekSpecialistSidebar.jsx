@@ -7,6 +7,7 @@ import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { FaUser } from "react-icons/fa";
 import { PiClockCountdownLight } from "react-icons/pi";
+import { IoMdSettings } from "react-icons/io";
 const IntekSpecialistSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSeetingsDropdownOpen, setSeetingsDropdownOpen] = useState(false);
@@ -16,7 +17,7 @@ const IntekSpecialistSidebar = () => {
 
   const isActiveDashboard = location.pathname === "/dashboard/admin";
 
-  const   isActiveClient = location.pathname.startsWith( "/dashboard/client");
+  const isActiveClient = location.pathname.startsWith("/dashboard/client");
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -50,7 +51,7 @@ const IntekSpecialistSidebar = () => {
         {/* Menu Items */}
         <nav className="flex flex-col  text-[#364636] mt-9">
           <NavLink
-            to="/dashboard/intekSpecialist"
+            to="/dashboard/intakeSpecialist"
             className="flex items-center justify-between w-[280px]"
           >
             <div className="flex items-center justify-between w-[280px] font-semibold  p-2 ">
@@ -65,13 +66,13 @@ const IntekSpecialistSidebar = () => {
                       : "text-[#9CA3AF]"
                   }`}
               >
-                <VscGraphLine className="w-[22px] h-[22px] font-bold   " />{" "}
-                <h1 className="text-xl font-bold poppins">Dashboard</h1>
+                <VscGraphLine className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">Dashboard</h1>
               </div>
             </div>
           </NavLink>
           <NavLink
-            to="/adminuser"
+            to="/dashboard/intakeSpecialistSettings"
             className="flex items-center justify-between w-[280px]"
           >
             <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
@@ -86,8 +87,8 @@ const IntekSpecialistSidebar = () => {
                       : "text-[#9CA3AF]"
                   }`}
               >
-                <HiMiniUserGroup className="w-[22px] h-[22px] font-bold  " />{" "}
-                <h1 className="text-base font-normal poppins">Client</h1>
+                <IoMdSettings className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">Settings</h1>
               </div>
             </div>
           </NavLink>

@@ -14,6 +14,7 @@ import message from "../../../assets/message.png";
 import priority from "../../../assets/priority.png";
 import active from "../../../assets/active.png";
 import appoinment from "../../../assets/appoinment.png";
+import { FaPlus } from "react-icons/fa";
 const fakeClients = [
   {
     name: "Smith & Associates",
@@ -88,7 +89,7 @@ const statsData = [
 ];
 
 // Helper function to return image based on title
-const getImageByTitle = (title) => {
+const getImageByTitle = (title) => { 
   if (title === "Active Clients") return active;
   if (title === "High Priority") return priority;
   if (title === "Messages Sent") return message;
@@ -103,8 +104,8 @@ const CaseMangerDashboard = () => {
     <div className="h-[90vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
         <h1 className=" text-2xl font-bold">Case Manager Dashboard</h1>
-        <button className="px-6 py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] hover:from-[#0129B3]/90 hover:via-[#007BCC]/90 hover:to-[#77D7D2]/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-          New Client
+        <button className="px-6 py-3 text-white flex items-center gap-2 font-semibold rounded-lg bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] hover:from-[#0129B3]/90 hover:via-[#007BCC]/90 hover:to-[#77D7D2]/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+         <FaPlus /> New Client
         </button>
       </div>
       {/* Stats Section */}
