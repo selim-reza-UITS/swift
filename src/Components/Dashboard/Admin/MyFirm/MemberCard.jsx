@@ -1,0 +1,27 @@
+import React from "react";
+import { FaEye, FaTrash } from "react-icons/fa";
+
+const MemberCard = ({ data }) => {
+  return (
+    <div className="bg-[#1e293b] p-4 rounded flex items-center justify-between poppins text-[#FFFFFF]">
+      <div className="flex items-center gap-4">
+        <img
+          src={data.image}
+          alt={data.name}
+          className="object-cover w-12 h-12 rounded-full"
+        />
+        <div>
+          <h3 className="text-lg font-semibold">{data.name}</h3>
+          <p className="mt-1 mb-1 text-sm font-normal ">{data.email}</p>
+          <p className="text-sm font-normal">Role: {data.role}</p>
+        </div>
+      </div>
+      <div className="flex gap-4 text-xl text-gray-400">
+        <FaEye className="cursor-pointer hover:text-white" />
+        <FaTrash className="cursor-pointer hover:text-red-500" />
+      </div>
+    </div>
+  );
+};
+
+export default MemberCard;
