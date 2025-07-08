@@ -7,49 +7,104 @@ import first from "../../assets/1st.png";
 import second from "../../assets/2nd.png";
 import third from "../../assets/3rd.png";
 
-const messages = [
+const messagesTop = [
   "Awesome! When can I expect?",
   "Thanks for the update! What's next?",
   "Perfect! How long will this take?",
+];
+
+const messagesBottom = [
   "Great news! When should I check back?",
   "Excellent! What's the timeline?",
   "Wonderful! When will you know more?",
 ];
+
+
 const Banner = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [topIndex, setTopIndex] = useState(0);
+  const [bottomIndex, setBottomIndex] = useState(0);
+  const [topAnimationState, setTopAnimationState] = useState("hidden");
+  const [bottomAnimationState, setBottomAnimationState] = useState("hidden");
+    
 
   useEffect(() => {
+    const startTimeout = setTimeout(() => {
+      setTopAnimationState("entering");
+      setTimeout(() => setTopAnimationState("center"), 1500);
+    }, 1500);
+  
     const interval = setInterval(() => {
-      setIsAnimating(true);
-
+      setTopAnimationState("exiting");
       setTimeout(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % messages.length);
-        setIsAnimating(false);
-      }, 1000);
-    }, 3500);
-
-    return () => clearInterval(interval);
+        setTopIndex((prev) => (prev + 1) % messagesTop.length);
+        setTopAnimationState("entering");
+        setTimeout(() => setTopAnimationState("center"), 1500);
+      }, 1500);
+    }, 6000);
+  
+    return () => {
+      clearInterval(interval);
+      clearTimeout(startTimeout);
+    };
   }, []);
+  
+  useEffect(() => {
+    const startTimeout = setTimeout(() => {
+      setBottomAnimationState("entering");
+      setTimeout(() => setBottomAnimationState("center"), 1500);
+    }, 1500);
+  
+    const interval = setInterval(() => {
+      setBottomAnimationState("exiting");
+      setTimeout(() => {
+        setBottomIndex((prev) => (prev + 1) % messagesBottom.length);
+        setBottomAnimationState("entering");
+        setTimeout(() => setBottomAnimationState("center"), 1500);
+      }, 1500);
+    }, 6000);
+  
+    return () => {
+      clearInterval(interval);
+      clearTimeout(startTimeout);
+    };
+  }, []);
+  
+
+  const getAnimationClasses = (state) => {
+    switch (state) {
+      case "entering":
+        return "translate-y-12 opacity-0 scale-100";
+      case "center":
+        return "translate-y-0 opacity-100 scale-100";
+      case "exiting":
+        return "-translate-y-12 opacity-0 scale-100";
+      case "hidden":
+      default:
+        return "translate-y-12 opacity-0 scale-100";
+    }
+  };
+  
+
   return (
     <div>
-      <div className="relative w-full max-w-4xl h-16">
-        <div className="relative left-60 max-w-xs">
-          {/* Card slides from top to settled position */}
-          <div
-            className={`transition-all duration-800 ease-out ${
-              isAnimating
-                ? "transform -translate-y-20 opacity-0"
-                : "transform translate-y-16 opacity-100"
-            }`}
-          >
-            <div className="bg-slate-700 text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
-              <p className="leading-relaxed">{messages[currentIndex]}</p>
+      <div className="relative w-full max-w-4xl mt-10">
+        <div className="relative left-50 max-w-xs">
+          {/* Smooth sliding message card */}
+          <div className="relative w-full max-w-4xl">
+            <div className="relative left-60 max-w-xs">
+              <div
+                className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(topAnimationState)}`}
+              >
+                <div className="bg-[#4B5563] text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
+                  <p className="leading-relaxed">{messagesTop[topIndex]}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex lg:flex-row flex-col-reverse items-center lg:items-center justify-between gap-10 container mx-auto mt-10">
+
+      <div className="flex lg:flex-row flex-col-reverse items-center lg:items-center justify-between gap-10 container mx-auto">
         {/*  content  */}
         <Slide
           direction="left"
@@ -87,9 +142,24 @@ const Banner = () => {
             <img src={banner} alt="banner" />
           </div>
         </Slide>
-        {/* img */}
       </div>
-      <div className=" mt-10 container   mx-auto">
+      <div className="relative w-full right-0 mb-10">
+        <div className="absolute w-full right-60 max-w-xs">
+          {/* Smooth sliding message card */}
+          <div className="relative w-full max-w-4xl">
+            <div className="relative right-0 max-w-xs">
+              <div
+                className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(bottomAnimationState)}`}
+              >
+                <div className="bg-[#4B5563] text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
+                  <p className="leading-relaxed">{messagesBottom[bottomIndex]}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className=" mt-20 container mx-auto">
         <div className="flex flex-col lg:flex-row items-center  gap-10 w-1/2 mx-auto ">
           <img src={first} alt="illustration" className="" />
           <img src={second} alt="illustration" className="" />
