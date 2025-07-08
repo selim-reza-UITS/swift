@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Search, Eye, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const CaseManagerClients = () => {
+const IntakeSpecialistClients = () => {
   const [clients, setClients] = useState([
     {
       id: 1,
@@ -202,58 +202,7 @@ const CaseManagerClients = () => {
   const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
-  const [deleteProgress, setDeleteProgress] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteTimer, setDeleteTimer] = useState(null);
 
-  const handleDeleteClick = () => {
-    setIsDeleting(true);
-    setDeleteProgress(0);
-
-    const timer = setInterval(() => {
-      setDeleteProgress((prev) => {
-        const newProgress = prev + 100 / 30; // 30 intervals over 3 seconds
-        if (newProgress >= 100) {
-          clearInterval(timer);
-          setShowDeleteModal(true);
-          setIsDeleting(false);
-          setDeleteProgress(0);
-          return 100;
-        }
-        return newProgress;
-      });
-    }, 100);
-
-    setDeleteTimer(timer);
-  };
-
-  const handleDeleteCancel = () => {
-    if (deleteTimer) {
-      clearInterval(deleteTimer);
-      setDeleteTimer(null);
-    }
-    setIsDeleting(false);
-    setDeleteProgress(0);
-  };
-
-  const handleDeleteConfirm = () => {
-    setShowDeleteModal(false);
-    // Add your delete logic here
-    console.log("Case deleted");
-  };
-
-  const handleDeleteModalClose = () => {
-    setShowDeleteModal(false);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (deleteTimer) {
-        clearInterval(deleteTimer);
-      }
-    };
-  }, [deleteTimer]);
   const filteredClients = clients.filter((client) => {
     const matchesSearch =
       client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -446,7 +395,7 @@ const CaseManagerClients = () => {
                   {getPriorityLabel(client.priority)}
                 </span>
 
-                <Link to={`/dashboard/caseManagerClients/${client.id}`}>
+                <Link to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
                   <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors">
                     <Eye />
                   </button>
@@ -455,74 +404,10 @@ const CaseManagerClients = () => {
                 <button className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors">
                   <Trash2 />
                 </button>
-                {/* Delete Button with Progress */}
-                <button
-                  onClick={isDeleting ? handleDeleteCancel : handleDeleteClick}
-                  disabled={isDeleting}
-                  className="w-full relative overflow-hidden flex items-center space-x-3 text-left p-3 rounded-lg bg-red-900 hover:bg-red-800 transition-colors"
-                >
-                  {/* Progress Bar */}
-                  <div
-                    className="absolute left-0 top-0 h-full bg-red-600 transition-all duration-100 ease-linear"
-                    style={{ width: `${deleteProgress}%` }}
-                  />
-
-                  {/* Button Content */}
-                  <div className="relative z-10 flex items-center space-x-3">
-                    <Trash2 className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">
-                      {isDeleting ? "Deleting..." : "Delete"}
-                    </span>
-                  </div>
-                </button>
               </div>
             </div>
           ))}
-          {showDeleteModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 border border-gray-700">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-red-400">
-                    Delete Case
-                  </h3>
-                  <button
-                    onClick={handleDeleteModalClose}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
 
-                <div className="mb-6">
-                  <p className="text-gray-300 mb-2">
-                    Are you sure you want to delete this case?
-                  </p>
-                  <p className="text-gray-400 text-sm">
-                    <strong>Case:</strong> Sarah Johnson - Personal Injury Case
-                    #PI-2024-001
-                  </p>
-                  <p className="text-red-400 text-sm mt-2">
-                    This action cannot be undone.
-                  </p>
-                </div>
-
-                <div className="flex space-x-3">
-                  <button
-                    onClick={handleDeleteConfirm}
-                    className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg transition-colors"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={handleDeleteModalClose}
-                    className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
           {currentClients.length === 0 && (
             <div className="text-center py-12">
               <p className="text-gray-400 text-lg">
@@ -585,4 +470,4 @@ const CaseManagerClients = () => {
   );
 };
 
-export default CaseManagerClients;
+export default IntakeSpecialistClients;

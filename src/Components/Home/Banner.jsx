@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import banner from "../../assets/banner-right.png";
 import { NavLink } from "react-router-dom";
@@ -6,10 +6,50 @@ import { Slide } from "react-awesome-reveal";
 import first from "../../assets/1st.png";
 import second from "../../assets/2nd.png";
 import third from "../../assets/3rd.png";
+
+const messages = [
+  "Awesome! When can I expect?",
+  "Thanks for the update! What's next?",
+  "Perfect! How long will this take?",
+  "Great news! When should I check back?",
+  "Excellent! What's the timeline?",
+  "Wonderful! When will you know more?",
+];
 const Banner = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % messages.length);
+        setIsAnimating(false);
+      }, 1000);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div>
-      <div className="flex lg:flex-row flex-col-reverse items-center lg:items-center justify-between gap-10 container mx-auto">
+      <div className="relative w-full max-w-4xl h-16">
+        <div className="relative left-60 max-w-xs">
+          {/* Card slides from top to settled position */}
+          <div
+            className={`transition-all duration-800 ease-out ${
+              isAnimating
+                ? "transform -translate-y-20 opacity-0"
+                : "transform translate-y-16 opacity-100"
+            }`}
+          >
+            <div className="bg-slate-700 text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
+              <p className="leading-relaxed">{messages[currentIndex]}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex lg:flex-row flex-col-reverse items-center lg:items-center justify-between gap-10 container mx-auto mt-10">
         {/*  content  */}
         <Slide
           direction="left"

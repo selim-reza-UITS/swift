@@ -59,7 +59,7 @@ const IntekSpecialistSidebar = () => {
 
               {/* Main Button Area */}
               <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-centter
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
                   ${
                     isActiveDashboard
                       ? "bg-[#FFFFFF] text-black rounded-xl"
@@ -68,6 +68,24 @@ const IntekSpecialistSidebar = () => {
               >
                 <VscGraphLine className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">Dashboard</h1>
+              </div>
+            </div>
+          </NavLink>
+          <NavLink
+            to="/dashboard/intakeSpecialistClients"
+            className="flex items-center justify-between w-[280px]"
+          >
+            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+              <div
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
+                  ${
+                    isActiveClient
+                      ? "bg-[#FFFFFF] text-black rounded-xl"
+                      : "text-[#9CA3AF]"
+                  }`}
+              >
+                <HiMiniUserGroup className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">Clients</h1>
               </div>
             </div>
           </NavLink>

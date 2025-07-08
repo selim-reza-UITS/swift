@@ -22,6 +22,8 @@ import Login from "./Components/Pages/Login.jsx";
 import CaseManagerClients from "./Components/Dashboard/CaseManager/CaseManagerClients.jsx";
 import CaseManagerSettings from "./Components/Dashboard/CaseManager/CaseManagerSettings.jsx";
 import IntakeSpecialistSettings from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistSettings.jsx";
+import ClientDetails from "./Components/Shared/ClientDetails.jsx";
+import IntakeSpecialistClients from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistClients.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -77,12 +79,24 @@ const router = createBrowserRouter([
         element: <CaseManagerClients />,
       },
       {
+        path: "caseManagerClients/:id",
+        element: <ClientDetails />,
+      },
+      {
         path: "caseManagerSettings",
         element: <CaseManagerSettings />,
       },
       {
         path: "intakeSpecialist",
         element: <IntakeSpecialistDashboard></IntakeSpecialistDashboard>,
+      },
+      {
+        path: "intakeSpecialistClients",
+        element: <IntakeSpecialistClients />,
+      },
+      {
+        path: "intakeSpecialistClients/:id",
+        element: <ClientDetails />,
       },
       {
         path: "intakeSpecialistSettings",
