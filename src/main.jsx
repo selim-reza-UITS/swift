@@ -19,6 +19,9 @@ import SuperAdminDashboard from "./Components/Dashboard/SuperAdmin/SuperAdminDas
 import IntekSpecialistDashboard from "./Components/Dashboard/IntekSpecialist/IntekSpecialistDashboard.jsx";
 import CaseMangerDashboard from "./Components/Dashboard/CaseManager/CaseMangerDashboard.jsx";
 import Login from "./Components/Pages/Login.jsx";
+import MyFirm from "./Components/Dashboard/Admin/MyFirm/MyFirm.jsx";
+import Settings from "./Components/Dashboard/Admin/Settings/Settings.jsx";
+import Client from "./Components/Dashboard/Admin/Client/Client.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -63,6 +66,19 @@ const router = createBrowserRouter([
         path: "admin",
         element: <AdminDashboard />,
       },
+      {
+        path: "adminClient",
+        element: <Client></Client>,
+      },
+      {
+        path: "my-firm",
+        element: <MyFirm></MyFirm>,
+      },
+      {
+        path: "settings",
+        element: <Settings></Settings>,
+      },
+
       // all case manager role route will be there
       {
         path: "caseManager",
