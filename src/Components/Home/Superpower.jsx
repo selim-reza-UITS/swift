@@ -24,7 +24,7 @@ const Superpower = () => {
       icon: <SlEnergy />,
       title: "Boost Staff Efficiency",
       description:
-        "Free up your case managers from repetitive check-ins so they can focus on high-value legal work.",
+        "Free up your Lawyers from repetitive check-ins so they can focus on high-value legal work.",
     },
   ];
 
