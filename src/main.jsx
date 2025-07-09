@@ -22,6 +22,7 @@ import Login from "./Components/Pages/Login.jsx";
 import MyFirm from "./Components/Dashboard/Admin/MyFirm/MyFirm.jsx";
 import Settings from "./Components/Dashboard/Admin/Settings/Settings.jsx";
 import Client from "./Components/Dashboard/Admin/Client/Client.jsx";
+import LawFirm from "./Components/Dashboard/SuperAdmin/LawFirm/LawFirm.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "superadmin",
         element: <SuperAdminDashboard></SuperAdminDashboard>,
+      },
+      {
+        path: "law-Firm",
+        element: <LawFirm></LawFirm>,
       },
       // just admin role route will be here
       {
