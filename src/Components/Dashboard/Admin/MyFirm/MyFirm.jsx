@@ -5,10 +5,13 @@ import bag from "../../../../assets/bag.png";
 import right from "../../../../assets/right.png";
 import clock from "../../../../assets/clock.png";
 import { GoPlusCircle } from "react-icons/go";
+import AddUser from "./AddUser";
+import AddLawyer from "./AddLawyer";
 const MyFirm = () => {
   const [activeTab, setActiveTab] = useState("lawyers");
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [showLawyerModal, setShowLawyerModal] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
   const firmStats = {
     performanceScore: 85,
     totalClients: 247,
@@ -65,7 +68,13 @@ const MyFirm = () => {
   const filteredMembers = members.filter((member) =>
     member.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  const handleAddClick = () => {
+    if (activeTab === "lawyers") {
+      setShowLawyerModal(true);
+    } else {
+      setShowUserModal(true);
+    }
+  };
   return (
     <div className="min-h-screen bg-[#0F172A] p-6 text-white">
       {/* Stats */}
@@ -177,7 +186,10 @@ const MyFirm = () => {
           }...`}
           className="w-full max-w-md p-2 bg-[#1e293b] text-[#ADAEBC] rounded-lg outline-none poppins"
         />
-        <button className="flex items-center gap-3 px-4 py-2 ml-4 text-white rounded bg-gradient-to-r from-blue-600 to-cyan-400">
+        <button
+          className="flex items-center gap-3 px-4 py-2 ml-4 text-white rounded bg-gradient-to-r from-blue-600 to-cyan-400"
+          onClick={handleAddClick}
+        >
           <GoPlusCircle className="w-4 h-4" />{" "}
           {activeTab === "lawyers" ? "Add Lawyer" : "Add User"}
         </button>
@@ -195,6 +207,20 @@ const MyFirm = () => {
             <MemberCard key={member.id} data={member} />
           ))}
       </div>
+      {showUserModal && (
+        <AddUser
+          onClose={() => {
+            setShowUserModal(false);
+          }}
+        />
+      )}
+      {showLawyerModal && (
+        <AddLawyer
+          onClose={() => {
+            setShowLawyerModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };
