@@ -7,11 +7,17 @@ import clock from "../../../../assets/clock.png";
 import { GoPlusCircle } from "react-icons/go";
 import AddUser from "./AddUser";
 import AddLawyer from "./AddLawyer";
+import Swal from "sweetalert2";
+import ViewClientDetails from "../Client/ViewClientDetails";
 const MyFirm = () => {
   const [activeTab, setActiveTab] = useState("lawyers");
   const [searchTerm, setSearchTerm] = useState("");
   const [showLawyerModal, setShowLawyerModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
+  // State for viewing details
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedLawyer, setSelectedLawyer] = useState(null);
+
   const firmStats = {
     performanceScore: 85,
     totalClients: 247,
@@ -75,6 +81,39 @@ const MyFirm = () => {
       setShowUserModal(true);
     }
   };
+  // delete
+  const handleDelete = (type, id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (type === "lawyer") {
+          const updated = lawyers.filter((lawyer) => lawyer.id !== id);
+          // Set updated array to state (if using state-based lawyers)
+          console.log("Lawyer deleted", updated);
+        } else {
+          const updated = members.filter((member) => member.id !== id);
+          console.log("User deleted", updated);
+        }
+        Swal.fire("Deleted!", "The entry has been deleted.", "success");
+      }
+    });
+  };
+  // view
+  const handleViewDetails = (type, data) => {
+    if (type === "lawyer") {
+      setSelectedLawyer(data);
+    } else {
+      setSelectedUser(data);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0F172A] p-6 text-white">
       {/* Stats */}
@@ -158,7 +197,7 @@ const MyFirm = () => {
               : "text-[#FFFFFF]"
           }`}
         >
-          Users
+          Members
         </button>
         <button
           onClick={() => {
@@ -191,7 +230,7 @@ const MyFirm = () => {
           onClick={handleAddClick}
         >
           <GoPlusCircle className="w-4 h-4" />{" "}
-          {activeTab === "lawyers" ? "Add Lawyer" : "Add User"}
+          {activeTab === "lawyers" ? "Add Lawyer" : "Add Member"}
         </button>
       </div>
 
@@ -199,12 +238,22 @@ const MyFirm = () => {
       <div className="space-y-4">
         {activeTab === "lawyers" &&
           filteredLawyers.map((lawyer) => (
-            <LawyerCard key={lawyer.id} data={lawyer} />
+            <LawyerCard
+              key={lawyer.id}
+              data={lawyer}
+              onDelete={() => handleDelete("lawyer", lawyer.id)}
+              onView={() => handleViewDetails("lawyer", lawyer)}
+            />
           ))}
 
         {activeTab === "users" &&
           filteredMembers.map((member) => (
-            <MemberCard key={member.id} data={member} />
+            <MemberCard
+              key={member.id}
+              data={member}
+              onDelete={() => handleDelete("user", member.id)}
+              onView={() => handleViewDetails("user", member)}
+            />
           ))}
       </div>
       {showUserModal && (
@@ -219,6 +268,19 @@ const MyFirm = () => {
           onClose={() => {
             setShowLawyerModal(false);
           }}
+        />
+      )}
+      {/* view lawyer */}
+      {selectedLawyer && (
+        <ViewClientDetails
+          client={selectedLawyer}
+          onClose={() => setSelectedLawyer(null)}
+        />
+      )}
+      {selectedUser && (
+        <ViewClientDetails
+          client={selectedUser}
+          onClose={() => setSelectedUser(null)}
         />
       )}
     </div>
