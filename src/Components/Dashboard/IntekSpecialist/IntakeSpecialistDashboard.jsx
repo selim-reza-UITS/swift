@@ -135,16 +135,6 @@ const IntakeSpecialistDashboard = () => {
   const [activeIndex, setActiveIndex] = React.useState(null);
   const [showAddClientModal, setShowAddClientModal] = React.useState(false);
 
-  // Close modal on Escape
-  React.useEffect(() => {
-    if (!showAddClientModal) return;
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") setShowAddClientModal(false);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showAddClientModal]);
-
   return (
     <div className="h-[90vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
@@ -173,7 +163,7 @@ const IntakeSpecialistDashboard = () => {
             >
               &times;
             </button> */}
-            <AddClientForm setShowAddClientModal={setShowAddClientModal}/>
+            <AddClientForm setShowAddClientModal={setShowAddClientModal} />
           </div>
         </div>
       )}

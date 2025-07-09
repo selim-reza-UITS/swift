@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Search, Eye, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Eye, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CaseManagerClients = () => {
@@ -456,25 +456,23 @@ const CaseManagerClients = () => {
                   <Trash2 />
                 </button>
                 {/* Delete Button with Progress */}
-                <button
+                {/* <button
                   onClick={isDeleting ? handleDeleteCancel : handleDeleteClick}
                   disabled={isDeleting}
                   className="w-full relative overflow-hidden flex items-center space-x-3 text-left p-3 rounded-lg bg-red-900 hover:bg-red-800 transition-colors"
                 >
-                  {/* Progress Bar */}
                   <div
                     className="absolute left-0 top-0 h-full bg-red-600 transition-all duration-100 ease-linear"
                     style={{ width: `${deleteProgress}%` }}
                   />
 
-                  {/* Button Content */}
                   <div className="relative z-10 flex items-center space-x-3">
                     <Trash2 className="w-4 h-4 text-red-400" />
                     <span className="text-red-400">
                       {isDeleting ? "Deleting..." : "Delete"}
                     </span>
                   </div>
-                </button>
+                </button> */}
               </div>
             </div>
           ))}
