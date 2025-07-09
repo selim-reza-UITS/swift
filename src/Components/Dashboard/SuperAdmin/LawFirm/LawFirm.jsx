@@ -4,6 +4,8 @@ import { FaPhone, FaMapMarkerAlt, FaPen, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { MdLocalPhone } from "react-icons/md";
 import AddLawFirm from "./AddLawFirm";
+import { FaRegEdit } from "react-icons/fa";
+import EditLawfirm from "./EditLawfirm";
 const fakeFirms = [
   {
     id: 1,
@@ -53,7 +55,9 @@ const ToggleSwitch = ({ isOn, handleToggle }) => {
 const LawFirm = () => {
   const [firms, setFirms] = useState(fakeFirms);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFirm, setSelectedFirm] = useState(null); // For editing
   const handleToggle = (id) => {
     Swal.fire({
       title: "Are you sure to deactivate?",
@@ -78,6 +82,38 @@ const LawFirm = () => {
       firm.phone.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Delete function
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      background: "#1e293b",
+      color: "#fff",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updated = firms.filter((firm) => firm.id !== id);
+        setFirms(updated);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Firm has been deleted.",
+          icon: "success",
+          background: "#1e293b",
+          color: "#fff",
+        });
+      }
+    });
+  };
+
+  // Open edit modal
+  const handleEdit = (firm) => {
+    setSelectedFirm(firm);
+    setIsEditModalOpen(true);
+  };
   return (
     <div className="min-h-screen bg-[#0F172A] text-white p-6 poppins">
       <div className="flex items-center justify-between mb-6">
@@ -110,13 +146,19 @@ const LawFirm = () => {
           >
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-lg font-semibold">{item.name}</h2>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <ToggleSwitch
                   isOn={item.active}
                   handleToggle={() => handleToggle(item.id)}
                 />
-                <FaPen className="text-green-400 cursor-pointer" />
-                <FaTrash className="text-red-400 cursor-pointer" />
+                <FaRegEdit
+                  onClick={() => handleEdit(item.id)}
+                  className="text-[#FFFFFF] cursor-pointer text-lg"
+                />
+                <FaTrash
+                  onClick={() => handleDelete(item.id)}
+                  className="text-red-400 cursor-pointer"
+                />
               </div>
             </div>
 
@@ -160,6 +202,15 @@ const LawFirm = () => {
           onClose={() => {
             setIsModalOpen(false);
           }}
+        />
+      )}
+      {isEditModalOpen && (
+        <EditLawfirm
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedFirm(null);
+          }}
+          firmToEdit={selectedFirm}
         />
       )}
     </div>
