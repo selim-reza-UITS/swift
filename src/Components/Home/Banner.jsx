@@ -48,26 +48,33 @@ const Banner = () => {
     };
   }, []);
   
+  const BOTTOM_DELAY = 1000; // 1 sec delay
+
   useEffect(() => {
     const startTimeout = setTimeout(() => {
       setBottomAnimationState("entering");
       setTimeout(() => setBottomAnimationState("center"), 1500);
-    }, 500);
+    }, BOTTOM_DELAY);
   
-    const interval = setInterval(() => {
-      setBottomAnimationState("exiting");
-      setTimeout(() => {
-        setBottomIndex((prev) => (prev + 1) % messagesBottom.length);
-        setBottomAnimationState("entering");
-        setTimeout(() => setBottomAnimationState("center"), 1500);
-      }, 1500);
-    }, 6000);
+    const intervalTimeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        setBottomAnimationState("exiting");
+        setTimeout(() => {
+          setBottomIndex((prev) => (prev + 1) % messagesBottom.length);
+          setBottomAnimationState("entering");
+          setTimeout(() => setBottomAnimationState("center"), 1500);
+        }, 1500);
+      }, 6000);
+      // Save interval to clear later
+      return () => clearInterval(interval);
+    }, BOTTOM_DELAY);
   
     return () => {
-      clearInterval(interval);
       clearTimeout(startTimeout);
+      clearTimeout(intervalTimeout);
     };
   }, []);
+  
   
 
   const getAnimationClasses = (state) => {
