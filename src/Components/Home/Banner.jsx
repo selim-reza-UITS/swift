@@ -31,7 +31,7 @@ const Banner = () => {
     const startTimeout = setTimeout(() => {
       setTopAnimationState("entering");
       setTimeout(() => setTopAnimationState("center"), 1500);
-    }, 1500);
+    }, 0);
   
     const interval = setInterval(() => {
       setTopAnimationState("exiting");
@@ -52,7 +52,7 @@ const Banner = () => {
     const startTimeout = setTimeout(() => {
       setBottomAnimationState("entering");
       setTimeout(() => setBottomAnimationState("center"), 1500);
-    }, 1500);
+    }, 500);
   
     const interval = setInterval(() => {
       setBottomAnimationState("exiting");
@@ -151,7 +151,7 @@ const Banner = () => {
               <div
                 className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(bottomAnimationState)}`}
               >
-                <div className="bg-[#4B5563] text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
+                <div className="bg-[#06B6D4] text-white px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
                   <p className="leading-relaxed">{messagesBottom[bottomIndex]}</p>
                 </div>
               </div>
