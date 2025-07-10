@@ -44,12 +44,12 @@ const AdminSidebar = () => {
     <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen flex flex-col justify-between  open-sns">
       {/* Logo Section */}
       <div className="flex flex-col py-4">
-        <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
+        <NavLink to="/" className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
           <a className="block text-teal-600" href="#">
             <img src={logo} alt="" className="" />
           </a>
           <h1 className="text-3xl text-white ">Arviso</h1>
-        </div>
+        </NavLink>
         {/* Menu Items */}
         <nav className="flex flex-col  text-[#364636] mt-9">
           <NavLink
