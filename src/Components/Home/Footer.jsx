@@ -7,6 +7,7 @@ import {
 } from "react-icons/fa";
 import logo from "../../assets/logo.png"; // Adjust the path as necessary
 import { FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="bg-[#0D111C] text-white px-6 md:px-20 py-12 poppins">
@@ -40,12 +41,12 @@ const Footer = () => {
           <a href="#" className="text-sm footer-color hover:text-white">
             Home
           </a>
-          <a href="#" className="text-sm footer-color hover:text-white">
+          <Link to={'/privacy'} className="text-sm footer-color hover:text-white">
             Privacy Policy
-          </a>
-          <a href="#" className="text-sm footer-color hover:text-white">
+          </Link>
+          <Link to={'/terms'} className="text-sm footer-color hover:text-white">
             Terms and condition
-          </a>
+          </Link>
         </div>
 
         {/* Contact Section */}
