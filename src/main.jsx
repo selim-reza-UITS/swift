@@ -16,13 +16,21 @@ import Privacy from "./Components/PrivacyandPolicy/Privacy.jsx";
 import Forgot from "./Components/Pages/Forgot.jsx";
 import SetNew from "./Components/Pages/SetNew.jsx";
 import SuperAdminDashboard from "./Components/Dashboard/SuperAdmin/SuperAdminDashboard.jsx";
-import IntekSpecialistDashboard from "./Components/Dashboard/IntekSpecialist/IntekSpecialistDashboard.jsx";
+import IntakeSpecialistDashboard from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistDashboard.jsx";
 import CaseMangerDashboard from "./Components/Dashboard/CaseManager/CaseMangerDashboard.jsx";
 import Login from "./Components/Pages/Login.jsx";
+
+import CaseManagerClients from "./Components/Dashboard/CaseManager/CaseManagerClients.jsx";
+import CaseManagerSettings from "./Components/Dashboard/CaseManager/CaseManagerSettings.jsx";
+import IntakeSpecialistSettings from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistSettings.jsx";
+import ClientDetails from "./Components/Shared/ClientDetails.jsx";
+import IntakeSpecialistClients from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistClients.jsx";
+
 import MyFirm from "./Components/Dashboard/Admin/MyFirm/MyFirm.jsx";
 import Settings from "./Components/Dashboard/Admin/Settings/Settings.jsx";
 import Client from "./Components/Dashboard/Admin/Client/Client.jsx";
 import LawFirm from "./Components/Dashboard/SuperAdmin/LawFirm/LawFirm.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -89,10 +97,34 @@ const router = createBrowserRouter([
         path: "caseManager",
         element: <CaseMangerDashboard></CaseMangerDashboard>,
       },
-      //all intek specialist role route will be there
+      //all intake specialist role route will be there
       {
-        path: "intekSpecialist",
-        element: <IntekSpecialistDashboard></IntekSpecialistDashboard>,
+        path: "caseManagerClients",
+        element: <CaseManagerClients />,
+      },
+      {
+        path: "caseManagerClients/:id",
+        element: <ClientDetails />,
+      },
+      {
+        path: "caseManagerSettings",
+        element: <CaseManagerSettings />,
+      },
+      {
+        path: "intakeSpecialist",
+        element: <IntakeSpecialistDashboard></IntakeSpecialistDashboard>,
+      },
+      {
+        path: "intakeSpecialistClients",
+        element: <IntakeSpecialistClients />,
+      },
+      {
+        path: "intakeSpecialistClients/:id",
+        element: <ClientDetails />,
+      },
+      {
+        path: "intakeSpecialistSettings",
+        element: <IntakeSpecialistSettings></IntakeSpecialistSettings>,
       },
     ],
   },

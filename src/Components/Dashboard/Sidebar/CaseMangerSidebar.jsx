@@ -5,17 +5,14 @@ import { VscGraphLine } from "react-icons/vsc";
 import { useEffect, useRef, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
-import { FaUser } from "react-icons/fa";
-import { PiClockCountdownLight } from "react-icons/pi";
+import { IoMdSettings } from "react-icons/io";
 const CaseMangerSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isSeetingsDropdownOpen, setSeetingsDropdownOpen] = useState(false);
+  const [isSettingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  // console.log(user);
+
   const dropdownRef = useRef(null);
-
   const isActiveDashboard = location.pathname === "/dashboard/admin";
-
   const isActiveClient = location.pathname.startsWith("/dashboard/client");
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -36,7 +33,7 @@ const CaseMangerSidebar = () => {
     localStorage.removeItem("accessToken"); // Remove token from localStorage
     navigate("/login", { replace: true }); // Redirect to login page
   };
-  const toggleDropdownSettings = () => setSeetingsDropdownOpen((prev) => !prev);
+  const toggleDropdownSettings = () => setSettingsDropdownOpen((prev) => !prev);
   return (
     <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen flex flex-col justify-between  open-sns">
       {/* Logo Section */}
@@ -65,19 +62,16 @@ const CaseMangerSidebar = () => {
                       : "text-[#9CA3AF]"
                   }`}
               >
-                <VscGraphLine className="w-[22px] h-[22px] font-bold   " />{" "}
-                <h1 className="text-xl font-bold poppins">Case Manager</h1>
+                <VscGraphLine className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">Case Manager</h1>
               </div>
             </div>
           </NavLink>
           <NavLink
-            to="/caseManager"
+            to="/dashboard/caseManagerClients"
             className="flex items-center justify-between w-[280px]"
           >
             <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
-              {/* Left Indicator Bar */}
-
-              {/* Main Button Area */}
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
                   ${
@@ -86,8 +80,26 @@ const CaseMangerSidebar = () => {
                       : "text-[#9CA3AF]"
                   }`}
               >
-                <HiMiniUserGroup className="w-[22px] h-[22px] font-bold  " />{" "}
-                <h1 className="text-base font-normal poppins">Client</h1>
+                <HiMiniUserGroup className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">Clients</h1>
+              </div>
+            </div>
+          </NavLink>
+          <NavLink
+            to="/dashboard/caseManagerSettings"
+            className="flex items-center justify-between w-[280px]"
+          >
+            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+              <div
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
+                  ${
+                    isActiveClient
+                      ? "bg-[#FFFFFF] text-black rounded-xl"
+                      : "text-[#9CA3AF]"
+                  }`}
+              >
+                <IoMdSettings className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">Settings</h1>
               </div>
             </div>
           </NavLink>

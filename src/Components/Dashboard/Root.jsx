@@ -11,7 +11,7 @@ import SuperAdminSidebar from "./Sidebar/SuperAdminSidebar";
 import IntekSpecialistSidebar from "./Sidebar/IntekSpecialistSidebar";
 import SuperAdminDashboard from "./SuperAdmin/SuperAdminDashboard";
 import CaseMangerDashboard from "./CaseManager/CaseMangerDashboard";
-import IntekSpecialistDashboard from "./IntekSpecialist/IntekSpecialistDashboard";
+import IntekSpecialistDashboard from "./IntekSpecialist/IntakeSpecialistDashboard";
 
 const Root = () => {
   const navigate = useNavigate();

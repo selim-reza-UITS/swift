@@ -4,7 +4,7 @@ import UserDashboard from "../Components/Dashboard/User/UserDashboard";
 import getRole from "./role";
 import CaseMangerDashboard from "../Components/Dashboard/CaseManager/CaseMangerDashboard";
 import SuperAdminDashboard from "../Components/Dashboard/SuperAdmin/SuperAdminDashboard";
-import IntekSpecialistDashboard from "../Components/Dashboard/IntekSpecialist/IntekSpecialistDashboard";
+import IntekSpecialistDashboard from "../Components/Dashboard/IntekSpecialist/IntakeSpecialistDashboard";
 
 export default function DashboardContent() {
   //   const role = useSelector((state) => state.auth?.user?.role);
