@@ -7,7 +7,7 @@ const Header = () => {
   const role = getRole();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Show only for allowed roles
-  const allowedRoles = ["Admin", "Case Manager", "Intake Specialist"];
+  const allowedRoles = ["admin", "CaseManager", "IntekSpecialist"];
   if (!allowedRoles.includes(role)) return null;
 
   return (
