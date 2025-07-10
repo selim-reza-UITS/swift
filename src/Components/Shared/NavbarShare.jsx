@@ -66,12 +66,14 @@ const NavbarShare = () => {
       <nav className="bg-white container mx-auto  rounded-full  text-white p-1">
         <div className="container mx-auto flex justify-between items-center 2xl:py-2 px-6">
           {/*  Left: Logo */}
-          <div className="text-xl md:text-xl lg:text-2xl font-extrabold flex items-center gap-2">
-            <a className="block text-teal-600" href="#">
-              <img src={logo} alt="" className="" />
-            </a>
-            <h1 className=" text-black">Arviso</h1>
-          </div>
+          <Link to={"/"}>
+            <div className="text-xl md:text-xl lg:text-2xl font-extrabold flex items-center gap-2">
+              <a className="block text-teal-600" href="#">
+                <img src={logo} alt="" className="" />
+              </a>
+              <h1 className=" text-black">Arviso</h1>
+            </div>
+          </Link>
 
           {/* Center: Navigation Menu (Large Screen) */}
           <ul className="hidden lg:flex gflex items-center gap-20  list-none poppins  font-bold text-lg text-[#8B5CF6] "></ul>
