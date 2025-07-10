@@ -55,7 +55,7 @@ const flaggedClients = [
     lastContact: "3 days ago",
     alert: "Case progressing well",
     priority: "Low",
-  },
+  }, 
 ];
 
 const sentimentData = [
@@ -77,12 +77,12 @@ const CustomTooltip = ({ active, payload }) => {
         <p className="text-sm"> {mood}</p>
       </div>
     );
-  }
+  }      
   return null;
 };
 const statsData = [
   { title: "Active Clients", value: 24 },
-  { title: "High Priority", value: 3 },
+  { title: "High Priority", value: 3 },       
   { title: "Messages Sent", value: 12 },
   { title: "Missed Appointments", value: 2 },
 ];

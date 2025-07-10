@@ -1,12 +1,11 @@
 import { FaSignOutAlt } from "react-icons/fa";
-
+import { IoSettingsSharp } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
 import { VscGraphLine } from "react-icons/vsc";
 import { useEffect, useRef, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
-import { FaUser } from "react-icons/fa";
-import { PiClockCountdownLight } from "react-icons/pi";
+import { FaBalanceScale } from "react-icons/fa";
 const SuperAdminSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSeetingsDropdownOpen, setSeetingsDropdownOpen] = useState(false);
@@ -15,8 +14,9 @@ const SuperAdminSidebar = () => {
   const dropdownRef = useRef(null);
 
   const isActiveDashboard = location.pathname === "/dashboard/admin";
+  const isActiveLawFirm = location.pathname.startsWith("/dashboard/law-Firm");
+  const isActiveSettings = location.pathname === "/dashboard/settings";
 
-  const isActiveClient = location.pathname.startsWith("/dashboard/client");
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -58,20 +58,16 @@ const SuperAdminSidebar = () => {
 
               {/* Main Button Area */}
               <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-centter
-                  ${
-                    isActiveDashboard
-                      ? "bg-[#FFFFFF] text-black rounded-xl"
-                      : "text-[#9CA3AF]"
-                  }`}
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
+                   ${isActiveDashboard ? " text-[#FFFFFF]" : "text-[#9CA3AF]"}`}
               >
                 <VscGraphLine className="w-[22px] h-[22px] font-bold   " />{" "}
-                <h1 className="text-xl font-bold poppins">Dashboard</h1>
+                <h1 className="text-xl font-normal poppins">Dashboard</h1>
               </div>
             </div>
           </NavLink>
           <NavLink
-            to="/adminuser"
+            to="/dashboard/law-Firm"
             className="flex items-center justify-between w-[280px]"
           >
             <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
@@ -80,14 +76,27 @@ const SuperAdminSidebar = () => {
               {/* Main Button Area */}
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveClient
-                      ? "bg-[#FFFFFF] text-black rounded-xl"
-                      : "text-[#9CA3AF]"
-                  }`}
+                   ${isActiveLawFirm ? "text-[#FFFFFF] " : "text-[#9CA3AF]"}`}
               >
-                <HiMiniUserGroup className="w-[22px] h-[22px] font-bold  " />{" "}
-                <h1 className="text-base font-normal poppins">Client</h1>
+                <FaBalanceScale className="w-[22px] h-[22px] font-bold  " />{" "}
+                <h1 className="text-xl font-normal poppins">Law Firm</h1>
+              </div>
+            </div>
+          </NavLink>
+          <NavLink
+            to="/dashboard/settings"
+            className="flex items-center justify-between w-[280px]"
+          >
+            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+              {/* Left Indicator Bar */}
+
+              {/* Main Button Area */}
+              <div
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
+                   ${isActiveSettings ? "text-[#FFFFFF] " : "text-[#9CA3AF]"}`}
+              >
+                <IoSettingsSharp className="w-[22px] h-[22px] font-bold  " />{" "}
+                <h1 className="text-xl font-normal poppins">Settings</h1>
               </div>
             </div>
           </NavLink>
