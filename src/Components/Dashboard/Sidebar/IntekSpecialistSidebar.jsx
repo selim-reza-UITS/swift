@@ -1,6 +1,6 @@
 import { FaSignOutAlt } from "react-icons/fa";
 
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { VscGraphLine } from "react-icons/vsc";
 import { useEffect, useRef, useState } from "react";
 import logo from "../../../assets/logo.png";
@@ -42,12 +42,14 @@ const IntekSpecialistSidebar = () => {
     <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen flex flex-col justify-between  open-sns">
       {/* Logo Section */}
       <div className="flex flex-col py-4">
-        <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
-          <a className="block text-teal-600" href="#">
-            <img src={logo} alt="" className="" />
-          </a>
-          <h1 className="text-3xl text-white ">Arviso</h1>
-        </div>
+        <Link to={"/"}>
+          <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
+            <a className="block text-teal-600" href="#">
+              <img src={logo} alt="" className="" />
+            </a>
+            <h1 className="text-3xl text-white ">Arviso</h1>
+          </div>
+        </Link>
         {/* Menu Items */}
         <nav className="flex flex-col  text-[#364636] mt-9">
           <NavLink

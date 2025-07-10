@@ -29,7 +29,7 @@ const Superpower = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-32 ">
+    <div id="about" className="container mx-auto px-4 py-32 ">
       {/* Heading Section */}
       <div className=" mx-auto text-center mb-20">
         <h1 className="poppins text-3xl md:text-4xl lg:text-6xl  font-bold bg-gradient-to-r from-[#6366F1] to-[#06B6D4] bg-clip-text text-transparent">

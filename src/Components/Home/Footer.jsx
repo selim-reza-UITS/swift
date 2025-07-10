@@ -25,7 +25,7 @@ const Footer = () => {
             <a href="" className="hover:text-white cursor-pointer">
               <FaTwitter className="hover:text-white cursor-pointer" />
             </a>
-            <a className="hover:text-white cursor-pointer" href="">
+            <a className="hover:text-white cursor-pointer" target="_blank" href="https://www.linkedin.com/in/arviso-ai-236334361/">
               <FaLinkedin />
             </a>
 
