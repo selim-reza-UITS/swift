@@ -9,7 +9,7 @@ const Pay = () => {
   const monthlySavings = Math.floor(annualROI / 12);
 
   return (
-    <div className="container mx-auto px-4 py-12 text-center">
+    <div id="Resources" className="container px-4 py-12 mx-auto text-center">
       {/* Heading section */}
       <p className="text-[#8B5CF6]  mb-2 text-2xl poppins font-bold">
         Reclaim Your Team's Most Valuable Asset: Time.
@@ -33,11 +33,11 @@ const Pay = () => {
       {/* Sliders Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
         {/* Lawyers */}
-        <div className="rounded-xl p-4">
+        <div className="p-4 rounded-xl">
           <p className="text-[#CBD5E1] font-medium text-xs mb-1 poppins">
             Number of Lawyer
           </p>
-          <p className="text-2xl  font-bold text-white  poppins">
+          <p className="text-2xl font-bold text-white poppins">
             {managers} Manager{managers > 1 ? "s" : ""}
           </p>
           <input
@@ -56,11 +56,11 @@ const Pay = () => {
         </div>
 
         {/* Average Fee */}
-        <div className="rounded-xl p-4">
+        <div className="p-4 rounded-xl">
           <p className="text-[#CBD5E1] font-medium text-xs mb-1 poppins">
             Average Fee Per Retained Case
           </p>
-          <p className="text-2xl  font-bold text-white  poppins">
+          <p className="text-2xl font-bold text-white poppins">
             ${fee.toLocaleString()}
           </p>
           <input
@@ -79,7 +79,7 @@ const Pay = () => {
         </div>
 
         {/* Annual ROI */}
-        <div className=" lg:border lg:border-t-0 lg:border-b-0 lg:border-r-0 lg:border-r-white   text-white flex flex-col items-center justify-center  px-6 ">
+        <div className="flex flex-col items-center justify-center px-6 text-white lg:border lg:border-t-0 lg:border-b-0 lg:border-r-0 lg:border-r-white">
           <p className="text-xs mb-1 text-[#CBD5E1]">
             Your Annual ROI with Arviso
           </p>
@@ -94,7 +94,7 @@ const Pay = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="bg-[#8B5CF6] rounded-xl text-white p-4 text-start">
           <p className="font-medium poppins text-base text-[#FFFFFF]">
             Net Monthly Savings

@@ -7,16 +7,15 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     let role = "";
 
     if (email === "admin@gmail.com") {
-      role = "Admin";
-    }
-    else if (email === "superadmin@gmail.com") {
-      role = "SuperAdmin";
+      role = "admin";
+    } else if (email === "superadmin@gmail.com") {
+      role = "superadmin";
     } else if (email === "case@gmail.com") {
       role = "CaseManager";
     } else if (email === "intek@gmail.com") {
@@ -30,7 +29,7 @@ export default function Login() {
     localStorage.setItem("userEmail", email);
 
     setMessage(`Logged in as ${role}`);
-    navigate("/dashboard")
+    navigate("/dashboard");
   };
 
   return (

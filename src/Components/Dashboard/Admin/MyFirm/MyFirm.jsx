@@ -11,6 +11,8 @@ import Swal from "sweetalert2";
 import ViewClientDetails from "../Client/ViewClientDetails";
 import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa";
+import ViewLawyerDetails from "./ViewLawyerDetails";
+import ViewMemberDetails from "./ViewMemberDetails";
 const MyFirm = () => {
   const [activeTab, setActiveTab] = useState("lawyers");
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,35 +35,60 @@ const MyFirm = () => {
     {
       id: 1,
       name: "Sarah Johnson",
+      email: "sarah.johnson@example.com",
       phone: "(555) 123-4567",
+      role: "Lawyer",
+      specialization: "Family Law",
+      cases: 12,
+      firm: "Johnson Legal Group",
       manager: "John Smith",
       image: "https://i.pravatar.cc/150?img=1",
     },
     {
       id: 2,
       name: "Michael Davis",
+      email: "michael.davis@example.com",
       phone: "(555) 987-6543",
+      role: "Lawyer",
+      specialization: "Criminal Defense",
+      cases: 18,
+      firm: "Davis & Co.",
       manager: "Emily Chen",
       image: "https://i.pravatar.cc/150?img=2",
     },
     {
       id: 3,
       name: "Lisa Wilson",
+      email: "lisa.wilson@example.com",
       phone: "(555) 456-7890",
+      role: "Lawyer",
+      specialization: "Immigration",
+      cases: 9,
+      firm: "Global Law Associates",
       manager: "David Brown",
       image: "https://i.pravatar.cc/150?img=3",
     },
     {
       id: 4,
       name: "Robert Smith",
+      email: "robert.smith@example.com",
       phone: "(555) 111-2222",
+      role: "Lawyer",
+      specialization: "Corporate Law",
+      cases: 22,
+      firm: "Smith & Partners",
       manager: "Mark White",
       image: "https://i.pravatar.cc/150?img=6",
     },
     {
       id: 5,
       name: "Emily Clark",
+      email: "emily.clark@example.com",
       phone: "(555) 333-4444",
+      role: "Lawyer",
+      specialization: "Intellectual Property",
+      cases: 15,
+      firm: "Clark Legal Solutions",
       manager: "Samantha Lee",
       image: "https://i.pravatar.cc/150?img=7",
     },
@@ -72,22 +99,25 @@ const MyFirm = () => {
       id: 1,
       name: "Jacob Lee",
       email: "jacob@example.com",
-      role: "Assistant",
+      role: "Intake Specialist",
       image: "https://i.pravatar.cc/150?img=4",
+      lawyerId: 1, // Under Sarah Johnson
     },
     {
       id: 2,
       name: "Nina Patel",
       email: "nina@example.com",
-      role: "Intern",
+      role: "Intake Specialist",
       image: "https://i.pravatar.cc/150?img=5",
+      lawyerId: 2, // Under Michael Davis
     },
     {
       id: 3,
       name: "John Doe",
       email: "john@example.com",
-      role: "Clerk",
+      role: "Assistant",
       image: "https://i.pravatar.cc/150?img=8",
+      lawyerId: 3, // Under Lisa Wilson
     },
     {
       id: 4,
@@ -95,13 +125,15 @@ const MyFirm = () => {
       email: "sophia@example.com",
       role: "Paralegal",
       image: "https://i.pravatar.cc/150?img=9",
+      lawyerId: 1, // Under Sarah Johnson
     },
     {
       id: 5,
       name: "Rahim Mia",
       email: "rahim@example.com",
-      role: "Assistant",
+      role: "Intake Specialist",
       image: "https://i.pravatar.cc/150?img=10",
+      lawyerId: 4, // Under Robert Smith
     },
   ]);
 
@@ -419,17 +451,17 @@ const MyFirm = () => {
         <AddLawyer onClose={() => setShowLawyerModal(false)} />
       )}
       {selectedLawyer && (
-        <ViewClientDetails
-          client={selectedLawyer}
+        <ViewLawyerDetails
+          lawyer={selectedLawyer}
           onClose={() => setSelectedLawyer(null)}
         />
       )}
-      {selectedUser && (
-        <ViewClientDetails
-          client={selectedUser}
+      {/* {selectedUser && (
+        <ViewMemberDetails
+          member={selectedUser}
           onClose={() => setSelectedUser(null)}
         />
-      )}
+      )} */}
     </div>
   );
 };
