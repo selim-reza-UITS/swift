@@ -356,7 +356,7 @@ const CaseManagerClients = () => {
         </div>
 
         <div className="flex items-center space-x-3">
-          {/* <button
+          <button
             onClick={() => handleViewChange('all')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               activeView === 'all'
@@ -365,7 +365,7 @@ const CaseManagerClients = () => {
             }`}
           >
             All Clients
-          </button> */}
+          </button>
           <button
             onClick={() => handleViewChange("active")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${

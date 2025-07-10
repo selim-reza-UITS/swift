@@ -105,7 +105,7 @@ const CaseMangerDashboard = () => {
   return (
     <div className="h-[90vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
-        <h1 className=" text-2xl font-bold">Case Manager Dashboard</h1>
+        <h1 className=" text-2xl font-bold">Lawyer Dashboard</h1>
         <button
           className="px-6 py-3 text-white flex items-center gap-2 font-semibold rounded-lg bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] hover:from-[#0129B3]/90 hover:via-[#007BCC]/90 hover:to-[#77D7D2]/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           onClick={() => setShowAddClientModal(true)}

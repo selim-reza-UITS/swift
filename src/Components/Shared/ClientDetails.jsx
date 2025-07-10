@@ -138,16 +138,14 @@ export default function ClientDetails() {
             </div>
           </div>
           <div className="flex items-center space-x-4 relative">
-            <span className="bg-yellow-600 px-3 py-1 rounded text-sm">
+            <span className="bg-yellow-600 px-3 py-1 rounded text-sm inline-block">
               Medium Priority
             </span>
-            <button
-              onClick={() => setOpenModal(true)}
-              className="text-gray-400 hover:text-white "
-            >
-              <MoreHorizontal className="w-5 h-5" />
+            <button className="w-full flex items-center space-x-3 text-left p-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
+              <Pause className="w-4 h-4 text-blue-400" />
+              <span className="text-blue-400">Pause</span>
             </button>
-            {openModal && (
+            {/* {openModal && (
               <div
                 className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30"
                 onClick={() => setOpenModal(false)}
@@ -163,10 +161,6 @@ export default function ClientDetails() {
                   <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
                   <div className="space-y-3">
                     <button className="w-full flex items-center space-x-3 text-left p-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
-                      <Calendar className="w-4 h-4 text-blue-400" />
-                      <span className="text-blue-400">Schedule Follow-up</span>
-                    </button>
-                    <button className="w-full flex items-center space-x-3 text-left p-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
                       <Pause className="w-4 h-4 text-blue-400" />
                       <span className="text-blue-400">
                         Pause Communications
@@ -175,10 +169,9 @@ export default function ClientDetails() {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
-
 
         {/* Messages */}
         <div className="flex-1 p-6 overflow-y-auto">

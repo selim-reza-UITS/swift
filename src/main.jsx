@@ -92,7 +92,7 @@ const router = createBrowserRouter([
         element: <Settings></Settings>,
       },
 
-      // all case manager role route will be there
+      // all Lawyer role route will be there
       {
         path: "caseManager",
         element: <CaseMangerDashboard></CaseMangerDashboard>,
@@ -108,7 +108,7 @@ const router = createBrowserRouter([
       },
       {
         path: "caseManagerSettings",
-        element: <CaseManagerSettings />,
+        element: <Settings></Settings>,
       },
       {
         path: "intakeSpecialist",
@@ -124,7 +124,7 @@ const router = createBrowserRouter([
       },
       {
         path: "intakeSpecialistSettings",
-        element: <IntakeSpecialistSettings></IntakeSpecialistSettings>,
+        element: <Settings />,
       },
     ],
   },

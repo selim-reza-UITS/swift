@@ -32,10 +32,10 @@ const Pay = () => {
 
       {/* Sliders Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
-        {/* Case Managers */}
+        {/* Lawyers */}
         <div className="rounded-xl p-4">
           <p className="text-[#CBD5E1] font-medium text-xs mb-1 poppins">
-            Number of Case Managers
+            Number of Lawyer
           </p>
           <p className="text-2xl  font-bold text-white  poppins">
             {managers} Manager{managers > 1 ? "s" : ""}
