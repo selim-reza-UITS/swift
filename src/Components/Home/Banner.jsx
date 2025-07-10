@@ -134,7 +134,7 @@ const Banner = () => {
               Human-like AI keeps every client informed and cared for. Slash
               double-digit hours of follow-ups to a 5-minute glance..
             </p>
-            <NavLink to="/Signup">
+            <NavLink to="/login">
               <div className="mt-9">
                 <button className="poppins md:text-base text-center items-center justify-center rounded-lg hover:bg-none hover:text-black border hover:border-[#0129B3]  bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 ease-in-out hover:scale-105">
                   Apply For Early Access
