@@ -456,12 +456,12 @@ const MyFirm = () => {
           onClose={() => setSelectedLawyer(null)}
         />
       )}
-      {/* {selectedUser && (
+      {selectedUser && (
         <ViewMemberDetails
           member={selectedUser}
           onClose={() => setSelectedUser(null)}
         />
-      )} */}
+      )}
     </div>
   );
 };

@@ -17,9 +17,9 @@ const ViewLawyerDetails = ({ lawyer, onClose }) => {
         {/* Lawyer Image & Name */}
         <div className="mt-2 text-center">
           <img
-            src={lawyer.image}
+            src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
             alt={lawyer.name}
-            className="object-cover w-20 h-20 mx-auto border-2 border-blue-500 rounded-full"
+            className="object-cover w-20 h-20 mx-auto rounded-full"
           />
           <h2 className="mt-3 text-xl font-bold">{lawyer.name}</h2>
           <p className="text-base text-[#FFFFFF]">{lawyer.email}</p>

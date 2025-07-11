@@ -22,12 +22,28 @@ const SecuritySettings = () => {
     const { currentPassword, newPassword, confirmPassword } = formData;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Swal.fire("Error", "Please fill out all fields", "error");
+          Swal.fire({
+        icon: "warning",
+        title: "Incomplete Preferences",
+        text: "Please fill all required preferences before saving.",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Swal.fire("Mismatch", "New passwords do not match", "warning");
+             Swal.fire({
+        icon: "warning",
+        title: "Mismatch",
+        text:  "New passwords do not match", "warning",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    
       return;
     }
 
