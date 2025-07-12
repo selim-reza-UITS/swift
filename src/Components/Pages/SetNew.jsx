@@ -39,23 +39,23 @@ const SetNew = () => {
 
   return (
     <div
-      className="h-auto bg-center bg-cover p-4"
+      className="h-auto p-4 bg-center bg-cover"
       style={{ backgroundImage: `url(${loginImage})` }}
     >
-      <div className="flex items-center justify-start min-h-screen relative container mx-auto">
+      <div className="container relative flex items-center justify-start min-h-screen mx-auto">
         <div
           className="rounded-lg p-10 w-full max-w-2xl shadow-2xl h-[800px] bg-center bg-cover justify-center items-center ml-12"
           style={{ backgroundImage: `url(${login})` }}
         >
-          <div className="h-full flex flex-col justify-center w-full">
+          <div className="flex flex-col justify-center w-full h-full">
             <div className="flex flex-col items-center mb-8">
-              <div className="text-xl md:text-2xl lg:text-6xl font-extrabold flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
                 <a className="block text-teal-600" href="#">
                   <img src={logo} alt="Logo" />
                 </a>
                 <h1 className="text-black poppins">Arviso</h1>
               </div>
-              <p className="text-blue-400 text-4xl poppins font-bold">
+              <p className="text-4xl font-bold text-blue-400 poppins">
                 Reset Your Password
               </p>
               <p className="text-[#54657E] w-2/3 mt-2 text-base poppins font-normal">
@@ -71,7 +71,7 @@ const SetNew = () => {
               {/* New Password */}
               <div className="w-full">
                 <label className="block text-[#979797] text-base mb-2 outfit">
-                  Set Password :
+                  Set Password 
                 </label>
                 <div className="relative">
                   <input
@@ -97,9 +97,9 @@ const SetNew = () => {
               </div>
 
               {/* Confirm Password */}
-              <div className="mb-6 mt-9 w-full">
+              <div className="w-full mb-6 mt-9">
                 <label className="block text-[#979797] text-base mb-2 outfit">
-                  Confirm Password :
+                  Confirm Password 
                 </label>
                 <div className="relative">
                   <input
@@ -136,7 +136,7 @@ const SetNew = () => {
 
               {/* Optional error message (for fallback) */}
               {errorMessage && (
-                <p className="text-red-500 text-sm text-center mb-4">
+                <p className="mb-4 text-sm text-center text-red-500">
                   {errorMessage}
                 </p>
               )}

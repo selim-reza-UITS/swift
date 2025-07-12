@@ -77,24 +77,24 @@ const Verification = () => {
     <div>
       {!otpSent ? (
         <div
-          className="h-auto bg-center bg-cover   p-4 "
+          className="h-auto p-4 bg-center bg-cover "
           style={{ backgroundImage: `url(${loginImage})` }}
         >
-          <div className="flex items-center justify-start min-h-screen  relative containmer mx-auto">
+          <div className="relative flex items-center justify-start min-h-screen mx-auto containmer">
             <div
               className=" rounded-lg p-10 w-full max-w-2xl shadow-2xl h-[800px] bg-center bg-cover  justify-center items-center ml-12  "
               style={{ backgroundImage: `url(${login})` }}
             >
               {/* left side */}
-              <div className=" flex flex-col  justify-center items-center w-full h-full">
+              <div className="flex flex-col items-center justify-center w-full h-full ">
                 <div className="flex flex-col items-center ">
-                  <div className="text-xl md:text-2xl lg:text-6xl font-extrabold flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
                     <a className="block text-teal-600" href="#">
                       <img src={logo} alt="" className="" />
                     </a>
-                    <h1 className=" text-black  poppins">Arviso</h1>
+                    <h1 className="text-black  poppins">Arviso</h1>
                   </div>
-                  <p className="text-blue-400 text-4xl poppin font-bold  poppins">
+                  <p className="text-4xl font-bold text-blue-400 poppin poppins">
                     OTP code verification 🔐
                   </p>
                   <p className="text-[#54657E] w-2/3 mt-2 text-base poppins font-normal  poppins">
@@ -105,7 +105,7 @@ const Verification = () => {
 
                 {/* OTP Input Fields */}
                 <div
-                  className="flex justify-center space-x-3 mb-4 mt-6"
+                  className="flex justify-center mt-6 mb-4 space-x-3"
                   onPaste={handlePaste}
                 >
                   {code.map((digit, index) => (
@@ -126,7 +126,7 @@ const Verification = () => {
                   <p className="mt-4 text-lg font-semibold">{successMessage}</p>
                 )}
                 {errorMessage ? (
-                  <div className="text-red-500 text-xl text-center">
+                  <div className="text-xl text-center text-red-500">
                     {" "}
                     Verification Code not Valid Try again
                   </div>

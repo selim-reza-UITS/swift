@@ -68,7 +68,7 @@ const Forgot = () => {
                     <Link className="block text-teal-600" href="/">
                       <img src={logo} alt="" className="" />
                     </Link>
-                    <h1 className="text-black  poppins">Arviso</h1>
+                    <h1 className="text-black poppins">Arviso</h1>
                   </div>
                   <p className="mb-2 text-4xl font-bold text-blue-400 poppin poppins">
                     Reset Your Password
@@ -81,7 +81,7 @@ const Forgot = () => {
                 <form onSubmit={handleOtpSend} className="space-y-4">
                   <div>
                     <label className="block text-[#979797] text-base mb-1 outfit">
-                      Email :
+                      Email 
                     </label>
                     <input
                       type="email"
