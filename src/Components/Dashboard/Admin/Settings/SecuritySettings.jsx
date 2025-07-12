@@ -38,7 +38,7 @@ const SecuritySettings = () => {
              Swal.fire({
         icon: "warning",
         title: "Mismatch",
-        text:  "New passwords do not match", "warning",
+        text:  "New passwords do not match", 
         background: "#1f2937",
         color: "#f9fafb",
         confirmButtonColor: "#8B5CF6",

@@ -26,7 +26,7 @@ export default function Login() {
     }
 
     localStorage.setItem("userRole", role);
-    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userEmail", email)
 
     setMessage(`Logged in as ${role}`);
     navigate("/dashboard");
