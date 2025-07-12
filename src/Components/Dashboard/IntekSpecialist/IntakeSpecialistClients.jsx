@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Search, Eye, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import ViewClientDetails from "../Admin/Client/ViewClientDetails";
+import { FaEye } from "react-icons/fa6";
 const IntakeSpecialistClients = () => {
   const [clients, setClients] = useState([
     {
@@ -201,6 +203,8 @@ const IntakeSpecialistClients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+    const [selectedClient, setSelectedClient] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 7;
 
   const filteredClients = clients.filter((client) => {
@@ -419,12 +423,14 @@ const handleDeleteClient = (id) => {
                 >
                   {getPriorityLabel(client.priority)}
                 </span>
-
-                <Link to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
-                  <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700">
-                    <Eye />
-                  </button>
-                </Link>
+ <FaEye
+                onClick={() => {
+                  setSelectedClient(client);
+                  setIsModalOpen(true);
+                }}
+                className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
+              />
+            
 
                 <button  onClick={() => handleDeleteClient(client.id)} className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700">
                   <Trash2 />
@@ -491,7 +497,18 @@ const handleDeleteClient = (id) => {
           </div>
         </div>
       )}
+         {isModalOpen && selectedClient && (
+        <ViewClientDetails
+          client={selectedClient}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedClient(null);
+          }}
+        />
+      )}
+
     </div>
+    
   );
 };
 

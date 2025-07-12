@@ -56,7 +56,7 @@ const Forgot = () => {
           className="h-auto p-4 bg-center bg-cover "
           style={{ backgroundImage: `url(${loginImage})` }}
         >
-          <div className="relative flex items-center justify-start min-h-screen mx-auto containmer">
+          <div className="container relative flex items-center justify-start min-h-screen mx-auto">
             <div
               className=" rounded-lg p-10 w-full max-w-2xl shadow-2xl h-[800px] bg-center bg-cover  justify-center items-center ml-12  "
               style={{ backgroundImage: `url(${login})` }}
@@ -74,7 +74,7 @@ const Forgot = () => {
                     Reset Your Password
                   </p>
                   <p className="text-[#54657E] w-2/3 mt-2 text-base poppin font-normal  poppins">
-               Enter your email address, and we will send you a one-time password (OTP) in the next step to reset your password.
+               Enter your email to receive a one-time password (OTP) to reset your password.
                   </p>
                 </div>
                 <form onSubmit={handleOtpSend} className="space-y-4">
@@ -97,7 +97,7 @@ const Forgot = () => {
                       type="submit"
                       className="w-full py-2 rounded-xl bg-gradient-to-r from-[#95016D]  via-[#7601C1] to-[#0124B6] text-white font-bold hover:opacity-90 transition outfit"
                     >
-                      Send
+                      Send OTP
                     </button>
                   </div>
                 </form>

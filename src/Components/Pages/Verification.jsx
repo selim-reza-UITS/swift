@@ -92,14 +92,14 @@ const Verification = () => {
                     <a className="block text-teal-600" href="#">
                       <img src={logo} alt="" className="" />
                     </a>
-                    <h1 className="text-black  poppins">Arviso</h1>
+                    <h1 className="text-black poppins">Arviso</h1>
                   </div>
                   <p className="text-4xl font-bold text-blue-400 poppin poppins">
-                    OTP code verification 🔐
+                    OTP code verification 
                   </p>
                   <p className="text-[#54657E] w-2/3 mt-2 text-base poppins font-normal  poppins">
-                    Please enter your email and we will send an OTP code in the
-                    next step to reset your password.
+                   Please enter the code below to verify your identity and reset your password.
+ 
                   </p>
                 </div>
 
@@ -139,7 +139,7 @@ const Verification = () => {
                     type="submit"
                     className="w-full py-2 rounded-xl bg-gradient-to-r from-[#95016D]  via-[#7601C1] to-[#0124B6] text-white font-bold hover:opacity-90 transition outfit"
                   >
-                    Continue
+                    Verify OTP
                   </button>
                 </div>
               </div>

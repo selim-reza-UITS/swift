@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FaTrashAlt, FaEdit } from "react-icons/fa";
 import { FaEye } from "react-icons/fa6";
 import ViewClientDetails from "./ViewClientDetails";
+import { Link } from "lucide-react";
+import { NavLink } from "react-router-dom";
 // Fake data
 const clientsData = [
   {
@@ -137,13 +139,12 @@ const Client = () => {
               >
                 {client.priority}
               </span>
-              <FaEye
-                onClick={() => {
-                  setSelectedClient(client);
-                  setIsModalOpen(true);
-                }}
-                className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
-              />
+                  <NavLink to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
+                  <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700">
+                    <FaEye />
+                  </button>
+                </NavLink>
+           
               <FaTrashAlt className="text-gray-300 cursor-pointer hover:text-red-500" />
             </div>
           </div>

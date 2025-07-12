@@ -129,7 +129,7 @@ const Reset = () => {
                             type="submit"
                             className="w-full py-2 rounded-xl bg-gradient-to-r from-[#95016D] via-[#7601C1] to-[#0124B6] text-white font-bold hover:opacity-90 transition outfit"
                           >
-                            Continue
+                           Reset Password
                           </button>
                         </div>
                       </div>

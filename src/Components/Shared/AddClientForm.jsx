@@ -57,14 +57,14 @@ export default function AddClientForm({ setShowAddClientModal }) {
       <Toaster/>
       <div className=" rounded-lg p-8 w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="mb-6 text-center">
           <div className="flex items-center justify-center mb-2">
-            <Plus className="w-6 h-6 text-purple-400 mr-2" />
-            <h1 className="text-white text-xl font-semibold">
+            <Plus className="w-6 h-6 mr-2 text-purple-400" />
+            <h1 className="text-xl font-semibold text-white">
               Add a New Client
             </h1>
           </div>
-          <p className="text-gray-400 text-sm">
+          <p className="text-sm text-gray-400">
             Use this form to quickly and easily add a new client.
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
         <div className="space-y-4 bg-[#1E293B] p-8 rounded-xl">
           {/* Full Name */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               Full Name<span className="text-red-400">*</span>
             </label>
             <input
@@ -87,7 +87,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
 
           {/* Lawyer Name */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               Lawyer Name<span className="text-red-400">*</span>
             </label>
             <input
@@ -102,7 +102,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
 
           {/* Date of Incident */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               Date of Incident<span className="text-red-400">*</span>
             </label>
             <input
@@ -116,7 +116,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
 
           {/* Gender */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               Gender<span className="text-red-400">*</span>
             </label>
             <div className="flex gap-4">
@@ -129,7 +129,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                   onChange={handleInputChange}
                   className="mr-2 text-purple-400 focus:ring-purple-400"
                 />
-                <span className="text-white text-sm">Female</span>
+                <span className="text-sm text-white">Female</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -140,7 +140,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                   onChange={handleInputChange}
                   className="mr-2 text-purple-400 focus:ring-purple-400"
                 />
-                <span className="text-white text-sm">Male</span>
+                <span className="text-sm text-white">Male</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -151,14 +151,14 @@ export default function AddClientForm({ setShowAddClientModal }) {
                   onChange={handleInputChange}
                   className="mr-2 text-purple-400 focus:ring-purple-400"
                 />
-                <span className="text-white text-sm">Prefer not to say</span>
+                <span className="text-sm text-white">Prefer not to say</span>
               </label>
             </div>
           </div>
 
           {/* Select Managing User */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               Select Managing User(s)<span className="text-red-400">*</span>
             </label>
             <div className="relative">
@@ -171,7 +171,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                 <option value="Dev Guru">Dev Guru</option>
                 <option value="Other User">Other User</option>
               </select>
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <div className="absolute transform -translate-y-1/2 pointer-events-none right-3 top-1/2">
                 <svg
                   className="w-4 h-4 text-gray-400"
                   fill="none"
@@ -187,14 +187,14 @@ export default function AddClientForm({ setShowAddClientModal }) {
                 </svg>
               </div>
             </div>
-            <p className="text-gray-400 text-xs mt-1">
+            <p className="mt-1 text-xs text-gray-400">
               Link a manager to this client. Select from users in your firm.
             </p>
           </div>
 
           {/* Phone Number */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               Phone Number<span className="text-red-400">*</span>
             </label>
             <input
@@ -209,7 +209,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
 
           {/* Injury's Sustained */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               Injury's Sustained<span className="text-red-400">*</span>
             </label>
             <textarea
@@ -217,14 +217,14 @@ export default function AddClientForm({ setShowAddClientModal }) {
               value={formData.injurySustained}
               onChange={handleInputChange}
               placeholder="e.g., Whiplash, minor back pain..."
-              rows={3}
+         
               className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 resize-none"
             />
           </div>
 
           {/* General Case Info */}
           <div>
-            <label className="block text-white text-sm font-medium mb-2">
+            <label className="block mb-2 text-sm font-medium text-white">
               General Case Info<span className="text-red-400">*</span>
             </label>
             <textarea
@@ -232,7 +232,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
               value={formData.generalCaseInfo}
               onChange={handleInputChange}
               placeholder="e.g., Rear-ended at a stoplight..."
-              rows={4}
+             
               className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 resize-none"
             />
           </div>
@@ -242,7 +242,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
             <button
               type="button"
               onClick={handleSubmit}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center"
+              className="flex items-center justify-center flex-1 px-4 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Client
