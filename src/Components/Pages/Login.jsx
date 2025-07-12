@@ -58,7 +58,7 @@ export default function Login() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-[#979797] text-base mb-1 outfit">
-                  Email :
+                  Email 
                 </label>
                 <input
                   type="email"
@@ -71,7 +71,7 @@ export default function Login() {
               </div>
               <div>
                 <label className="block text-[#979797]  text-base mb-1 outfit">
-                  Password :
+                  Password 
                 </label>
                 <input
                   type="password"
