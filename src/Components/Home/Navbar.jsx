@@ -13,7 +13,10 @@ const Navbar = () => {
     { name: "Resources", id: "Resources" },
     { name: "Contact us", id: "Contact us" },
   ];
-
+  const handleScroll = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setActiveSection(id);
+  };
   useEffect(() => {
     const handleScrollEvent = () => {
       menuItems.forEach(({ id }) => {
@@ -33,23 +36,7 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const handleScroll = (id) => {
-    if (id === "home") {
-      navigate("/");
-    }
-    if (id === "Resources") {
-      navigate("/resources");
-    }
-    if (id === "Contact us") {
-      navigate("/contactus");
-    }
-    if (id === "about") {
-      navigate("/about");
-    } else {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      setActiveSection(id);
-    }
-  };
+ 
   // const user = useSelector((state) => state.auth?.user);
 
   // useEffect(() => {
@@ -65,16 +52,16 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className="bg-white container mx-auto  rounded-full  text-white p-1">
-        <div className="container mx-auto flex justify-between items-center 2xl:py-2 px-6">
+      <nav className="container p-1 mx-auto text-white bg-white rounded-full">
+        <div className="container flex items-center justify-between px-6 mx-auto 2xl:py-2">
           {/*  Left: Logo */}
 
           <Link to={"/"}>
-            <div className="text-xl md:text-xl lg:text-2xl font-extrabold flex items-center gap-2">
+            <div className="flex items-center gap-2 text-xl font-extrabold md:text-xl lg:text-2xl">
               <a className="block text-teal-600" href="#">
                 <img src={logo} alt="" className="" />
               </a>
-              <h1 className=" text-black">Arviso</h1>
+              <h1 className="text-black ">Arviso</h1>
             </div>
           </Link>
 
@@ -97,7 +84,7 @@ const Navbar = () => {
           </ul>
 
           {/*  Right: Log In & Sign Up (Large Screen) */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="items-center hidden gap-6 lg:flex">
             <NavLink
               to="/login"
               className=" md:text-base rounded-xl  bg-[#6366F1] hover:bg-transparent hover:text-black  border hover:border-[#5c5edf] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 hover:scale-105"
@@ -133,7 +120,7 @@ const Navbar = () => {
           {/*  Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden focus:outline-none text-black"
+            className="text-black lg:hidden focus:outline-none"
           >
             {isOpen ? (
               <svg
@@ -188,8 +175,8 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-          <div className="mt-4 flex flex-col gap-4">
-            <div className="w-full justify-center flex">
+          <div className="flex flex-col gap-4 mt-4">
+            <div className="flex justify-center w-full">
               <Link
                 to="/login"
                 className="outfit md:text-base w-[50%] text-center items-center justify-center rounded-lg  to-[#080F24] px-3  sm:px-5 sm:py-2.5 text-sm font-medium text-white"
@@ -212,7 +199,7 @@ const Navbar = () => {
                 >
                   Log in
                 </Link>
-                <div className="w-full justify-center flex">
+                <div className="flex justify-center w-full">
                   <Link
                     to="/signup"
                     className="montserrat md:text-base w-[50%] text-center items-center justify-center rounded-3xl bg-gradient-to-b from-[#00B2F7] via-[#1E3A8A] to-[#080F24] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white"

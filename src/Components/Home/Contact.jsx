@@ -2,7 +2,7 @@ import React from "react";
 
 const Contact = () => {
   return (
-    <div className="container mx-auto px-6 py-12">
+    <div id="Contact us" className="container px-6 py-12 mx-auto">
       <div className="flex flex-col items-center justify-between mb-8">
         <h2 className="text-3xl poppins text-center md:text-left font-bold mb-2 bg-gradient-to-r from-[#6366F1] to-[#06B6D4] bg-clip-text text-transparent">
           Secure Early Access to Arviso
@@ -11,7 +11,7 @@ const Contact = () => {
           Choose the perfect plan for your firm's size and needs
         </p>
       </div>
-      <div className=" w-full flex flex-col md:flex-row items-start justify-between gap-8  p-6">
+      <div className="flex flex-col items-start justify-between w-full gap-8 p-6 md:flex-row">
         {/* Left side */}
         <div className="flex flex-col justify-start">
           <h1 className="text-5xl poppins md:text-6xl font-medium bg-gradient-to-r from-[#7C3AED] to-[#537AFF] bg-clip-text text-transparent selection:mb-4 text-center md:text-left">

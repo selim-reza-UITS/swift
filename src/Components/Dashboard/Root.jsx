@@ -36,9 +36,9 @@ const Root = () => {
   // Function to render default dashboard content based on role
   const renderDefaultDashboard = () => {
     switch (role) {
-      case "Admin":
+      case "admin":
         return <AdminDashboard />;
-      case "SuperAdmin":
+      case "superadmin":
         return <SuperAdminDashboard></SuperAdminDashboard>;
       case "CaseManager":
         return <CaseMangerDashboard></CaseMangerDashboard>;
@@ -57,9 +57,9 @@ const Root = () => {
     <div className="flex h-screen bg-[#101725] dark:bg-[#101725]">
       {/* Sidebar - Fixed Position */}
       <div className="w-[280px] fixed left-0 top-0 h-screen">
-        {role === "SuperAdmin" && <SuperAdminSidebar></SuperAdminSidebar>}
+        {role === "superadmin" && <SuperAdminSidebar></SuperAdminSidebar>}
 
-        {role === "Admin" && <AdminSidebar />}
+        {role === "admin" && <AdminSidebar />}
         {role === "CaseManager" && <CaseMangerSidebar></CaseMangerSidebar>}
         {role === "IntekSpecialist" && (
           <IntekSpecialistSidebar></IntekSpecialistSidebar>

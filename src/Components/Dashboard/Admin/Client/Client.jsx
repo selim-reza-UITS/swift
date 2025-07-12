@@ -61,14 +61,17 @@ const Client = () => {
   return (
     <div className="p-4  mx-auto mt-6 rounded-md  bg-[#0f172a] text-white">
       {/* Search & Filters */}
-      <div className="flex flex-col gap-5 mb-4 bg-[#161E2F] px-4 py-3 rounded-md poppins">
-        <input
+      <div className="flex  items-center justify-between gap-5 mb-4 bg-[#161E2F] px-4 py-4 rounded-md poppins">
+        <div className="w-1/2">
+<input
           type="text"
           placeholder="Search clients..."
-          className="flex-1 w-1/2 px-4 py-2 text-[#ADAEBC] bg-transparent border border-[#2A2E37] rounded-xl"
+          className="flex-1 px-4 py-2 text-[#ADAEBC] bg-transparent border border-[#2A2E37] rounded-xl w-1/2"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        </div>
+        
         <div className="flex items-center gap-2 ">
           <button
             onClick={() => setFilter("Active")}
