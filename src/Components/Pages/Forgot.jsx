@@ -74,8 +74,7 @@ const Forgot = () => {
                     Reset Your Password
                   </p>
                   <p className="text-[#54657E] w-2/3 mt-2 text-base poppin font-normal  poppins">
-                    Please enter your email and we will send an OTP code in the
-                    next step to reset your password.
+               Enter your email address, and we will send you a one-time password (OTP) in the next step to reset your password.
                   </p>
                 </div>
                 <form onSubmit={handleOtpSend} className="space-y-4">
