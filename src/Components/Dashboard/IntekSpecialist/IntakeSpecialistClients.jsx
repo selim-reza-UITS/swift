@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import ViewClientDetails from "../Admin/Client/ViewClientDetails";
 import { FaEye } from "react-icons/fa6";
+import EditClientDetails from "./EditClientDetails";
 const IntakeSpecialistClients = () => {
   const [clients, setClients] = useState([
     {
@@ -203,8 +204,10 @@ const IntakeSpecialistClients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-    const [selectedClient, setSelectedClient] = useState(null);
+ const [selectedClient, setSelectedClient] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+      const [selectedEditClient, setEditSelectedClient] = useState(null);
   const itemsPerPage = 7;
 
   const filteredClients = clients.filter((client) => {
@@ -423,6 +426,13 @@ const handleDeleteClient = (id) => {
                 >
                   {getPriorityLabel(client.priority)}
                 </span>
+                 <FaEye
+                onClick={() => {
+                  setEditSelectedClient(client);
+                  setIsEditModalOpen(true);
+                }}
+                className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
+              />
  <FaEye
                 onClick={() => {
                   setSelectedClient(client);
@@ -496,6 +506,15 @@ const handleDeleteClient = (id) => {
             </button>
           </div>
         </div>
+      )}
+          {isEditModalOpen && selectedEditClient && (
+        <EditClientDetails
+          client={selectedEditClient}
+          onClose={() => {
+           setIsEditModalOpen(false);
+            setEditSelectedClient(null);
+          }}
+        />
       )}
          {isModalOpen && selectedClient && (
         <ViewClientDetails
