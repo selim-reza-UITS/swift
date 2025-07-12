@@ -5,7 +5,22 @@ import Swal from "sweetalert2";
 
 const NotificationPreferences = () => {
   
-
+const ToggleSwitch = ({ isOn, handleToggle }) => {
+  return (
+    <div
+      className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${
+        isOn ? "bg-purple-500" : "bg-gray-300"
+      }`}
+      onClick={handleToggle}
+    >
+      <div
+        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+          isOn ? "translate-x-6" : "translate-x-0"
+        }`}
+      />
+    </div>
+  );
+};
   const [frequency, setFrequency] = useState("immediate");
   const [flaggedEmail, setFlaggedEmail] = useState(true);
   const [highConcern, setHighConcern] = useState(true);
@@ -59,6 +74,7 @@ const NotificationPreferences = () => {
             <span className="text-[#D1D5DB]">Immediate</span>
           </label>
           <label className="flex items-center gap-2">
+ 
             <input
               type="radio"
               name="frequency"
@@ -92,12 +108,11 @@ const NotificationPreferences = () => {
               Receive email notifications for flagged client messages
             </p>
           </div>
-          <input
-            type="checkbox"
-            className="accent-purple-500"
-            checked={flaggedEmail}
-            onChange={(e) => setFlaggedEmail(e.target.checked)}
-          />
+                     <ToggleSwitch
+  isOn={flaggedEmail}
+  handleToggle={() => setFlaggedEmail(!flaggedEmail)}
+/>
+      
         </div>
         <div className="flex items-center justify-between p-4 text-white rounded bg-slate-700">
           <div>
@@ -106,12 +121,10 @@ const NotificationPreferences = () => {
               Receive email notifications for high-priority client insights
             </p>
           </div>
-          <input
-            type="checkbox"
-            className="accent-purple-500"
-            checked={highConcern}
-            onChange={(e) => setHighConcern(e.target.checked)}
-          />
+                 <ToggleSwitch
+  isOn={highConcern}
+  handleToggle={() => setHighConcern(!highConcern)}
+/>
         </div>
       </div>
 

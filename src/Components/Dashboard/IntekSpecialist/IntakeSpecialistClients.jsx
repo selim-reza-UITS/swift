@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Search, Eye, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import Swal from "sweetalert2";
 const IntakeSpecialistClients = () => {
   const [clients, setClients] = useState([
     {
@@ -286,20 +286,45 @@ const IntakeSpecialistClients = () => {
       setCurrentPage(page);
     }
   };
+const handleDeleteClient = (id) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    background: "#1f2937", // dark bg
+    color: "#fff", // text color
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#4b5563",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      setClients((prevClients) => prevClients.filter((client) => client.id !== id));
+      Swal.fire({
+        title: "Deleted!",
+        text: "Client has been deleted.",
+        icon: "success",
+        background: "#1f2937",
+        color: "#fff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
+  });
+};
 
   return (
     <div className="h-[91vh] bg-gray-900 text-white flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-800 flex-shrink-0">
+      <div className="flex items-center justify-between flex-shrink-0 p-6 border-b border-gray-800">
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute w-4 h-4 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Search clients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
+              className="w-64 py-2 pl-10 pr-4 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -349,19 +374,19 @@ const IntakeSpecialistClients = () => {
       </div>
 
       {/* Client List */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 p-6 overflow-auto">
         <div className="space-y-4">
           {currentClients.map((client) => (
             <div
               key={client.id}
-              className="flex items-center justify-between p-4 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-750 transition-colors"
+              className="flex items-center justify-between p-4 transition-colors bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750"
             >
               <div className="flex items-center space-x-4">
                 <div className="relative">
                   <img
-                    src={client.avatar}
+                    src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
                     alt={client.name}
-                    className="w-12 h-12 rounded-full bg-gray-600"
+                    className="w-12 h-12 bg-gray-600 rounded-full"
                   />
                   <div
                     className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-800 ${getStatusColor(
@@ -371,10 +396,10 @@ const IntakeSpecialistClients = () => {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-white text-lg">
+                  <h3 className="text-lg font-semibold text-white">
                     {client.name}
                   </h3>
-                  <p className="text-gray-400 text-sm">{client.phone}</p>
+                  <p className="text-sm text-gray-400">{client.phone}</p>
                 </div>
               </div>
 
@@ -396,12 +421,12 @@ const IntakeSpecialistClients = () => {
                 </span>
 
                 <Link to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
-                  <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors">
+                  <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700">
                     <Eye />
                   </button>
                 </Link>
 
-                <button className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors">
+                <button  onClick={() => handleDeleteClient(client.id)} className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700">
                   <Trash2 />
                 </button>
               </div>
@@ -409,8 +434,8 @@ const IntakeSpecialistClients = () => {
           ))}
 
           {currentClients.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-400 text-lg">
+            <div className="py-12 text-center">
+              <p className="text-lg text-gray-400">
                 No clients found matching your criteria.
               </p>
             </div>
@@ -420,7 +445,7 @@ const IntakeSpecialistClients = () => {
 
       {/* Pagination */}
       {filteredClients.length > itemsPerPage && (
-        <div className="flex items-center justify-between px-6 pt-4 border-t border-gray-800 flex-shrink-0">
+        <div className="flex items-center justify-between flex-shrink-0 px-6 pt-4 border-t border-gray-800">
           <div className="text-sm text-gray-400">
             Showing{" "}
             {Math.min(
@@ -435,7 +460,7 @@ const IntakeSpecialistClients = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="p-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2 text-gray-300 transition-colors bg-gray-700 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -459,7 +484,7 @@ const IntakeSpecialistClients = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="p-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2 text-gray-300 transition-colors bg-gray-700 rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

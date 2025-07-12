@@ -86,23 +86,7 @@ const AdminSidebar = () => {
               </div>
             </div>
           </NavLink>
-          <NavLink
-            to="/dashboard/settings"
-            className="flex items-center justify-between w-[280px]"
-          >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
-              {/* Left Indicator Bar */}
-
-              {/* Main Button Area */}
-              <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${isActiveSettings ? "text-[#FFFFFF] " : "text-[#9CA3AF]"}`}
-              >
-                <IoSettingsSharp className="w-[22px] h-[22px] font-bold  " />{" "}
-                <h1 className="text-xl font-normal poppins">Settings</h1>
-              </div>
-            </div>
-          </NavLink>
+       
           <NavLink
             to="/dashboard/my-firm"
             className="flex items-center justify-between w-[280px]"
@@ -117,6 +101,23 @@ const AdminSidebar = () => {
               >
                 <MdGavel className="w-[22px] h-[22px] font-bold  " />{" "}
                 <h1 className="text-xl font-normal poppins">My Firm</h1>
+              </div>
+            </div>
+          </NavLink>
+             <NavLink
+            to="/dashboard/settings"
+            className="flex items-center justify-between w-[280px]"
+          >
+            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+              {/* Left Indicator Bar */}
+
+              {/* Main Button Area */}
+              <div
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
+                  ${isActiveSettings ? "text-[#FFFFFF] " : "text-[#9CA3AF]"}`}
+              >
+                <IoSettingsSharp className="w-[22px] h-[22px] font-bold  " />{" "}
+                <h1 className="text-xl font-normal poppins">Settings</h1>
               </div>
             </div>
           </NavLink>

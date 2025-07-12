@@ -84,7 +84,7 @@ const CustomTooltip = ({ active, payload }) => {
 };
 const statsData = [
   { title: "Active Clients", value: 24 },
-  { title: "High Priority", value: 3 },
+  { title: "High Risk", value: 3 },
   { title: "Messages Sent", value: 12 },
   { title: "Flagged Clients", value: 2 },
 ];
@@ -92,7 +92,7 @@ const statsData = [
 // Helper function to return image based on title
 const getImageByTitle = (title) => {
   if (title === "Active Clients") return active;
-  if (title === "High Priority") return priority;
+  if (title === "High Risk") return priority;
   if (title === "Messages Sent") return message;
   if (title === "Flagged Clients") return appoinment;
   return null; // default if no match
@@ -105,7 +105,7 @@ const CaseMangerDashboard = () => {
   return (
     <div className="h-[90vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
-        <h1 className=" text-2xl font-bold">Lawyer Dashboard</h1>
+        <h1 className="text-2xl font-bold "> Dashboard</h1>
         <button
           className="px-6 py-3 text-white flex items-center gap-2 font-semibold rounded-lg bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] hover:from-[#0129B3]/90 hover:via-[#007BCC]/90 hover:to-[#77D7D2]/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           onClick={() => setShowAddClientModal(true)}
@@ -120,11 +120,11 @@ const CaseMangerDashboard = () => {
           onClick={() => setShowAddClientModal(false)}
         >
           <div
-            className="relative bg-slate-800 rounded-lg shadow-lg p-0 w-full max-w-lg"
+            className="relative w-full max-w-lg p-0 rounded-lg shadow-lg bg-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
             {/* <button
-              className="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl font-bold z-10"
+              className="absolute z-10 text-2xl font-bold text-gray-400 top-2 right-2 hover:text-white"
               onClick={() => setShowAddClientModal(false)}
               aria-label="Close"
             >
@@ -200,7 +200,7 @@ const CaseMangerDashboard = () => {
 
         {/* Client Sentiment Graph */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
-          <h3 className="mb-4 text-lg font-semibold">Client Sentiment Graph</h3>
+          <h3 className="mb-4 text-lg font-semibold">Firm Reputation Score</h3>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart
               data={sentimentData}

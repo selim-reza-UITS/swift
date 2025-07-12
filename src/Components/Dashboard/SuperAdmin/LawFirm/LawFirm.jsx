@@ -20,6 +20,7 @@ const fakeFirms = [
     ],
     active: true,
   },
+
   {
     id: 2,
     name: "Lina & Associates",
@@ -32,6 +33,19 @@ const fakeFirms = [
       { name: "Jane Doe", role: "Lawyer", tag: "bg-slate-600" },
     ],
     active: true,
+  },
+     {
+    id: 3,
+    name: "Zon & Associates",
+    phone: "(555) 123-4567",
+    address: "123 Main St, New York, NY",
+    status: "Not Available",
+    team: [
+      { name: "John Smith", role: "Admin", tag: "bg-purple-700" },
+      { name: "Mike Johnson", role: "IS", tag: "bg-green-700" },
+      { name: "Jane Doe", role: "Lawyer", tag: "bg-slate-600" },
+    ],
+    active: false,
   },
 ];
 

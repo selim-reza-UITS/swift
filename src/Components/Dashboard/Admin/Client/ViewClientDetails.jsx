@@ -71,9 +71,9 @@ const ViewClientDetails = ({ onClose, client }) => {
           </div>
         </div>
 
-        <button className="mt-4 w-full bg-[#2C2F48] hover:bg-[#3b3e5b] text-sm text-white py-2 rounded-lg border border-[#3A3A3A]">
+        {/* <button className="mt-4 w-full bg-[#2C2F48] hover:bg-[#3b3e5b] text-sm text-white py-2 rounded-lg border border-[#3A3A3A]">
           + Log Case Update
-        </button>
+        </button> */}
       </div>
     </div>
   );

@@ -52,7 +52,7 @@ export default function Login() {
                 <h1 className="text-black poppins">Arviso</h1>
               </div>
               <p className="text-4xl font-bold text-blue-400 poppin poppins">
-                Create an account
+              Login To Your Account
               </p>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">

@@ -89,7 +89,7 @@ const Navbar = () => {
               to="/login"
               className=" md:text-base rounded-xl  bg-[#6366F1] hover:bg-transparent hover:text-black  border hover:border-[#5c5edf] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 hover:scale-105"
             >
-              Get Started
+            Login 
             </NavLink>
 
             {/* {user ? (

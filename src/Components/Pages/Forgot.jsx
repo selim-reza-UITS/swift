@@ -53,24 +53,24 @@ const Forgot = () => {
     <div>
       {!otpSent ? (
         <div
-          className="h-auto bg-center bg-cover   p-4 "
+          className="h-auto p-4 bg-center bg-cover "
           style={{ backgroundImage: `url(${loginImage})` }}
         >
-          <div className="flex items-center justify-start min-h-screen  relative containmer mx-auto">
+          <div className="relative flex items-center justify-start min-h-screen mx-auto containmer">
             <div
               className=" rounded-lg p-10 w-full max-w-2xl shadow-2xl h-[800px] bg-center bg-cover  justify-center items-center ml-12  "
               style={{ backgroundImage: `url(${login})` }}
             >
-              <div className="h-full flex flex-col justify-center  w-full">
+              <div className="flex flex-col justify-center w-full h-full">
                 {" "}
                 <div className="flex flex-col items-center mb-8">
-                  <div className="text-xl md:text-2xl lg:text-6xl font-extrabold flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
                     <Link className="block text-teal-600" href="/">
                       <img src={logo} alt="" className="" />
                     </Link>
-                    <h1 className=" text-black  poppins">Arviso</h1>
+                    <h1 className="text-black  poppins">Arviso</h1>
                   </div>
-                  <p className="text-blue-400 text-4xl poppin font-bold  poppins mb-2">
+                  <p className="mb-2 text-4xl font-bold text-blue-400 poppin poppins">
                     Reset Your Password
                   </p>
                   <p className="text-[#54657E] w-2/3 mt-2 text-base poppin font-normal  poppins">
@@ -87,7 +87,7 @@ const Forgot = () => {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-2 rounded-md bg-white/20 text-white placeholder-[#979797] focus:outline-none focus:ring-2 focus:ring-blue-400 border border-[#979797] outfit"
+                      className="w-full px-4 py-2 rounded-md bg-white/20 text-black placeholder-[#979797] focus:outline-none focus:ring-2 focus:ring-blue-400 border border-[#979797] outfit"
                       placeholder="Enter your email"
                       required
                     />
@@ -103,7 +103,7 @@ const Forgot = () => {
                   </div>
                 </form>
                 {message && (
-                  <p className="mt-4 text-center text-green-400 text-sm">
+                  <p className="mt-4 text-sm text-center text-green-400">
                     {message}
                   </p>
                 )}

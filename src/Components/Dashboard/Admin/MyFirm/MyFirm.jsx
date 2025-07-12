@@ -26,6 +26,7 @@ const MyFirm = () => {
 
   const firmStats = {
     performanceScore: 85,
+    reputation:70,
     totalClients: 247,
     activeCases: 89,
     teamMembers: 158,
@@ -167,28 +168,40 @@ const MyFirm = () => {
     }
   };
 
-  const handleDelete = (type, id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (type === "lawyer") {
-          const updated = lawyerList.filter((lawyer) => lawyer.id !== id);
-          setLawyerList(updated);
-        } else {
-          const updated = memberList.filter((member) => member.id !== id);
-          setMemberList(updated);
-        }
-        Swal.fire("Deleted!", "The entry has been deleted.", "success");
+const handleDelete = (type, id) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#4b5563", // Tailwind gray-700
+    confirmButtonText: "Yes, delete it!",
+    background: "#1f2937", // dark background
+    color: "#ffffff", // white text
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (type === "lawyer") {
+        const updated = lawyerList.filter((lawyer) => lawyer.id !== id);
+        setLawyerList(updated);
+      } else {
+        const updated = memberList.filter((member) => member.id !== id);
+        setMemberList(updated);
       }
-    });
-  };
+
+      // Show success alert
+      Swal.fire({
+        title: "Deleted!",
+        text: "The entry has been deleted.",
+        icon: "success",
+        background: "#1f2937",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1", // Tailwind indigo-500
+      });
+    }
+  });
+};
+
 
   const handleViewDetails = (type, data) => {
     if (type === "lawyer") {
@@ -214,6 +227,21 @@ const MyFirm = () => {
             <div
               className="h-2 bg-white rounded"
               style={{ width: `${firmStats.performanceScore}%` }}
+            />
+          </div>
+        </div>
+          <div className="bg-[#1e293b] p-4 rounded-lg w-1/2">
+          <h2 className="text-2xl font-bold">Firm Reputation</h2>
+          <div className="flex flex-col items-center gap-3">
+            <p className="mt-4 text-5xl font-semibold poppins">
+              {firmStats.reputation}%
+            </p>
+            <p className="text-sm text-gray-400">Overall Score</p>
+          </div>
+          <div className="w-full h-2 mt-2 bg-gray-700 rounded">
+            <div
+              className="h-2 bg-white rounded"
+              style={{ width: `${firmStats.reputation}%` }}
             />
           </div>
         </div>

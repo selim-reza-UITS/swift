@@ -9,10 +9,12 @@ const Feedback = ({ onClose }) => {
   });
 
   const handleChange = (e) => {
-    const { feedback, value } = e.target;
-    setFormData((prev) => ({ ...prev, [feedback]: value }));
-  };
-
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -56,14 +58,13 @@ const Feedback = ({ onClose }) => {
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="flex flex-col gap-1 ">
             <textarea
-              type="text"
-              name="feedback"
-              placeholder=" Your Feedback"
-              value={formData.feedback}
-              onChange={handleChange}
-              required
-              className="w-full p-4 rounded-lg poppins bg-[#1e293b] focus:outline-none mt-2 "
-            />
+      name="feedback"
+      placeholder="Your Feedback"
+      value={formData.feedback}
+      onChange={handleChange}
+      required
+      className="w-full p-4 rounded-lg poppins bg-[#1e293b] focus:outline-none mt-2 text-white"
+    />
           </div>
           {/* email */}
 

@@ -13,7 +13,7 @@ const SuperAdminSidebar = () => {
   // console.log(user);
   const dropdownRef = useRef(null);
 
-  const isActiveDashboard = location.pathname === "/dashboard/admin";
+  const isActiveDashboard = location.pathname === "/dashboard/superadmin";
   const isActiveLawFirm = location.pathname.startsWith("/dashboard/law-Firm");
   const isActiveSettings = location.pathname === "/dashboard/settings";
 

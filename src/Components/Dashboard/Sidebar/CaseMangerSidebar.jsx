@@ -65,7 +65,7 @@ const CaseMangerSidebar = () => {
                   }`}
               >
                 <VscGraphLine className="w-[22px] h-[22px] font-bold" />
-                <h1 className="text-xl font-medium poppins">Lawyer</h1>
+                <h1 className="text-xl font-medium poppins">Dashboard</h1>
               </div>
             </div>
           </NavLink>

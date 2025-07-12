@@ -73,6 +73,12 @@ const Client = () => {
         </div>
         
         <div className="flex items-center gap-2 ">
+           <button
+            onClick={() => setFilter("Active")}
+            className="px-3 py-2 text-sm text-[#FFFFFF] bg-[#6366F1] rounded-md hover:bg-[#2f31af]"
+          >
+            All client
+          </button>
           <button
             onClick={() => setFilter("Active")}
             className="px-3 py-2 text-sm text-[#FFFFFF] bg-[#6366F1] rounded-md hover:bg-[#2f31af]"

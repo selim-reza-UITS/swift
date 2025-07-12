@@ -50,7 +50,7 @@ const SuperAdminDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#0f172a] text-white p-6">
-      <h1 className="mb-6 text-2xl font-bold">Admin Dashboard</h1>
+      <h1 className="mb-6 text-2xl font-bold">Super Admin Dashboard</h1>
 
       {/* Stats Section */}
       <div className="grid gap-4 mb-6 lg:grid-cols-2 2xl:grid-cols-4">
@@ -100,7 +100,7 @@ const SuperAdminDashboard = () => {
             className="flex flex-col items-center gap-4  border border-dashed border-[#FFFFFF] text-[#FFFFFF] px-6 py-4 rounded-lg roboto text-base font-medium"
           >
             {" "}
-            <button className="flex flex-col items-center gap-4  ">
+            <button className="flex flex-col items-center gap-4 ">
               <BsQuestionCircle className="text-[#16A34A]" /> View Law Firms
             </button>{" "}
           </NavLink>
@@ -109,7 +109,7 @@ const SuperAdminDashboard = () => {
             className="flex flex-col items-center gap-4  border border-dashed border-[#FFFFFF] text-[#FFFFFF] px-6 py-4 rounded-lg roboto text-base font-medium"
           >
             {" "}
-            <button className="flex flex-col items-center gap-4  ">
+            <button className="flex flex-col items-center gap-4 ">
               <MdSettingsSuggest className="text-[#EA580C]" /> Manage Settings
             </button>{" "}
           </NavLink>
