@@ -31,7 +31,7 @@ const Pay = () => {
       </p>
 
       {/* Sliders Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
+      <div className="grid grid-cols-1 md:grid-cols-3 shadow-2xl shadow-slate-400 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
         {/* Lawyers */}
         <div className="p-4 rounded-xl">
           <p className="text-[#CBD5E1] font-medium text-xs mb-1 poppins">
@@ -94,8 +94,8 @@ const Pay = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="bg-[#8B5CF6] rounded-xl text-white p-4 text-start">
+      <div className="grid grid-cols-1 mt-12 gap-4 md:grid-cols-2">
+        <div className="bg-[#8B5CF6] shadow-2xl shadow-slate-400 rounded-xl text-white p-4 text-start">
           <p className="font-medium poppins text-base text-[#FFFFFF]">
             Net Monthly Savings
           </p>
@@ -106,7 +106,7 @@ const Pay = () => {
             Monthly savings after Arviso costs
           </p>
         </div>
-        <div className="bg-[#8B5CF6] rounded-xl text-white p-4 text-start">
+        <div className="bg-[#8B5CF6] shadow-2xl shadow-slate-400 rounded-xl text-white p-4 text-start">
           <p className="font-medium poppins text-base text-[#FFFFFF]">
             Break-Even Point
           </p>

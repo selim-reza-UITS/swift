@@ -1,4 +1,5 @@
 import React from "react";
+import Booking_widget from "./Booking_widget";
 
 const Contact = () => {
   return (
@@ -11,7 +12,7 @@ const Contact = () => {
           Choose the perfect plan for your firm's size and needs
         </p>
       </div>
-      <div className="flex flex-col items-start justify-between w-full gap-8 p-6 md:flex-row">
+      <div className="flex flex-col items-center justify-between w-full gap-8 p-6 md:flex-row">
         {/* Left side */}
         <div className="flex flex-col justify-start">
           <h1 className="text-5xl poppins md:text-6xl font-medium bg-gradient-to-r from-[#7C3AED] to-[#537AFF] bg-clip-text text-transparent selection:mb-4 text-center md:text-left">
@@ -29,55 +30,9 @@ const Contact = () => {
         </div>
 
         {/* Right side (Form) */}
-        <form className="grid grid-cols-2 gap-4 text-purple-600 poppins">
-          <div className="col-span-2 text-sbase  text-[#7C3AED]">
-            <div>
-              <input
-                type="text"
-                placeholder="Which Department are you contacting?"
-                className="w-full border-b border-[#8B5CF6] focus:outline-none  bg-transparent focus:border-purple-600 placeholder:text-[#6366F1]  poppins"
-              />
-            </div>
-          </div>
-
-          <div>
-            <input
-              type="text"
-              placeholder="First Name :"
-              className="w-full border-b border-[#8B5CF6] focus:outline-none  bg-transparent focus:border-purple-600 placeholder:text-[#6366F1]  poppins"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Last Name :"
-              className="w-full border-b border-[#8B5CF6] focus:outline-none  bg-transparent focus:border-purple-600 placeholder:text-[#6366F1]  poppins"
-            />
-          </div>
-          <div>
-            <input
-              type="email"
-              placeholder="Email :"
-              className="w-full border-b border-[#8B5CF6] focus:outline-none  bg-transparent focus:border-purple-600 placeholder:text-[#6366F1]  poppins"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Subject:"
-              className="w-full border-b border-[#8B5CF6] focus:outline-none  bg-transparent focus:border-purple-600 placeholder:text-[#6366F1]  poppins"
-            />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-sm mb-1 text-[#6366F1] ">
-              Message:
-            </label>
-            <textarea
-              rows="4"
-              className="w-full border border-[#6366F1] rounded-md p-2 focus:outline-none focus:border-purple-600"
-            ></textarea>
-          </div>
-        </form>
+   <div>
+    <Booking_widget />
+   </div>
       </div>
     </div>
   );
