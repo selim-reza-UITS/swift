@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import banner from "../../assets/banner-right.png";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Slide } from "react-awesome-reveal";
 import first from "../../assets/1st.png";
 import second from "../../assets/2nd.png";
@@ -94,22 +94,7 @@ const Banner = () => {
 
   return (
     <div>
-      <div className="relative w-full max-w-4xl mt-10">
-        <div className="relative left-50 max-w-xs">
-          {/* Smooth sliding message card */}
-          <div className="relative w-full max-w-4xl">
-            <div className="relative left-60 max-w-xs">
-              <div
-                className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(topAnimationState)}`}
-              >
-                <div className="bg-[#4B5563] text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
-                  <p className="leading-relaxed">{messagesTop[topIndex]}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       <div className="flex lg:flex-row flex-col-reverse items-center lg:items-center justify-between gap-10 container mx-auto">
         {/*  content  */}
@@ -134,13 +119,15 @@ const Banner = () => {
               Human-like AI keeps every client informed and cared for. Slash
               double-digit hours of follow-ups to a 5-minute glance..
             </p>
-            <NavLink to="/login">
+          
               <div className="mt-9">
-                <button className="poppins md:text-base text-center items-center justify-center rounded-lg hover:bg-none hover:text-black border hover:border-[#0129B3]  bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 ease-in-out hover:scale-105">
+              <Link to="/login" >
+                              <button className="poppins md:text-base text-center items-center justify-center rounded-lg hover:bg-none hover:text-black border hover:border-[#0129B3]  bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 ease-in-out hover:scale-105">
                   Apply For Early Access
                 </button>
+              </Link>
               </div>
-            </NavLink>
+      
           </div>
         </Slide>
         {/* img */}
@@ -150,11 +137,16 @@ const Banner = () => {
           </div>
         </Slide>
       </div>
-      <div className="relative w-full right-0 mb-10">
-        <div className="absolute w-full right-60 max-w-xs">
+
+      <div className=" mt-20 container mx-auto">
+        <div className="flex flex-col lg:flex-row items-center  gap-1 mx-auto ">
+              <div className="relative w-full right-0 mb-10">
+        <div className="absolute w-full  max-w-xs">
           {/* Smooth sliding message card */}
+          {/* target 2 ............................................................................................................................... */}
           <div className="relative w-full max-w-4xl">
-            <div className="relative right-0 max-w-xs">
+       
+            <div className="relative left-80  max-w-xs">
               <div
                 className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(bottomAnimationState)}`}
               >
@@ -166,11 +158,32 @@ const Banner = () => {
           </div>
         </div>
       </div>
-      <div className=" mt-20 container mx-auto">
-        <div className="flex flex-col lg:flex-row items-center  gap-10 w-1/2 mx-auto ">
-          <img src={first} alt="illustration" className="" />
-          <img src={second} alt="illustration" className="" />
-          <img src={third} alt="illustration" className="" />
+
+            <div className="relative w-full max-w-4xl m-t-12">
+        <div className="relative  max-w-xs">
+          {/* tatget 1................................................................................................................. */}
+          {/* Smooth sliding message card */}
+  <div className="relative w-full max-w-4xl md:-mt-36">
+  <div className="relative max-w-xs">
+    {/* target 1 message card */}
+    <div className="relative w-full max-w-4xl">
+      <div className="relative max-w-xs">
+        <div
+          className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(topAnimationState)}`}
+        >
+          <div className="bg-[#4B5563] text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
+            <p className="leading-relaxed">{messagesTop[topIndex]}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </div>
+
+
         </div>
       </div>
     </div>
