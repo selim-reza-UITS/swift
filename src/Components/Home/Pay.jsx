@@ -17,21 +17,18 @@ const Pay = () => {
       <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8B5CF6] to-[#06B6D4] bg-clip-text text-transparent  mb-1">
         ${annualROI.toLocaleString()} recovered
       </h1>
-      <p className="text-[#94A3B8] mb-4 mt-2">in annual staff costs.</p>
+      <p className="text-[#94A3B8] mb-4 mt-2"><b>Net gain</b> in annual staff costs.</p>
 
       <h2 className="text-3xl font-bold text-[#8B5CF6] poppins">
-        Arviso Pays for Itself{" "}
+        Arviso Pays for Itself
         <span className="bg-gradient-to-r from-[#38BDF8] to-[#8B5CF6] bg-clip-text text-transparent">
           —Then Keeps Paying You.
         </span>
       </h2>
-      <p className="text-[#94A3B8] text-base poppins  mt-2 mb-8 px-6">
-        See the clear return on investment by factoring in both client retention
-        and recovered staff time.
-      </p>
+    
 
       {/* Sliders Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 shadow-2xl shadow-slate-400 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
+      <div className="grid grid-cols-1 md:grid-cols-2 shadow-2xl shadow-slate-400 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
         {/* Lawyers */}
         <div className="p-4 rounded-xl">
           <p className="text-[#CBD5E1] font-medium text-xs mb-1 poppins">
@@ -55,40 +52,16 @@ const Pay = () => {
           </div>
         </div>
 
-        {/* Average Fee */}
-        <div className="p-4 rounded-xl">
-          <p className="text-[#CBD5E1] font-medium text-xs mb-1 poppins">
-            Average Fee Per Retained Case
-          </p>
-          <p className="text-2xl font-bold text-white poppins">
-            ${fee.toLocaleString()}
-          </p>
-          <input
-            type="range"
-            min={5000}
-            max={100000}
-            step={1000}
-            value={fee}
-            onChange={(e) => setFee(Number(e.target.value))}
-            className="w-full mt-2 accent-[#38BDF8]  "
-          />
-          <div className="flex justify-between text-xs text-[#CBD5E1]  ">
-            <p>$5K</p>
-            <p>$3100K</p>
-          </div>
-        </div>
-
         {/* Annual ROI */}
         <div className="flex flex-col items-center justify-center px-6 text-white lg:border lg:border-t-0 lg:border-b-0 lg:border-r-0 lg:border-r-white">
           <p className="text-xs mb-1 text-[#CBD5E1]">
             Your Annual ROI with Arviso
           </p>
           <p className="text-2xl font-bold text-[#34D399]">
-            + ${annualROI.toLocaleString()}
+            + $8568 
           </p>
           <p className="text-xs text-[#CBD5E1]  mt-3">
-            Net gain when Arviso saves one case and recovers staff time
-            annually.
+          Net gain when Arviso recovers staff time annually.
           </p>
         </div>
       </div>
@@ -100,7 +73,7 @@ const Pay = () => {
             Net Monthly Savings
           </p>
           <p className="text-lg font-bold text-[#34D399]">
-            + ${monthlySavings}
+            + $714
           </p>
           <p className=" text-[#FFFFFF] text-xs">
             Monthly savings after Arviso costs

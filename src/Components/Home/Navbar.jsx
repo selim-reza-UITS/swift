@@ -61,7 +61,6 @@ const Navbar = () => {
               <a className="block text-teal-600" href="#">
                 <img src={logo} alt="" className="" />
               </a>
-              <h1 className="text-black ">Arviso</h1>
             </div>
           </Link>
 

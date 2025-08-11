@@ -38,14 +38,14 @@ const Footer = () => {
 
         {/* Center Navigation */}
         <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-6">
-          <a href="#" className="text-sm footer-color hover:text-white">
+          <Link to={'/'} className="text-sm footer-color hover:text-white">
             Home
-          </a>
+          </Link>
           <Link to={'/privacy'} className="text-sm footer-color hover:text-white">
             Privacy Policy
           </Link>
           <Link to={'/terms'} className="text-sm footer-color hover:text-white">
-            Terms and condition
+            Terms and conditions
           </Link>
         </div>
 
@@ -58,7 +58,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center footer-color text-sm">
             <FaPhoneAlt className="mr-2" />
-            <span>0192 295 - 4922</span>
+            <span>(702) 305 - 4252</span>
           </div>
         </div>
       </div>

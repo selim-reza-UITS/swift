@@ -15,16 +15,16 @@ const Superpower = () => {
     {
       id: 2,
       icon: <FaRegStar />,
-      title: "Enhance Your Reputation",
+      title: "Only the Happiest Clients Get Asked",
       description:
-        "Automatically prompt your happiest clients for 5-star reviews, turning great service into your best marketing asset.",
+        "Arviso's AI identifies your most satisfied clients and prompts them for reviews at just the right moment — turning silent gratitude into public praise.",
     },
     {
       id: 3,
       icon: <SlEnergy />,
-      title: "Boost Staff Efficiency",
+      title: "Boost Staff Efficiency ",
       description:
-        "Free up your Lawyers from repetitive check-ins so they can focus on high-value legal work.",
+        "Free up your staff from repetitive check-ins so they can focus on high-value legal work.   ",
     },
   ];
 
@@ -33,11 +33,11 @@ const Superpower = () => {
       {/* Heading Section */}
       <div className=" mx-auto text-center mb-20">
         <h1 className="poppins text-3xl md:text-4xl lg:text-6xl  font-bold bg-gradient-to-r from-[#6366F1] to-[#06B6D4] bg-clip-text text-transparent">
-          From a Liability to a Superpower
+          The Human Touch, at Scale.
         </h1>
         <p className="text-[#4B5563] text-2xl mt-7 poppins font-normal">
-          From platform management to client communication, Arviso adapts to
-          your firm's needs
+          Arviso keeps clients informed, heard, and loyal — without adding hours
+          to your team's workload.
         </p>
       </div>
 
