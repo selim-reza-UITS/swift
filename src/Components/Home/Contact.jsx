@@ -20,13 +20,7 @@ const Contact = () => {
             <br />
             Us Today
           </h1>
-          <p className="text-sm text-[#7C3AED] uppercase tracking-widest mt-4">
-            Contact Form
-          </p>
-          <p className="text-xs text-[#7C3AED] mt-1 ">
-            Send us a message and someone from the department you selected will
-            get back to you as soon as possible.
-          </p>
+         
         </div>
 
         {/* Right side (Form) */}

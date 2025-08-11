@@ -1,38 +1,67 @@
 import React, { useEffect, useState } from "react";
-
 import banner from "../../assets/banner-right.png";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Slide } from "react-awesome-reveal";
-import first from "../../assets/1st.png";
-import second from "../../assets/2nd.png";
-import third from "../../assets/3rd.png";
 
 const messagesTop = [
-  "Awesome! When can I expect?",
-  "Thanks for the update! What's next?",
-  "Perfect! How long will this take?",
+
+   "Hey Taylor! Just checking in—how’s the pain level this week on a scale of 1‑10?",
+  
+      
+  
+  "Got it. Have you been able to keep up with the physical‑therapy exercises?",
+  
+      
+  
+  "No worries. Consistency speeds recovery; I’ll remind you tomorrow at 7 PM if that helps.",
+  
+  "Anything new we should relay to your case manager?",
+  
+  
+  "Perfect move, I’ve alerted Jenna (your case manager). Expect a call from her soon.",
+  
+  
+  // Conversation 2:
+  
+  
+  //      Client: I just got a $480 bill from the ER.
+  //                   I Thought the other driver’s insurance
+  //                   was covering that—should I pay it?
+  
+  // Ai: Thanks for letting me know. I’ve notified Jenna, your case manager, so she can review it first thing tomorrow.
+  
+  // Ai: Could you snap a clear photo of the bill and text it here? That’ll help Jenna confirm the charges and respond faster.
+  
+  //      Client: Sure, one sec
+  
+  //      Client: [sends photo of invoice]
+  
+  // Ai: That’s perfect. Jenna will look it over and reach out with the next steps. Feel free to keep me posted if anything else comes up.
+  
+  //      Client: Thanks for the help
+  
+  // Ai: Anytime—you can text me 24/7 if anything else comes up. Sleep easy; we’ve got it covered.
+
 ];
 
 const messagesBottom = [
-  "Great news! When should I check back?",
-  "Excellent! What's the timeline?",
-  "Wonderful! When will you know more?",
+ "Probably a 6. Shoulder still stiff.",
+ "I actually missed yesterday work ran late.",
+ "The driver’s insurer called me directly. I wasn’t sure what to say so I hung up."
 ];
-
 
 const Banner = () => {
   const [topIndex, setTopIndex] = useState(0);
   const [bottomIndex, setBottomIndex] = useState(0);
   const [topAnimationState, setTopAnimationState] = useState("hidden");
   const [bottomAnimationState, setBottomAnimationState] = useState("hidden");
-    
 
   useEffect(() => {
     const startTimeout = setTimeout(() => {
       setTopAnimationState("entering");
       setTimeout(() => setTopAnimationState("center"), 1500);
     }, 0);
-  
+
     const interval = setInterval(() => {
       setTopAnimationState("exiting");
       setTimeout(() => {
@@ -41,13 +70,13 @@ const Banner = () => {
         setTimeout(() => setTopAnimationState("center"), 1500);
       }, 1500);
     }, 6000);
-  
+
     return () => {
       clearInterval(interval);
       clearTimeout(startTimeout);
     };
   }, []);
-  
+
   const BOTTOM_DELAY = 1000; // 1 sec delay
 
   useEffect(() => {
@@ -55,7 +84,7 @@ const Banner = () => {
       setBottomAnimationState("entering");
       setTimeout(() => setBottomAnimationState("center"), 1500);
     }, BOTTOM_DELAY);
-  
+
     const intervalTimeout = setTimeout(() => {
       const interval = setInterval(() => {
         setBottomAnimationState("exiting");
@@ -68,14 +97,12 @@ const Banner = () => {
       // Save interval to clear later
       return () => clearInterval(interval);
     }, BOTTOM_DELAY);
-  
+
     return () => {
       clearTimeout(startTimeout);
       clearTimeout(intervalTimeout);
     };
   }, []);
-  
-  
 
   const getAnimationClasses = (state) => {
     switch (state) {
@@ -90,12 +117,9 @@ const Banner = () => {
         return "translate-y-12 opacity-0 scale-100";
     }
   };
-  
 
   return (
     <div>
-
-
       <div className="flex lg:flex-row flex-col-reverse items-center lg:items-center justify-between gap-10 container mx-auto">
         {/*  content  */}
         <Slide
@@ -105,29 +129,21 @@ const Banner = () => {
         >
           <div>
             <h1 className="poppins text-3xl lg:text-6xl  font-bold  mt-2 mb-5 text-[#4B5563] leading-normal  ">
-              AI-Powered{" "}
+              I Haven’t Heard From My  <br />
               <span className="bg-gradient-to-r from-[#C084FC] to-[#06B6D4] bg-clip-text text-transparent">
-                Communication
+               Lawyer.
               </span>{" "}
               <br />
             </h1>
-            <h1 className="poppins text-3xl lg:text-6xl  font-bold  mt-2 mb-6 text-[#4B5563] ">
-              {" "}
-              <span className="text-[#4B5563] mt-3 ">for Law Firms</span>
-            </h1>
-            <p className="poppins text-lg lg:text-[32px] text-[#4B5563] font-normal  mt-9 leading-normal  ">
-              Human-like AI keeps every client informed and cared for. Slash
-              double-digit hours of follow-ups to a 5-minute glance..
-            </p>
           
-              <div className="mt-9">
-              <Link to="/login" >
-                              <button className="poppins md:text-base text-center items-center justify-center rounded-lg hover:bg-none hover:text-black border hover:border-[#0129B3]  bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 ease-in-out hover:scale-105">
+
+            <div className="mt-9">
+              <Link to="/login">
+                <button className="poppins md:text-base text-center items-center justify-center rounded-lg hover:bg-none hover:text-black border hover:border-[#0129B3]  bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 ease-in-out hover:scale-105">
                   Apply For Early Access
                 </button>
               </Link>
-              </div>
-      
+            </div>
           </div>
         </Slide>
         {/* img */}
@@ -140,50 +156,54 @@ const Banner = () => {
 
       <div className=" mt-20 container mx-auto">
         <div className="flex flex-col lg:flex-row items-center  gap-1 mx-auto ">
-              <div className="relative w-full right-0 mb-10">
-        <div className="absolute w-full  max-w-xs">
-          {/* Smooth sliding message card */}
-          {/* target 2 ............................................................................................................................... */}
-          <div className="relative w-full max-w-4xl">
-       
-            <div className="relative left-80  max-w-xs">
-              <div
-                className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(bottomAnimationState)}`}
-              >
-                <div className="bg-[#06B6D4] text-white px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
-                  <p className="leading-relaxed">{messagesBottom[bottomIndex]}</p>
+          <div className="relative w-full right-0 mb-10">
+            <div className="absolute w-full  max-w-xs">
+              {/* Smooth sliding message card */}
+              {/* target 2 ............................................................................................................................... */}
+              <div className="relative w-full max-w-4xl">
+                <div className="relative left-80  max-w-xs">
+                  <div
+                    className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(
+                      bottomAnimationState
+                    )}`}
+                  >
+                    <div className="bg-[#06B6D4] text-white px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
+                      <p className="leading-relaxed">
+                        {messagesBottom[bottomIndex]}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-            <div className="relative w-full max-w-4xl m-t-12">
-        <div className="relative  max-w-xs">
-          {/* tatget 1................................................................................................................. */}
-          {/* Smooth sliding message card */}
-  <div className="relative w-full max-w-4xl md:-mt-36">
-  <div className="relative max-w-xs">
-    {/* target 1 message card */}
-    <div className="relative w-full max-w-4xl">
-      <div className="relative max-w-xs">
-        <div
-          className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(topAnimationState)}`}
-        >
-          <div className="bg-[#4B5563] text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
-            <p className="leading-relaxed">{messagesTop[topIndex]}</p>
+          <div className="relative w-full max-w-4xl m-t-12">
+            <div className="relative  max-w-xs">
+              {/* tatget 1................................................................................................................. */}
+              {/* Smooth sliding message card */}
+              <div className="relative w-full max-w-4xl md:-mt-36">
+                <div className="relative max-w-xs">
+                  {/* target 1 message card */}
+                  <div className="relative w-full max-w-4xl">
+                    <div className="relative max-w-xs">
+                      <div
+                        className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(
+                          topAnimationState
+                        )}`}
+                      >
+                        <div className="bg-[#4B5563] text-slate-300 px-4 py-2 rounded-t-3xl rounded-br-3xl rounded-bl-md shadow-lg">
+                          <p className="leading-relaxed">
+                            {messagesTop[topIndex]}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-        </div>
-      </div>
-
-
         </div>
       </div>
     </div>

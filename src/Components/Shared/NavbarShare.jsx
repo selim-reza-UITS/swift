@@ -49,18 +49,7 @@ const NavbarShare = () => {
       setActiveSection(id);
     }
   };
-  // const user = useSelector((state) => state.auth?.user);
 
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem("user");
-  //   if (storedUser) {
-  //     try {
-  //       setUser(JSON.parse(storedUser));
-  //     } catch (err) {
-  //       console.error("Invalid user in localStorage", err);
-  //     }
-  //   }
-  // }, []);
   return (
     <div>
       <nav className="container p-1 mx-auto text-white bg-white rounded-full">
@@ -71,7 +60,7 @@ const NavbarShare = () => {
               <a className="block text-teal-600" href="#">
                 <img src={logo} alt="" className="" />
               </a>
-              <h1 className="text-black ">Arviso</h1>
+              {/* <h1 className="text-black ">Arviso</h1> */}
             </div>
           </Link>
 
@@ -87,29 +76,6 @@ const NavbarShare = () => {
              Login
             </NavLink>
 
-            {/* {user ? (
-                     <Link
-                       to="/dashboard"
-                       className="montserrat md:text-base rounded-3xl bg-gradient-to-b from-[#00B2F7] via-[#1E3A8A]  to-[#080F24] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white"
-                     >
-                       Dashboard
-                     </Link>
-                   ) : (
-                     <>
-                       <NavLink
-                         to="/login"
-                         className=" montserrat   md:text-base px-5 py-2.5 text-sm font-medium text-[#000000] "
-                       >
-                         Log in
-                       </NavLink>
-                       <NavLink
-                         to="/signUp"
-                         className="montserrat md:text-base rounded-3xl bg-gradient-to-b from-[#00B2F7] via-[#1E3A8A]  to-[#080F24] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white"
-                       >
-                         Sign up
-                       </NavLink>
-                     </>
-                   )} */}
           </div>
 
           {/*  Mobile Menu Button */}
@@ -156,19 +122,7 @@ const NavbarShare = () => {
       {isOpen && (
         <div className="lg:hidden mt-4  bg-[#a0d2ff] rounded-tl-2xl rounded-br-2xl text-center p-4  container mx-auto m-4 absolute z-50">
           <ul className="flex flex-col gap-4">
-            {/* {menuItems.map(({ name, id }) => (
-                     <li key={id}>
-                       <button
-                         onClick={() => {
-                           handleScroll(id);
-                           setIsOpen(false);
-                         }}
-                         className="text-lg font-medium hover:text-gray-200"
-                       >
-                         {name}
-                       </button>
-                     </li>
-                   ))} */}
+        
           </ul>
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex justify-center w-full">
