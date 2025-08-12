@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function AddClientForm({ setShowAddClientModal }) {
@@ -53,7 +53,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
   };
 
   return (
-    <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full">
+    <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full z-50">
       <Toaster/>
       <div className=" rounded-lg p-8 w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
         {/* Header */}
