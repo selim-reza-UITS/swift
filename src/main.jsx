@@ -19,13 +19,9 @@ import SuperAdminDashboard from "./Components/Dashboard/SuperAdmin/SuperAdminDas
 import IntakeSpecialistDashboard from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistDashboard.jsx";
 import CaseMangerDashboard from "./Components/Dashboard/CaseManager/CaseMangerDashboard.jsx";
 import Login from "./Components/Pages/Login.jsx";
-
-import CaseManagerClients from "./Components/Dashboard/CaseManager/CaseManagerClients.jsx";
-import CaseManagerSettings from "./Components/Dashboard/CaseManager/CaseManagerSettings.jsx";
-import IntakeSpecialistSettings from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistSettings.jsx";
 import ClientDetails from "./Components/Shared/ClientDetails.jsx";
 import IntakeSpecialistClients from "./Components/Dashboard/IntekSpecialist/IntakeSpecialistClients.jsx";
-
+import CaseManagerClients from "./Components/Dashboard/CaseManager/CaseManagerClients.jsx";
 import MyFirm from "./Components/Dashboard/Admin/MyFirm/MyFirm.jsx";
 import Settings from "./Components/Dashboard/Admin/Settings/Settings.jsx";
 import Client from "./Components/Dashboard/Admin/Client/Client.jsx";

@@ -28,7 +28,7 @@ const Pay = () => {
     
 
       {/* Sliders Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 shadow-2xl shadow-slate-400 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
+      <div className="grid grid-cols-1 mt-10 md:grid-cols-2 shadow-2xl shadow-slate-400 gap-4 mb-6 bg-[#8B5CF6] p-4 rounded-xl ">
         {/* Lawyers */}
         <div className="p-4 rounded-xl">
           <p className="text-[#CBD5E1] font-medium text-xs mb-1 poppins">

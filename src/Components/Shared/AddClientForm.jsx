@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Calendar, Plus, X } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Plus, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function AddClientForm({ setShowAddClientModal }) {
@@ -8,11 +8,40 @@ export default function AddClientForm({ setShowAddClientModal }) {
     lawyerName: "",
     dateOfIncident: "",
     gender: "",
-    managingUser: "Dev Guru",
+    managingUsers: [],
     phoneNumber: "",
     injurySustained: "",
     generalCaseInfo: "",
+    consentToCommunicate: false,
   });
+
+  const lawyerOptions = [
+    "Robert Johnson",
+    "Jane Doe",
+    "Robert Smith",
+    "Michael Davis",
+    "Lisa Wilson",
+  ];
+
+  const managingUserOptions = [
+    "Dev Guru",
+    "Smith Dark",
+    "John Smith",
+    "Emily Clark",
+  ];
+
+  const [isManagingOpen, setIsManagingOpen] = useState(false);
+  const managingRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (managingRef.current && !managingRef.current.contains(event.target)) {
+        setIsManagingOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,19 +51,47 @@ export default function AddClientForm({ setShowAddClientModal }) {
     }));
   };
 
+  const handlePhoneChange = (e) => {
+    const raw = e.target.value || "";
+    const digits = raw.replace(/\D/g, "").slice(0, 10);
+    let formatted = "";
+    if (digits.length === 0) {
+      formatted = "";
+    } else if (digits.length < 4) {
+      formatted = `(${digits}`;
+    } else if (digits.length < 7) {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
+        6,
+        10
+      )}`;
+    }
+    setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.consentToCommunicate) {
+      toast.error("Client consent is required to enable messaging.");
+      return;
+    }
+    if (!formData.managingUsers || formData.managingUsers.length === 0) {
+      toast.error("Please assign at least one managing user.");
+      return;
+    }
     console.log("Form submitted:", formData);
-    toast.success("New Client Added.")
+    toast.success("New Client Added.");
     setFormData({
       fullName: "",
       lawyerName: "",
       dateOfIncident: "",
       gender: "",
-      managingUser: "Dev Guru",
+      managingUsers: [],
       phoneNumber: "",
       injurySustained: "",
       generalCaseInfo: "",
+      consentToCommunicate: false,
     });
   };
 
@@ -44,17 +101,18 @@ export default function AddClientForm({ setShowAddClientModal }) {
       lawyerName: "",
       dateOfIncident: "",
       gender: "",
-      managingUser: "Dev Guru",
+      managingUsers: [],
       phoneNumber: "",
       injurySustained: "",
       generalCaseInfo: "",
+      consentToCommunicate: false,
     });
     setShowAddClientModal(false);
   };
 
   return (
-    <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full">
-      <Toaster/>
+    <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full z-50">
+      <Toaster />
       <div className=" rounded-lg p-8 w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
         {/* Header */}
         <div className="mb-6 text-center">
@@ -90,14 +148,38 @@ export default function AddClientForm({ setShowAddClientModal }) {
             <label className="block mb-2 text-sm font-medium text-white">
               Lawyer Name<span className="text-red-400">*</span>
             </label>
-            <input
-              type="text"
-              name="lawyerName"
-              value={formData.lawyerName}
-              onChange={handleInputChange}
-              placeholder="e.g., Saul Goodman"
-              className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
-            />
+            <div className="relative">
+              <select
+                name="lawyerName"
+                value={formData.lawyerName}
+                onChange={handleInputChange}
+                className="w-full bg-[#475569] text-white border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
+              >
+                <option value="" disabled>
+                  Select a lawyer
+                </option>
+                {lawyerOptions.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute transform -translate-y-1/2 pointer-events-none right-3 top-1/2">
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Date of Incident */}
@@ -156,39 +238,54 @@ export default function AddClientForm({ setShowAddClientModal }) {
             </div>
           </div>
 
-          {/* Select Managing User */}
-          <div>
+          {/* Select Managing User(s) */}
+          <div ref={managingRef}>
             <label className="block mb-2 text-sm font-medium text-white">
               Select Managing User(s)<span className="text-red-400">*</span>
             </label>
             <div className="relative">
-              <select
-                name="managingUser"
-                value={formData.managingUser}
-                onChange={handleInputChange}
-                className="w-full bg-[#475569] text-white border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
+              <button
+                type="button"
+                onClick={() => setIsManagingOpen((s) => !s)}
+                className="w-full bg-[#475569] text-white border border-slate-500 rounded-md px-3 py-2 text-left"
               >
-                <option value="Dev Guru">Dev Guru</option>
-                <option value="Other User">Other User</option>
-              </select>
-              <div className="absolute transform -translate-y-1/2 pointer-events-none right-3 top-1/2">
-                <svg
-                  className="w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
+                {formData.managingUsers.length > 0
+                  ? formData.managingUsers.join(", ")
+                  : "Select managing users"}
+              </button>
+              {isManagingOpen && (
+                <div className="absolute z-20 mt-1 w-full bg-[#1E293B] border border-slate-600 rounded-md shadow-lg max-h-48 overflow-auto">
+                  {managingUserOptions.map((name) => {
+                    const checked = formData.managingUsers.includes(name);
+                    return (
+                      <label
+                        key={name}
+                        className="flex items-center gap-2 px-3 py-2 text-white hover:bg-slate-600 cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) => {
+                            setFormData((prev) => {
+                              const set = new Set(prev.managingUsers);
+                              if (e.target.checked) set.add(name);
+                              else set.delete(name);
+                              return {
+                                ...prev,
+                                managingUsers: Array.from(set),
+                              };
+                            });
+                          }}
+                        />
+                        <span>{name}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <p className="mt-1 text-xs text-gray-400">
-              Link a manager to this client. Select from users in your firm.
+              Link one or more managers from your firm to this client.
             </p>
           </div>
 
@@ -201,7 +298,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
               type="tel"
               name="phoneNumber"
               value={formData.phoneNumber}
-              onChange={handleInputChange}
+              onChange={handlePhoneChange}
               placeholder="(XXX) XXX-XXXX"
               className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
             />
@@ -217,7 +314,6 @@ export default function AddClientForm({ setShowAddClientModal }) {
               value={formData.injurySustained}
               onChange={handleInputChange}
               placeholder="e.g., Whiplash, minor back pain..."
-         
               className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 resize-none"
             />
           </div>
@@ -232,9 +328,31 @@ export default function AddClientForm({ setShowAddClientModal }) {
               value={formData.generalCaseInfo}
               onChange={handleInputChange}
               placeholder="e.g., Rear-ended at a stoplight..."
-             
               className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 resize-none"
             />
+          </div>
+
+          {/* Consent to Communicate */}
+          <div>
+            <label className="flex items-center gap-2 text-white">
+              <input
+                type="checkbox"
+                name="consentToCommunicate"
+                checked={formData.consentToCommunicate}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    consentToCommunicate: e.target.checked,
+                  }))
+                }
+                className="h-4 w-4 text-purple-500 focus:ring-purple-400"
+                required
+              />
+              <span>Client Consented to Communication</span>
+            </label>
+            <p className="mt-1 text-xs text-gray-400">
+              Required to enable messaging in Client Details.
+            </p>
           </div>
 
           {/* Buttons */}
@@ -245,7 +363,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
               className="flex items-center justify-center flex-1 px-4 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Client
+              Create
             </button>
             <button
               type="button"

@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Search, Eye, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react";
+import {
+  Search,
+  Eye,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const CaseManagerClients = () => {
   const [clients, setClients] = useState([
@@ -228,14 +236,6 @@ const CaseManagerClients = () => {
     setDeleteTimer(timer);
   };
 
-  const handleDeleteCancel = () => {
-    if (deleteTimer) {
-      clearInterval(deleteTimer);
-      setDeleteTimer(null);
-    }
-    setIsDeleting(false);
-    setDeleteProgress(0);
-  };
 
   const handleDeleteConfirm = () => {
     setShowDeleteModal(false);
@@ -295,7 +295,7 @@ const CaseManagerClients = () => {
       case "paused":
         return "Paused";
       case "recovery":
-        return "Recovery";
+        return "Recently Deleted";
       default:
         return "Unknown";
     }
@@ -317,11 +317,11 @@ const CaseManagerClients = () => {
   const getPriorityLabel = (priority) => {
     switch (priority) {
       case "high":
-        return "High Priority";
+        return "High Risk";
       case "medium":
-        return "Medium Priority";
+        return "Medium Risk";
       case "low":
-        return "Low Priority";
+        return "Low Risk";
       default:
         return "Unknown";
     }
@@ -338,8 +338,36 @@ const CaseManagerClients = () => {
     }
   };
 
+  const handleDeleteClient = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      background: "#1f2937", // dark bg
+      color: "#fff", // text color
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#4b5563",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setClients((prevClients) =>
+          prevClients.filter((client) => client.id !== id)
+        );
+        Swal.fire({
+          title: "Deleted!",
+          text: "Client has been deleted.",
+          icon: "success",
+          background: "#1f2937",
+          color: "#fff",
+          confirmButtonColor: "#6366F1",
+        });
+      }
+    });
+  };
+
   return (
-    <div className="h-[91vh] bg-gray-900 text-white flex flex-col">
+    <div className="h-[80vh] bg-gray-900 text-white flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0 p-6 border-b border-gray-800">
         <div className="flex items-center space-x-4">
@@ -357,14 +385,14 @@ const CaseManagerClients = () => {
 
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => handleViewChange('all')}
+            onClick={() => handleViewChange("all")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeView === 'all'
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              activeView === "all"
+                ? "bg-purple-600 text-white"
+                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            All Clients
+            All
           </button>
           <button
             onClick={() => handleViewChange("active")}
@@ -374,7 +402,7 @@ const CaseManagerClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            View Active
+            Active
           </button>
           <button
             onClick={() => handleViewChange("paused")}
@@ -384,7 +412,7 @@ const CaseManagerClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            View Paused
+            Paused
           </button>
           <button
             onClick={() => handleViewChange("recovery")}
@@ -394,7 +422,7 @@ const CaseManagerClients = () => {
                 : "bg-gray-700 text-gray-300"
             }`}
           >
-            Recovery
+            Recently Deleted
           </button>
         </div>
       </div>
@@ -452,7 +480,10 @@ const CaseManagerClients = () => {
                   </button>
                 </Link>
 
-                <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700">
+                <button
+                  className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700"
+                  onClick={() => handleDeleteClient(client.id)}
+                >
                   <Trash2 />
                 </button>
                 {/* Delete Button with Progress */}
