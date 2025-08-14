@@ -1,9 +1,10 @@
+import { X } from "lucide-react";
 import { TbXboxXFilled } from "react-icons/tb";
 
 const ViewClientDetails = ({ onClose, client }) => {
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">
-      <div className="relative w-[350px] bg-[#0f172a] text-white rounded-xl p-4">
+      <div className="relative max-w-2xl w-1/4 mx-auto bg-[#0f172a] text-white rounded-xl p-4">
         <button
           onClick={onClose}
           className="absolute text-gray-400 top-2 right-2 hover:text-red-400"
@@ -33,13 +34,14 @@ const ViewClientDetails = ({ onClose, client }) => {
             <span className="text-[#FFFFFF] text-base">Female</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-[#FFFFFF] text-base">Managing User:</span>
+            <span className="text-[#FFFFFF] text-base">Managing User(s):</span>
             <span className="text-[#FFFFFF] text-base">{client.manager}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-[#FFFFFF] text-base">Lawyer:</span>
             <span className="text-[#FFFFFF] text-base">Robert Johnson</span>
           </div>
+      
         </div>
 
         <div className="mt-7">
@@ -48,10 +50,18 @@ const ViewClientDetails = ({ onClose, client }) => {
           </p>
           <div className="flex justify-between mb-3">
             <span className="text-base font-normal poppins">
-              Scheduled Next Send Date
+             Consent Form:
             </span>
             <span className="px-2 py-1 text-xs text-white bg-blue-600 rounded-full">
-              5%
+            <X className="w-4 h-4" />
+            </span>
+          </div>
+          <div className="flex justify-between mb-3">
+            <span className="text-base font-normal poppins">
+              Scheduled Next Send:
+            </span>
+            <span className="px-2 py-1 text-xs text-white bg-blue-600 rounded-full">
+              03/10/2025
             </span>
           </div>
           <div className="flex justify-between mb-3">
@@ -59,15 +69,34 @@ const ViewClientDetails = ({ onClose, client }) => {
             <span className="font-medium text-green-400">Positive</span>
           </div>
           <div className="flex justify-between">
-            <span>Concern Level:</span>
+            <span>Risk Level:</span>
             <span className="font-medium text-red-500">High</span>
           </div>
         </div>
 
         <div className="mt-5">
           <p className="mb-2 text-base font-semibold poppins">Case Notes</p>
-          <div className="bg-[#161E2F] text-sm text-gray-300 rounded-md px-3 py-2 border border-gray-700 roboto ">
-            Client reported back pain after accident.
+          <div className="flex justify-between">
+            <span className="text-[#FFFFFF] text-base">
+              Injury's Sustained:
+            </span>
+            <span className="text-[#FFFFFF] text-base">
+              {client.injurySustained || "Lower back pain and stiffness."}
+            </span>
+          </div>
+          <div className="flex justify-between my-2">
+            <span className="text-[#FFFFFF] text-base">General Case Info:</span>
+            <span className="text-[#FFFFFF] text-base">
+              {client.generalCaseInfo ||
+                "Client reported back pain after accident."}
+            </span>
+          </div>
+          <div className="flex justify-between my-2">
+            <span className="text-[#FFFFFF] text-base">Insights:</span>
+            <span className="text-[#FFFFFF] text-base">
+              {client.insights ||
+                "Client reported back pain after accident."}
+            </span>
           </div>
         </div>
 

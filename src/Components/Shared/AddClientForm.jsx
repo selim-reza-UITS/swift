@@ -363,15 +363,15 @@ export default function AddClientForm({ setShowAddClientModal }) {
               className="flex items-center justify-center flex-1 px-4 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create
+              <span className="mb-0.5"> Create</span>
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="flex-1 bg-[#475569] hover:bg-slate-500 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center"
+              className="bg-[#475569] flex-1 hover:bg-slate-500 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 flex items-center justify-center"
             >
-              <X className="w-4 h-4 mr-2" />
-              Cancel
+              <X className="w-4 h-4 mr-2 " />
+              <span className=" mb-0.5"> Cancel</span>
             </button>
           </div>
         </div>

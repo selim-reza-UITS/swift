@@ -1,11 +1,84 @@
-import React, { useState } from "react";
-import { Search, Eye, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Search,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  View,
+  Trash,
+} from "lucide-react";
 import Swal from "sweetalert2";
 import ViewClientDetails from "../Admin/Client/ViewClientDetails";
 import { FaEye } from "react-icons/fa6";
 import EditClientDetails from "./EditClientDetails";
 const IntakeSpecialistClients = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    lawyerName: "",
+    dateOfIncident: "",
+    gender: "",
+    managingUsers: [],
+    phoneNumber: "",
+    injurySustained: "",
+    generalCaseInfo: "",
+    consentToCommunicate: false,
+  });
+
+  const lawyerOptions = [
+    "Robert Johnson",
+    "Jane Doe",
+    "Robert Smith",
+    "Michael Davis",
+    "Lisa Wilson",
+  ];
+
+  const managingUserOptions = [
+    "Dev Guru",
+    "Smith Dark",
+    "John Smith",
+    "Emily Clark",
+  ];
+
+  const [isManagingOpen, setIsManagingOpen] = useState(false);
+  const managingRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (managingRef.current && !managingRef.current.contains(event.target)) {
+        setIsManagingOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlePhoneChange = (e) => {
+    const raw = e.target.value || "";
+    const digits = raw.replace(/\D/g, "").slice(0, 10);
+    let formatted = "";
+    if (digits.length === 0) {
+      formatted = "";
+    } else if (digits.length < 4) {
+      formatted = `(${digits}`;
+    } else if (digits.length < 7) {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
+        6,
+        10
+      )}`;
+    }
+    setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
+  };
   const [clients, setClients] = useState([
     {
       id: 1,
@@ -204,10 +277,10 @@ const IntakeSpecialistClients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
- const [selectedClient, setSelectedClient] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-      const [selectedEditClient, setEditSelectedClient] = useState(null);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedEditClient, setEditSelectedClient] = useState(null);
   const itemsPerPage = 7;
 
   const filteredClients = clients.filter((client) => {
@@ -293,34 +366,36 @@ const IntakeSpecialistClients = () => {
       setCurrentPage(page);
     }
   };
-const handleDeleteClient = (id) => {
-  Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    background: "#1f2937", // dark bg
-    color: "#fff", // text color
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#4b5563",
-    confirmButtonText: "Yes, delete it!",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      setClients((prevClients) => prevClients.filter((client) => client.id !== id));
-      Swal.fire({
-        title: "Deleted!",
-        text: "Client has been deleted.",
-        icon: "success",
-        background: "#1f2937",
-        color: "#fff",
-        confirmButtonColor: "#6366F1",
-      });
-    }
-  });
-};
+  const handleDeleteClient = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      background: "#1f2937", // dark bg
+      color: "#fff", // text color
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#4b5563",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setClients((prevClients) =>
+          prevClients.filter((client) => client.id !== id)
+        );
+        Swal.fire({
+          title: "Deleted!",
+          text: "Client has been deleted.",
+          icon: "success",
+          background: "#1f2937",
+          color: "#fff",
+          confirmButtonColor: "#6366F1",
+        });
+      }
+    });
+  };
 
   return (
-    <div className="h-[91vh] bg-gray-900 text-white flex flex-col">
+    <div className=" bg-gray-900 text-white flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0 p-6 border-b border-gray-800">
         <div className="flex items-center space-x-4">
@@ -338,11 +413,11 @@ const handleDeleteClient = (id) => {
 
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => handleViewChange('all')}
+            onClick={() => handleViewChange("all")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeView === 'all'
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              activeView === "all"
+                ? "bg-purple-600 text-white"
+                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
             All Clients
@@ -426,25 +501,24 @@ const handleDeleteClient = (id) => {
                 >
                   {getPriorityLabel(client.priority)}
                 </span>
-                 <FaEye
-                onClick={() => {
-                  setEditSelectedClient(client);
-                  setIsEditModalOpen(true);
-                }}
-                className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
-              />
- <FaEye
-                onClick={() => {
-                  setSelectedClient(client);
-                  setIsModalOpen(true);
-                }}
-                className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
-              />
-            
-
-                <button  onClick={() => handleDeleteClient(client.id)} className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700">
-                  <Trash2 />
-                </button>
+                <Edit
+                  onClick={() => {
+                    setEditSelectedClient(client);
+                    setIsEditModalOpen(true);
+                  }}
+                  className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
+                />
+                <View
+                  onClick={() => {
+                    setSelectedClient(client);
+                    setIsModalOpen(true);
+                  }}
+                  className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
+                />
+                <Trash
+                  onClick={() => handleDeleteClient(client.id)}
+                  className="ml-3 mb-0.5 text-gray-300 cursor-pointer  hover:text-red-400"
+                />
               </div>
             </div>
           ))}
@@ -507,16 +581,16 @@ const handleDeleteClient = (id) => {
           </div>
         </div>
       )}
-          {isEditModalOpen && selectedEditClient && (
+      {isEditModalOpen && selectedEditClient && (
         <EditClientDetails
           client={selectedEditClient}
           onClose={() => {
-           setIsEditModalOpen(false);
+            setIsEditModalOpen(false);
             setEditSelectedClient(null);
           }}
         />
       )}
-         {isModalOpen && selectedClient && (
+      {isModalOpen && selectedClient && (
         <ViewClientDetails
           client={selectedClient}
           onClose={() => {
@@ -525,9 +599,7 @@ const handleDeleteClient = (id) => {
           }}
         />
       )}
-
     </div>
-    
   );
 };
 

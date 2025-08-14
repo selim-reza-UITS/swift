@@ -1,21 +1,9 @@
 import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-  Cell,
-} from "recharts";
-import div from "../../../assets/div.png";
-import message from "../../../assets/message.png";
 import priority from "../../../assets/priority.png";
 import active from "../../../assets/active.png";
-import appoinment from "../../../assets/appoinment.png";
 import { FaPlus } from "react-icons/fa";
 import AddClientForm from "../../Shared/AddClientForm";
+import IntakeSpecialistClients from "./IntakeSpecialistClients";
 const assignments = [
   {
     id: 1,
@@ -117,17 +105,13 @@ const getActionButton = (actionType) => {
 
 const statsData = [
   { title: "Active Clients", value: 24 },
-  { title: "High Priority", value: 3 },
-  { title: "Messages Sent", value: 12 },
-  { title: "Flagged Clients", value: 2 },
+  { title: "Clients Signed This Month", value: 3 },
 ];
 
 // Helper function to return image based on title
 const getImageByTitle = (title) => {
   if (title === "Active Clients") return active;
-  if (title === "High Priority") return priority;
-  if (title === "Messages Sent") return message;
-  if (title === "Flagged Clients") return appoinment;
+  if (title === "Clients Signed This Month") return priority;
   return null; // default if no match
 };
 
@@ -136,7 +120,7 @@ const IntakeSpecialistDashboard = () => {
   const [showAddClientModal, setShowAddClientModal] = React.useState(false);
 
   return (
-    <div className="h-[90vh] bg-[#0f172a] text-white p-6">
+    <div className="h-[85vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
         <h1 className=" text-2xl font-bold">Intake Specialist Dashboard</h1>
         <button
@@ -168,7 +152,7 @@ const IntakeSpecialistDashboard = () => {
         </div>
       )}
       {/* Stats Section */}
-      <div className="grid gap-4 mb-6 lg:grid-cols-2 2xl:grid-cols-4">
+      <div className="grid gap-4 mb-6 lg:grid-cols-2">
         {statsData.map((item, index) => (
           <div
             key={index}
@@ -189,94 +173,7 @@ const IntakeSpecialistDashboard = () => {
 
       {/* Middle Section */}
       <div className="p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-          {/* Recent Client Assignments */}
-          <div className="bg-[#1e293b] rounded-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-white">
-                Recent Client Assignments
-              </h2>
-              <button className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
-                View All
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {assignments.map((assignment) => (
-                <div
-                  key={assignment.id}
-                  className="flex items-center justify-between p-4 bg-[#0f172a] rounded-lg border border-gray-700"
-                >
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-white text-lg mb-1">
-                      {assignment.name}
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      {assignment.assignedTime}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center space-x-3">
-                    <span
-                      className={`px-3 py-1 rounded-md text-sm font-medium text-white ${getStatusColor(
-                        assignment.status
-                      )}`}
-                    >
-                      {getStatusLabel(assignment.status)}
-                    </span>
-                    {getActionButton(assignment.actionType)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recent Messages */}
-          <div className="bg-[#1e293b] rounded-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-3">
-                <h2 className="text-xl font-semibold text-white">
-                  Recent Messages
-                </h2>
-                <span className="px-2 py-1 bg-purple-600 text-white rounded-full text-xs font-medium">
-                  5 New
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className="p-4 bg-gray-750 rounded-lg border border-gray-700"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="font-semibold text-white">
-                          {message.name}
-                        </h3>
-                        {message.isNew && (
-                          <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                        )}
-                      </div>
-                      <p className="text-gray-300 text-sm mb-2">
-                        {message.message}
-                      </p>
-                      <p className="text-gray-500 text-xs">{message.time}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 text-center">
-              <button className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
-                View All Messages
-              </button>
-            </div>
-          </div>
-        </div>
+      <IntakeSpecialistClients />
       </div>
     </div>
   );
