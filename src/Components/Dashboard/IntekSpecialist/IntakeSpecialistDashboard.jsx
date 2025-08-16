@@ -116,7 +116,6 @@ const getImageByTitle = (title) => {
 };
 
 const IntakeSpecialistDashboard = () => {
-  const [activeIndex, setActiveIndex] = React.useState(null);
   const [showAddClientModal, setShowAddClientModal] = React.useState(false);
 
   return (
@@ -146,7 +145,7 @@ const IntakeSpecialistDashboard = () => {
               aria-label="Close"
             >
               &times;
-            </button> */}
+            </button> */} 
             <AddClientForm setShowAddClientModal={setShowAddClientModal} />
           </div>
         </div>

@@ -81,21 +81,21 @@ const ViewClientDetails = ({ onClose, client }) => {
               Injury's Sustained:
             </span>
             <span className="text-[#FFFFFF] text-base">
-              {client.injurySustained || "Lower back pain and stiffness."}
+              {client.injurySustained || "Lower back pain and stiffness"}
             </span>
           </div>
           <div className="flex justify-between my-2">
             <span className="text-[#FFFFFF] text-base">General Case Info:</span>
             <span className="text-[#FFFFFF] text-base">
               {client.generalCaseInfo ||
-                "Client reported back pain after accident."}
+                "Client reported back pain after accident"}
             </span>
           </div>
           <div className="flex justify-between my-2">
             <span className="text-[#FFFFFF] text-base">Insights:</span>
             <span className="text-[#FFFFFF] text-base">
               {client.insights ||
-                "Client reported back pain after accident."}
+                "Client reported back pain after accident"}
             </span>
           </div>
         </div>

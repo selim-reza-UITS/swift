@@ -43,8 +43,8 @@ function ClientDetails() {
     scheduledNextSend: "2025-9-20",
     clientSentiment: "Positive",
     riskLevel: "High",
-    generalCaseInfo: "Client reported back pain after accident.",
-    injuriesSustained: "Lower back pain and stiffness.",
+    generalCaseInfo: "Client reported back pain after accident",
+    injuriesSustained: "Lower back pain and stiffness",
     consentToCommunicate: false,
   });
   const navigate = useNavigate();

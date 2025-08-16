@@ -324,7 +324,7 @@ const IntakeSpecialistClients = () => {
       case "paused":
         return "Paused";
       case "recovery":
-        return "Recovery";
+        return "Recently Deleted";
       default:
         return "Unknown";
     }
@@ -346,11 +346,11 @@ const IntakeSpecialistClients = () => {
   const getPriorityLabel = (priority) => {
     switch (priority) {
       case "high":
-        return "High Priority";
+        return "High Risk";
       case "medium":
-        return "Medium Priority";
+        return "Medium Risk";
       case "low":
-        return "Low Priority";
+        return "Low Risk";
       default:
         return "Unknown";
     }
@@ -420,7 +420,7 @@ const IntakeSpecialistClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            All Clients
+            All 
           </button>
           <button
             onClick={() => handleViewChange("active")}
@@ -430,7 +430,7 @@ const IntakeSpecialistClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            View Active
+             Active
           </button>
           <button
             onClick={() => handleViewChange("paused")}
@@ -440,7 +440,7 @@ const IntakeSpecialistClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            View Paused
+             Paused
           </button>
           <button
             onClick={() => handleViewChange("recovery")}
@@ -450,7 +450,7 @@ const IntakeSpecialistClients = () => {
                 : "bg-gray-700 text-gray-300"
             }`}
           >
-            Recovery
+            Recently Deleted
           </button>
         </div>
       </div>
