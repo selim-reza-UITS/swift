@@ -16,6 +16,7 @@ import active from "../../../assets/active.png";
 import appoinment from "../../../assets/appoinment.png";
 import { FaPlus } from "react-icons/fa";
 import AddClientForm from "../../Shared/AddClientForm";
+
 const fakeClients = [
   {
     name: "Smith & Associates",
@@ -28,14 +29,44 @@ const fakeClients = [
     added: "5 days ago",
   },
   {
-    name: "Smith & Associates",
+    name: "Johnson Law Group",
     status: "Active",
-    added: "2 days ago",
+    added: "1 day ago",
   },
   {
-    name: "Legal Partners LLC",
+    name: "Davis & Associates",
     status: "Pending",
-    added: "5 days ago",
+    added: "3 days ago",
+  },
+  {
+    name: "Wilson Legal Services",
+    status: "Active",
+    added: "4 days ago",
+  },
+  {
+    name: "Brown Law Firm",
+    status: "Pending",
+    added: "6 days ago",
+  },
+  {
+    name: "Miller & Co.",
+    status: "Active",
+    added: "1 week ago",
+  },
+  {
+    name: "Taylor Legal Partners",
+    status: "Pending",
+    added: "2 weeks ago",
+  },
+  {
+    name: "Anderson & Sons",
+    status: "Active",
+    added: "3 weeks ago",
+  },
+  {
+    name: "Garcia Legal",
+    status: "Pending",
+    added: "1 month ago",
   },
 ];
 
@@ -58,16 +89,43 @@ const flaggedClients = [
     alert: "Case progressing well",
     priority: "Low",
   },
+  {
+    name: "Robert Wilson",
+    lastContact: "4 hours ago",
+    alert: "Payment overdue",
+    priority: "High",
+  },
+  {
+    name: "Lisa Anderson",
+    lastContact: "2 days ago",
+    alert: "Document review needed",
+    priority: "Medium",
+  },
+  {
+    name: "David Brown",
+    lastContact: "5 days ago",
+    alert: "Case update required",
+    priority: "High",
+  },
+  {
+    name: "Jennifer Martinez",
+    lastContact: "1 week ago",
+    alert: "Client satisfaction survey",
+    priority: "Low",
+  },
+  {
+    name: "Christopher Lee",
+    lastContact: "3 days ago",
+    alert: "Contract renewal pending",
+    priority: "Medium",
+  },
 ];
 
 const sentimentData = [
-  { day: "Sun", value: 30 },
-  { day: "Mon", value: 40 },
-  { day: "Tue", value: 50 },
-  { day: "Wed", value: 60 },
-  { day: "Thu", value: 80 },
-  { day: "Fri", value: 60 },
-  { day: "Sat", value: 50 },
+  { week: "Week 1", value: 30 },
+  { week: "Week 2", value: 40 },
+  { week: "Week 3", value: 50 },
+  { week: "Week 4", value: 60 },
 ];
 
 const CustomTooltip = ({ active, payload }) => {
@@ -84,26 +142,34 @@ const CustomTooltip = ({ active, payload }) => {
 };
 const statsData = [
   { title: "Active Clients", value: 24 },
-  { title: "High Risk", value: 3 },
-  { title: "Messages Sent", value: 12 },
-  { title: "Flagged Clients", value: 2 },
+  { title: "Issues", value: 3 },
+  { title: "Messages Sent This Month", value: 12 },
 ];
 
 // Helper function to return image based on title
 const getImageByTitle = (title) => {
   if (title === "Active Clients") return active;
-  if (title === "High Risk") return priority;
-  if (title === "Messages Sent") return message;
-  if (title === "Flagged Clients") return appoinment;
+  if (title === "Issues") return priority;
+  if (title === "Messages Sent This Month") return message;
+
   return null; // default if no match
 };
 
 const CaseMangerDashboard = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [showAddClientModal, setShowAddClientModal] = useState(false);
+  const [showAllClients, setShowAllClients] = useState(false);
+  const [showAllFlaggedClients, setShowAllFlaggedClients] = useState(false);
+
+  const initialFakeClients = showAllClients
+    ? fakeClients
+    : fakeClients.slice(0, 4);
+  const initialFlaggedClients = showAllFlaggedClients
+    ? flaggedClients
+    : flaggedClients.slice(0, 3);
 
   return (
-    <div className="h-[90vh] bg-[#0f172a] text-white p-6">
+    <div className="h-[86vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold "> Dashboard</h1>
         <button
@@ -116,7 +182,7 @@ const CaseMangerDashboard = () => {
       {/* Modal for Add Client */}
       {showAddClientModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black bg-opacity-40"
           onClick={() => setShowAddClientModal(false)}
         >
           <div
@@ -135,7 +201,7 @@ const CaseMangerDashboard = () => {
         </div>
       )}
       {/* Stats Section */}
-      <div className="grid gap-4 mb-6 lg:grid-cols-2 2xl:grid-cols-4">
+      <div className="grid gap-4 mb-6 lg:grid-cols-2 2xl:grid-cols-3">
         {statsData.map((item, index) => (
           <div
             key={index}
@@ -159,11 +225,20 @@ const CaseMangerDashboard = () => {
         {/* High Concern Clients */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">High Concern Clients</h3>
-            <button className="text-sm text-blue-400">View All</button>
+            <h3 className="text-lg font-semibold">Clients at High Risk</h3>
+            <button
+              className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              onClick={() => setShowAllClients(!showAllClients)}
+            >
+              {showAllClients ? "View Less" : "View All"}
+            </button>
           </div>
-          <div className="space-y-4">
-            {fakeClients.map((client, idx) => (
+          <div
+            className={`space-y-4 ${
+              showAllClients ? "overflow-y-auto max-h-[400px] pr-2" : ""
+            }`}
+          >
+            {initialFakeClients.map((client, idx) => (
               <div
                 key={idx}
                 className="p-3 bg-transparent border rounded-lg border-[#F3F4F6] flex items-center justify-between hover:bg-[#374151] transition-colors duration-200"
@@ -199,8 +274,8 @@ const CaseMangerDashboard = () => {
         </div>
 
         {/* Client Sentiment Graph */}
-        <div className="bg-[#1e293b] p-4 rounded-lg">
-          <h3 className="mb-4 text-lg font-semibold">Firm Reputation Score</h3>
+        <div className="bg-[#1e293b] p-4 rounded-lg relative">
+          <h3 className="mb-4 text-lg font-semibold">Your Reputation Score</h3>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart
               data={sentimentData}
@@ -214,7 +289,7 @@ const CaseMangerDashboard = () => {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis dataKey="day" stroke="#cbd5e1" />
+              <XAxis dataKey="week" stroke="#cbd5e1" />
               <YAxis stroke="#cbd5e1" />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="value" radius={[5, 5, 0, 0]}>
@@ -231,11 +306,23 @@ const CaseMangerDashboard = () => {
 
         {/* Flagged Clients */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
-          <h3 className="mb-4 text-lg font-semibold text-[#DC2626]">
-            Flagged Clients
-          </h3>
-          <div className="space-y-4">
-            {flaggedClients.map((client, idx) => (
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-[#DC2626]">
+              Flagged Clients
+            </h3>
+            <button
+              className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              onClick={() => setShowAllFlaggedClients(!showAllFlaggedClients)}
+            >
+              {showAllFlaggedClients ? "View Less" : "View All"}
+            </button>
+          </div>
+          <div
+            className={`space-y-4 ${
+              showAllFlaggedClients ? "overflow-y-auto max-h-[400px] pr-2" : ""
+            }`}
+          >
+            {initialFlaggedClients.map((client, idx) => (
               <div
                 key={idx}
                 className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA]"

@@ -1,14 +1,18 @@
 import { FaSignOutAlt } from "react-icons/fa";
-
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { VscGraphLine } from "react-icons/vsc";
 import { useEffect, useRef, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { IoMdSettings } from "react-icons/io";
+import { Plus } from "lucide-react";
+import AddClientForm from "../../Shared/AddClientForm";
+
 const CaseMangerSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSettingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
+  const [showAddClientModal, setShowAddClientModal] = useState(false);
+
   const navigate = useNavigate();
 
   const dropdownRef = useRef(null);
@@ -38,12 +42,15 @@ const CaseMangerSidebar = () => {
     <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen flex flex-col justify-between  open-sns">
       {/* Logo Section */}
       <div className="flex flex-col py-4">
-        <Link to={'/'}>
+        <Link to={"/"}>
           <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
-            <a className="block text-teal-600" href="#">
+            <Link
+              to={"/dashboard/caseManager"}
+              className="block text-teal-600"
+              href="#"
+            >
               <img src={logo} alt="" className="" />
-            </a>
-            <h1 className="text-3xl text-white ">Arviso</h1>
+            </Link>
           </div>
         </Link>
         {/* Menu Items */}
@@ -105,6 +112,37 @@ const CaseMangerSidebar = () => {
               </div>
             </div>
           </NavLink>
+          <NavLink
+            onClick={() => setShowAddClientModal(true)}
+            className="flex items-center justify-between w-[280px]"
+          >
+            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+              <div
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
+                  ${
+                    isActiveClient
+                      ? "bg-[#FFFFFF] text-black rounded-xl"
+                      : "text-[#9CA3AF]"
+                  }`}
+              >
+                <Plus className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">New Client</h1>
+              </div>
+            </div>
+          </NavLink>
+          {showAddClientModal && (
+            <div
+              className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-60"
+              onClick={() => setShowAddClientModal(false)}
+            >
+              <div
+                className="relative w-full max-w-lg p-0 rounded-lg shadow-lg bg-slate-800"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <AddClientForm setShowAddClientModal={setShowAddClientModal} />
+              </div>
+            </div>
+          )}
         </nav>
       </div>
 
