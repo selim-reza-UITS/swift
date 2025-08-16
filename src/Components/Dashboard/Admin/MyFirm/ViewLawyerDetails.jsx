@@ -36,18 +36,18 @@ const ViewLawyerDetails = ({ lawyer, onClose }) => {
             <span className="text-base">Specialization:</span>
             <span className="text-base">{lawyer.specialization}</span>
           </div>
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <span className="text-base">Cases Handled:</span>
             <span className="text-base">{lawyer.cases}</span>
-          </div>
-          <div className="flex justify-between">
+          </div> */}
+          {/* <div className="flex justify-between">
             <span className="text-base">Firm:</span>
             <span className="text-base">{lawyer.firm}</span>
-          </div>
-          <div className="flex justify-between">
+          </div> */}
+          {/* <div className="flex justify-between">
             <span className="text-base">Manager:</span>
             <span className="text-base">{lawyer.manager}</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Placeholder Sections */}

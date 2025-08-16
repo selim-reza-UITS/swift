@@ -13,6 +13,7 @@ import { FaChevronLeft } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa";
 import ViewLawyerDetails from "./ViewLawyerDetails";
 import ViewMemberDetails from "./ViewMemberDetails";
+import EditLawyer from "./EditLawyer";
 const MyFirm = () => {
   const [activeTab, setActiveTab] = useState("lawyers");
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,13 +21,14 @@ const MyFirm = () => {
   const [showUserModal, setShowUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedLawyer, setSelectedLawyer] = useState(null);
+  const [selectedEditLawyer, setSelectedEditLawyer] = useState(null);
   const [currentLawyerPage, setCurrentLawyerPage] = useState(1);
   const [currentMemberPage, setCurrentMemberPage] = useState(1);
   const itemsPerPage = 4;
 
   const firmStats = {
     performanceScore: 85,
-    reputation:70,
+    reputation: 70,
     totalClients: 247,
     activeCases: 89,
     teamMembers: 158,
@@ -168,44 +170,51 @@ const MyFirm = () => {
     }
   };
 
-const handleDelete = (type, id) => {
-  Swal.fire({
-    title: "Are you sure?",
-    text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#4b5563", // Tailwind gray-700
-    confirmButtonText: "Yes, delete it!",
-    background: "#1f2937", // dark background
-    color: "#ffffff", // white text
-  }).then((result) => {
-    if (result.isConfirmed) {
-      if (type === "lawyer") {
-        const updated = lawyerList.filter((lawyer) => lawyer.id !== id);
-        setLawyerList(updated);
-      } else {
-        const updated = memberList.filter((member) => member.id !== id);
-        setMemberList(updated);
+  const handleDelete = (type, id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#4b5563", // Tailwind gray-700
+      confirmButtonText: "Yes, delete it!",
+      background: "#1f2937", // dark background
+      color: "#ffffff", // white text
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (type === "lawyer") {
+          const updated = lawyerList.filter((lawyer) => lawyer.id !== id);
+          setLawyerList(updated);
+        } else {
+          const updated = memberList.filter((member) => member.id !== id);
+          setMemberList(updated);
+        }
+
+        // Show success alert
+        Swal.fire({
+          title: "Deleted!",
+          text: "The entry has been deleted.",
+          icon: "success",
+          background: "#1f2937",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1", // Tailwind indigo-500
+        });
       }
-
-      // Show success alert
-      Swal.fire({
-        title: "Deleted!",
-        text: "The entry has been deleted.",
-        icon: "success",
-        background: "#1f2937",
-        color: "#ffffff",
-        confirmButtonColor: "#6366F1", // Tailwind indigo-500
-      });
-    }
-  });
-};
-
+    });
+  };
 
   const handleViewDetails = (type, data) => {
     if (type === "lawyer") {
       setSelectedLawyer(data);
+    } else {
+      setSelectedUser(data);
+    }
+  };
+  
+    const  handleEditDetails  = (type, data) => {
+    if (type === "lawyer") {
+     setSelectedEditLawyer(data);
     } else {
       setSelectedUser(data);
     }
@@ -216,7 +225,7 @@ const handleDelete = (type, id) => {
       {/* Stats Section */}
       <div className="flex flex-row items-center gap-8 mb-8">
         <div className="bg-[#1e293b] p-4 rounded-lg w-1/2">
-          <h2 className="text-2xl font-bold">Firm Performance Score</h2>
+          <h2 className="text-2xl font-bold">Firm Health Score</h2>
           <div className="flex flex-col items-center gap-3">
             <p className="mt-4 text-5xl font-semibold poppins">
               {firmStats.performanceScore}%
@@ -230,7 +239,7 @@ const handleDelete = (type, id) => {
             />
           </div>
         </div>
-          <div className="bg-[#1e293b] p-4 rounded-lg w-1/2">
+        <div className="bg-[#1e293b] p-4 rounded-lg w-1/2">
           <h2 className="text-2xl font-bold">Firm Reputation</h2>
           <div className="flex flex-col items-center gap-3">
             <p className="mt-4 text-5xl font-semibold poppins">
@@ -293,7 +302,7 @@ const handleDelete = (type, id) => {
               : "text-[#FFFFFF]"
           }`}
         >
-          Members
+          Users
         </button>
         <button
           onClick={() => {
@@ -327,7 +336,7 @@ const handleDelete = (type, id) => {
           onClick={handleAddClick}
         >
           <GoPlusCircle className="w-4 h-4" />
-          {activeTab === "lawyers" ? "Add Lawyer" : "Add Member"}
+          {activeTab === "lawyers" ? "Add Lawyer" : "Add Users"}
         </button>
       </div>
 
@@ -340,6 +349,7 @@ const handleDelete = (type, id) => {
               data={lawyer}
               onDelete={() => handleDelete("lawyer", lawyer.id)}
               onView={() => handleViewDetails("lawyer", lawyer)}
+            onEdit={() => handleEditDetails("lawyer", lawyer)}
             />
           ))}
 
@@ -482,6 +492,12 @@ const handleDelete = (type, id) => {
         <ViewLawyerDetails
           lawyer={selectedLawyer}
           onClose={() => setSelectedLawyer(null)}
+        />
+      )}
+       {selectedEditLawyer&& (
+        <EditLawyer
+          lawyer={selectedEditLawyer}
+          onClose={() => setSelectedEditLawyer(null)}
         />
       )}
       {selectedUser && (

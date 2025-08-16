@@ -44,14 +44,16 @@ const AdminSidebar = () => {
     <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen flex flex-col justify-between  open-sns">
       {/* Logo Section */}
       <div className="flex flex-col py-4">
-        <NavLink to="/" className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
-          <a className="block text-teal-600" href="#">
-            <img src={logo} alt="" className="" />
+        <NavLink
+          to="/"
+          className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-2 "
+        >
+          <a className="block text-teal-60 text-2xl " href="#">
+            <img src={logo} alt="" className="w-[50px] h-[50px]" />
           </a>
-          <h1 className="text-3xl text-white ">Arviso</h1>
         </NavLink>
         {/* Menu Items */}
-        <nav className="flex flex-col  text-[#364636] mt-9">
+        <nav className="flex flex-col  text-[#364636] mt-4">
           <NavLink
             to="/dashboard/admin"
             className="flex items-center justify-between w-[280px]"
@@ -82,11 +84,11 @@ const AdminSidebar = () => {
                   ${isActiveClient ? "text-[#FFFFFF] " : "text-[#9CA3AF]"}`}
               >
                 <HiMiniUserGroup className="w-[22px] h-[22px] font-bold  " />{" "}
-                <h1 className="text-xl font-normal poppins">Client</h1>
+                <h1 className="text-xl font-normal poppins">Clients</h1>
               </div>
             </div>
           </NavLink>
-       
+
           <NavLink
             to="/dashboard/my-firm"
             className="flex items-center justify-between w-[280px]"
@@ -104,7 +106,7 @@ const AdminSidebar = () => {
               </div>
             </div>
           </NavLink>
-             <NavLink
+          <NavLink
             to="/dashboard/settings"
             className="flex items-center justify-between w-[280px]"
           >

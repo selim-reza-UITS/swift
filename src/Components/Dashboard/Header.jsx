@@ -17,10 +17,10 @@ const Header = () => {
     <div className="flex items-center justify-between px-6 py-4 bg-[#161E2F] text-white poppins">
       {/* Left Side: Title and Welcome Message */}
       <div>
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        {/* <h1 className="text-2xl font-semibold">Dashboard</h1>
         <p className="text-sm text-[#9CA3AF] mt-2">
           Welcome back, Sarah. Here's your case overview.
-        </p>
+        </p> */}
       </div>
 
       {/* Right Side: Feedback Button (Only for allowed roles, not superadmin) */}

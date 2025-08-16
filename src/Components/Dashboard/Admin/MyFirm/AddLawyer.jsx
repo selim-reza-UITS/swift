@@ -101,12 +101,11 @@ const AddLawyer = ({ onClose }) => {
               placeholder=""
               value={formData.specialization}
               onChange={handleChange}
-              required
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
           </div>
           {/*notes */}
-          <div className="flex flex-col gap-1 ">
+          {/* <div className="flex flex-col gap-1 ">
             <label
               htmlFor="specialization"
               className="text-base poppins text-[#D1D5DB] "
@@ -121,7 +120,7 @@ const AddLawyer = ({ onClose }) => {
               onChange={handleChange}
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
-          </div>
+          </div> */}
 
           {/* Save Button */}
           <div className="flex justify-center">

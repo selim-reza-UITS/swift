@@ -13,7 +13,7 @@ const ViewMemberDetails = ({ member, onClose }) => {
         </button>
 
         <div className="mt-2 text-center">
-    <img
+          <img
             src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
             alt={member.name}
             className="object-cover w-20 h-20 mx-auto rounded-full"
@@ -27,28 +27,24 @@ const ViewMemberDetails = ({ member, onClose }) => {
             <span className="text-[#FFFFFF] text-base">Role:</span>
             <span className="text-[#FFFFFF] text-base">{member.role}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-[#FFFFFF] text-base">Under Lawyer ID:</span>
-            <span className="text-[#FFFFFF] text-base">{member.lawyerId}</span>
-          </div>
         </div>
 
         <div className="mt-7">
-          <p className="mb-4 font-semibold text-s poppins">Communication Status</p>
-      
+          <p className="mb-4 font-semibold text-s poppins">
+            Communication Statistics
+          </p>
+
           <div className="flex justify-between mb-3">
-            <span className="text-base font-normal poppins">Sentiment:</span>
+            <span className="text-base font-normal poppins">
+              Average Sentiment:
+            </span>
             <span className="font-medium text-green-400">Positive</span>
           </div>
           <div className="flex justify-between">
-            <span>Concern Level:</span>
+            <span>Average Client Risk:</span>
             <span className="font-medium text-red-500">Medium</span>
           </div>
         </div>
-
-       
-
-      
       </div>
     </div>
   );

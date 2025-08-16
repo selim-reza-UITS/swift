@@ -29,7 +29,7 @@ const clientsData = [
     name: "Lisa Wilson",
     phone: "(555) 456-7890",
     manager: "David Brown",
-    status: "Recovery",
+    status: "Recently Deleted",
     priority: "Low Priority",
     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
   },
@@ -38,7 +38,7 @@ const clientsData = [
 const statusColors = {
   Active: "bg-[#A855F7] text-[#FFFFFF]",
   Paused: "bg-[#F59E0B] text-[#161E2F]",
-  Recovery: "bg-[#EF4444] text-[#161E2F]",
+  "Recently Deleted": "bg-[#EF4444] text-[#161E2F]",
 };
 
 const priorityColors = {
@@ -65,17 +65,17 @@ const Client = () => {
       {/* Search & Filters */}
       <div className="flex  items-center justify-between gap-5 mb-4 bg-[#161E2F] px-4 py-4 rounded-md poppins">
         <div className="w-1/2">
-<input
-          type="text"
-          placeholder="Search clients..."
-          className="flex-1 px-4 py-2 text-[#ADAEBC] bg-transparent border border-[#2A2E37] rounded-xl w-1/2"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Search clients..."
+            className="flex-1 px-4 py-2 text-[#ADAEBC] bg-transparent border border-[#2A2E37] rounded-xl w-1/2"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-        
+
         <div className="flex items-center gap-2 ">
-           <button
+          <button
             onClick={() => setFilter("Active")}
             className="px-3 py-2 text-sm text-[#FFFFFF] bg-[#6366F1] rounded-md hover:bg-[#2f31af]"
           >
@@ -85,19 +85,19 @@ const Client = () => {
             onClick={() => setFilter("Active")}
             className="px-3 py-2 text-sm text-[#FFFFFF] bg-[#6366F1] rounded-md hover:bg-[#2f31af]"
           >
-            View Active
+            Active
           </button>
           <button
             onClick={() => setFilter("Paused")}
             className="px-3 py-2 text-sm text-[#374151] bg-[#E5E7EB] rounded-md hover:bg-[#acaeb1]"
           >
-            View Paused
+            Paused
           </button>
           <button
-            onClick={() => setFilter("Recovery")}
+            onClick={() => setFilter("Recently Deleted")}
             className="px-3 py-2 text-sm text-[#161E2F] bg-[#F59E0B] rounded-md hover:bg-[#f1b142]"
           >
-            Recovery
+            Recently Deleted
           </button>
         </div>
       </div>
@@ -139,12 +139,12 @@ const Client = () => {
               >
                 {client.priority}
               </span>
-                  <NavLink to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
-                  <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700">
-                    <FaEye />
-                  </button>
-                </NavLink>
-           
+              <NavLink to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
+                <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700">
+                  <FaEye />
+                </button>
+              </NavLink>
+
               <FaTrashAlt className="text-gray-300 cursor-pointer hover:text-red-500" />
             </div>
           </div>
