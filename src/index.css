@@ -49,3 +49,12 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
 }
+
+/* Scrollbar hide for all browsers */
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

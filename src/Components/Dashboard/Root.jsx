@@ -72,7 +72,7 @@ const Root = () => {
         <Header />
 
         {/* Render Child Routes or Default Dashboard */}
-        <main className="flex-1 bg-[#101725] dark:bg-[#101725]  p-4 overflow-y-auto">
+        <main className="flex-1 bg-[#101725] dark:bg-[#101725]  p-4 overflow-y-auto scrollbar-hide">
           {isDashboardRoot ? renderDefaultDashboard() : <Outlet />}
         </main>
       </div>

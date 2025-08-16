@@ -50,7 +50,7 @@ const AddUser = ({ onClose }) => {
         {/* Title */}
         <div className="flex items-center gap-2 mb-4">
           <FaUserPlus className="text-[#6366F1] w-[18px] h-[18px]" />
-          <h2 className="text-lg font-semibold poppins">Add New Lawyer</h2>
+          <h2 className="text-lg font-semibold poppins">Add New User</h2>
         </div>
 
         {/* Form */}
