@@ -45,14 +45,14 @@ export const authapi = createApi({
     }),
     forgotPassword: builder.mutation({
       query: (body) => ({
-        url: "/api/v1/forgot-password/",
+        url: "/auth/send-otp/",
         method: "POST",
         body,
       }),
     }),
     verifyOtp: builder.mutation({
       query: (body) => ({
-        url: "/api/v1/verify-otp/",
+        url: "/auth/verify-otp/",
         method: "POST",
         body,
       }),
