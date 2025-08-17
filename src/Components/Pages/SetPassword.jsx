@@ -1,16 +1,47 @@
 import React, { useState } from "react";
 import logo from "../../assets/loginlogo.png";
+import { useSetPasswordMutation } from "../../Redux/feature/auth/authapi";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function SetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const params = useParams();
+  const navigate = useNavigate();
+  console.log(params);
+  const [setPassword, { isLoading }] = useSetPasswordMutation();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
-    console.log("Password set:", newPassword);
+
+    if (!params.uuid || !params.token) {
+      toast.error("Invalid reset link. Please check your email.");
+      console.error("Missing params:", params);
+      return;
+    }
+
+    try {
+      const response = await setPassword({
+        password: newPassword,
+        uuid: params.uuid,
+        token: params.token,
+      });
+      if (response?.error) {
+        toast.error(response?.error?.data?.password[0]);
+      }
+
+      if (response.data) {
+        toast.success("Password set successfully!");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Set password error:", error);
+      toast.error("Failed to set password. Please try again.");
+    }
   };
 
   return (

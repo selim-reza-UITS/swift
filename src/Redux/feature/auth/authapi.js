@@ -64,6 +64,13 @@ export const authapi = createApi({
         body,
       }),
     }),
+    setPassword: builder.mutation({
+      query: (body) => ({
+        url: `/auth/set-password/${body.uuid}/${body.token}/`,
+        method: "POST",
+        body: { password: body.password },
+      }),
+    }),
     // This endpoint will automatically include the Authorization header if the user is logged in
     // and the access token is present in Redux state or localStorage (see baseQuery above).
     chat: builder.mutation({
@@ -118,4 +125,5 @@ export const {
   useGetChatMessagesQuery,
   useUpdateProfileMutation,
   useGetUserProfileQuery,
+  useSetPasswordMutation,
 } = authapi;

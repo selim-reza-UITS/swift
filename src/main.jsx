@@ -58,7 +58,7 @@ const router = createBrowserRouter([
     element: <SetNew></SetNew>,
   },
   {
-    path: "/set-password",
+    path: `/set-password/:uuid/:token`,
     element: <SetPassword></SetPassword>,
   },
   {

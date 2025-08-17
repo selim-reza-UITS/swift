@@ -42,8 +42,8 @@ export default function Login() {
       setMessage(`Logged in as ${role}`);
       navigate("/dashboard");
     } catch (error) {
-      toast.error( error?.data?.detail[0]);
-      setMessage( "Login failed. Please try again.");
+      toast.error(error?.data?.detail[0]);
+      setMessage("Login failed. Please try again.");
     }
   };
 
