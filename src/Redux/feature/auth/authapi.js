@@ -29,13 +29,6 @@ export const authapi = createApi({
   baseQuery: baseQuery,
   tagTypes: ["users", "chatSessions"],
   endpoints: (builder) => ({
-    register: builder.mutation({
-      query: (body) => ({
-        url: "/api/v1/register/",
-        method: "POST",
-        body,
-      }),
-    }),
     login: builder.mutation({
       query: (body) => ({
         url: "/auth/login/",
@@ -59,7 +52,7 @@ export const authapi = createApi({
     }),
     resetPassword: builder.mutation({
       query: (body) => ({
-        url: "/api/v1/reset-password/",
+        url: "/auth/reset-password/",
         method: "POST",
         body,
       }),
@@ -71,8 +64,7 @@ export const authapi = createApi({
         body: { password: body.password },
       }),
     }),
-    // This endpoint will automatically include the Authorization header if the user is logged in
-    // and the access token is present in Redux state or localStorage (see baseQuery above).
+   
     chat: builder.mutation({
       query: (body) => ({
         url: "/api/v1/chat/",
@@ -115,7 +107,6 @@ export const authapi = createApi({
 });
 
 export const {
-  useRegisterMutation,
   useLoginMutation,
   useForgotPasswordMutation,
   useVerifyOtpMutation,
