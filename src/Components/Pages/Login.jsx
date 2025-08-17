@@ -4,6 +4,8 @@ import loginImage from "../../assets/loginpage.png";
 import login from "../../assets/login-banner.png";
 import logo from "../../assets/loginlogo.png";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../Redux/feature/auth/authapi";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,28 +13,38 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false); // 👈 New state
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let role = "";
 
-    if (email === "admin@gmail.com") {
-      role = "admin";
-    } else if (email === "superadmin@gmail.com") {
-      role = "superadmin";
-    } else if (email === "case@gmail.com") {
-      role = "CaseManager";
-    } else if (email === "intek@gmail.com") {
-      role = "IntekSpecialist";
-    } else {
-      setMessage("Invalid email. Try admin@gmail.com or user@gmail.com");
-      return;
+    try {
+      const response = await login({ email, password }).unwrap();
+      console.log("Login response:", response.data.role);
+
+      let role = "";
+
+      if (response?.data?.role === "Super Admin") {
+        role = "superadmin";
+      } else if (response?.data?.role === "Admin") {
+        role = "admin";
+      } else if (response?.data?.role === "Case Manager") {
+        role = "CaseManager";
+      } else if (response?.data?.role === "Intake Specialist") {
+        role = "IntekSpecialist";
+      } else {
+        setMessage("Invalid role. Please contact administrator.");
+        return;
+      }
+
+      localStorage.setItem("userRole", role);
+      localStorage.setItem("userEmail", email);
+      setMessage(`Logged in as ${role}`);
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error( error?.data?.detail[0]);
+      setMessage( "Login failed. Please try again.");
     }
-
-    localStorage.setItem("userRole", role);
-    localStorage.setItem("userEmail", email);
-    setMessage(`Logged in as ${role}`);
-    navigate("/dashboard");
   };
 
   return (
@@ -51,7 +63,7 @@ export default function Login() {
                 <a className="block text-teal-600" href="#">
                   <img src={logo} alt="" />
                 </a>
-                <h1 className="text-black poppins">Arviso</h1>
+                <h1 className="text-white poppins">Arviso</h1>
               </div>
               <p className="text-4xl font-bold text-blue-400 poppins">
                 Log in to your account
@@ -107,9 +119,10 @@ export default function Login() {
               <div className="w-1/2 mx-auto">
                 <button
                   type="submit"
-                  className="w-full py-2 rounded-xl bg-gradient-to-r from-[#95016D] via-[#7601C1] to-[#0124B6] text-white font-bold hover:opacity-90 transition outfit"
+                  disabled={isLoading}
+                  className="w-full py-2 rounded-xl bg-gradient-to-r from-[#95016D] via-[#7601C1] to-[#0124B6] text-white font-bold hover:opacity-90 transition outfit disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Log In
+                  {isLoading ? "Logging in..." : "Log In"}
                 </button>
               </div>
             </form>

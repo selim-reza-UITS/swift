@@ -5,16 +5,13 @@ export function PrivateRoute({ children, allowedRoles }) {
   const accessToken = useSelector((state) => state.auth?.accessToken);
   const refreshToken = useSelector((state) => state.auth?.refreshToken);
   const user = useSelector((state) => state.auth?.user);
+  console.log(user)
 
-  // Handle nested structure for both admin and student
-  const role = user?.role || user?.user?.role;
-  const isAuthenticated = user?.is_active || user?.user?.is_active;
-
-  const location = useLocation();
+  const location = useLocation()
 
   console.log("AccessToken:", accessToken);
   console.log("RefreshToken:", refreshToken);
-  console.log("User Role:", role);
+  console.log("User Role:", user?.role);
   console.log("Allowed Roles:", allowedRoles);
   console.log("Authenticated:", isAuthenticated);
 

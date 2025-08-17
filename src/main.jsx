@@ -1,5 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -10,6 +12,7 @@ import AdminDashboard from "./Components/Dashboard/Admin/AdminDashboard.jsx";
 import UserDashboard from "./Components/Dashboard/User/UserDashboard.jsx";
 import Error from "./Error.jsx";
 import Root from "./Components/Dashboard/Root.jsx";
+import { store, persistor } from "./Redux/store.js";
 
 import Terms from "./Components/TermsandCondition/Terms.jsx";
 import Privacy from "./Components/PrivacyandPolicy/Privacy.jsx";
@@ -26,6 +29,8 @@ import MyFirm from "./Components/Dashboard/Admin/MyFirm/MyFirm.jsx";
 import Settings from "./Components/Dashboard/Admin/Settings/Settings.jsx";
 import Client from "./Components/Dashboard/Admin/Client/Client.jsx";
 import LawFirm from "./Components/Dashboard/SuperAdmin/LawFirm/LawFirm.jsx";
+import { Toaster } from "react-hot-toast";
+import SetPassword from "./Components/Pages/SetPassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: "/set",
     element: <SetNew></SetNew>,
+  },
+  {
+    path: "/set-password",
+    element: <SetPassword></SetPassword>,
   },
   {
     path: "/dashboard",
@@ -127,6 +136,11 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <Toaster />
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
   </StrictMode>
 );
