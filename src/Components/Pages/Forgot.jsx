@@ -5,12 +5,14 @@ import logo from "../../assets/loginlogo.png";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import Verification from "./Verification";
+import { useForgotPasswordMutation } from "../../Redux/feature/auth/authapi";
 
 const Forgot = () => {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [message, setMessage] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [forgotPassword] = useForgotPasswordMutation();
   const handleOtpSend = async (e) => {
     e.preventDefault();
     setErrorMessage(""); // Clear old error
@@ -21,8 +23,8 @@ const Forgot = () => {
     }
 
     try {
-      //   const response = await forgot({ email }).unwrap();
-      console.log("OTP Sent:");
+      const response = await forgotPassword({ email })
+      console.log("OTP Sent:", response);
 
       localStorage.setItem("email", email);
 
@@ -31,7 +33,7 @@ const Forgot = () => {
         icon: "success",
         title: "OTP Sent Successfully",
         // text: response?.message || "An OTP has been sent to your email.",
-          text: "An OTP has been sent to your email.",
+        text: "An OTP has been sent to your email.",
         confirmButtonColor: "#3085d6",
       });
       setOtpSent(true);
@@ -74,13 +76,14 @@ const Forgot = () => {
                     Reset Your Password
                   </p>
                   <p className="text-[#54657E] w-2/3 mt-2 text-base poppin font-normal  poppins">
-               Enter your email to receive a one-time password (OTP) to reset your password.
+                    Enter your email to receive a one-time password (OTP) to
+                    reset your password.
                   </p>
                 </div>
                 <form onSubmit={handleOtpSend} className="space-y-4">
                   <div>
                     <label className="block text-[#979797] text-base mb-1 outfit">
-                      Email 
+                      Email
                     </label>
                     <input
                       type="email"

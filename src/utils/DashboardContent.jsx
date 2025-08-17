@@ -7,7 +7,6 @@ import SuperAdminDashboard from "../Components/Dashboard/SuperAdmin/SuperAdminDa
 import IntekSpecialistDashboard from "../Components/Dashboard/IntekSpecialist/IntakeSpecialistDashboard";
 
 export default function DashboardContent() {
-  //   const role = useSelector((state) => state.auth?.user?.role);
   const role = getRole();
 
   if (!role) return <p>Loading...</p>;
@@ -17,9 +16,9 @@ export default function DashboardContent() {
       return <SuperAdminDashboard />;
     case "admin":
       return <AdminDashboard />;
-    case "CaseManager":
+    case "casemanager":
       return <CaseMangerDashboard />;
-    case "IntekSpecialist":
+    case "intekspecialist":
       return <IntekSpecialistDashboard></IntekSpecialistDashboard>;
     default:
       return <Navigate to="/" />;
