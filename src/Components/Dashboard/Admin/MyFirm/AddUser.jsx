@@ -8,8 +8,8 @@ const AddUser = ({ onClose }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    specialization: "",
-    notes: "",
+    phone: "",
+    role: "",
   });
 
   const handleChange = (e) => {
@@ -93,15 +93,14 @@ const AddUser = ({ onClose }) => {
               htmlFor="specialization"
               className="text-base poppins text-[#D1D5DB] "
             >
-              Specialization *
+              Contact number *
             </label>
             <input
               type="text"
-              name="specialization"
+              name="phone"
               placeholder=""
-              value={formData.specialization}
+              value={formData.phone}
               onChange={handleChange}
-              required
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
           </div>
@@ -111,13 +110,13 @@ const AddUser = ({ onClose }) => {
               htmlFor="specialization"
               className="text-base poppins text-[#D1D5DB] "
             >
-              Notes *
+              Role *
             </label>
             <input
               type="text"
-              name="notes"
+              name="role"
               placeholder=""
-              value={formData.notes}
+              value={formData.role}
               onChange={handleChange}
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />

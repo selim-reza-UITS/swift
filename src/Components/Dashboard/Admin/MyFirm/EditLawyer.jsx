@@ -6,11 +6,11 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
     name: lawyer.name || "",
     email: lawyer.email || "",
     phone: lawyer.phone || "",
-    role: lawyer.role || "",
+ 
     specialization: lawyer.specialization || "",
-    cases: lawyer.cases || "",
-    firm: lawyer.firm || "",
-    manager: lawyer.manager || "",
+  
+    
+    
   });
 
   const handleChange = (e) => {
@@ -108,22 +108,9 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
             />
           </div>
 
-          {/* Cases */}
-          <div className="flex flex-col gap-1">
-            <label className="text-base poppins text-[#D1D5DB]">
-              Cases Handled
-            </label>
-            <input
-              type="number"
-              name="cases"
-              value={formData.cases}
-              onChange={handleChange}
-              className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
-            />
-          </div>
 
           {/* Firm */}
-          <div className="flex flex-col gap-1">
+          {/* <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">Firm</label>
             <input
               type="text"
@@ -132,10 +119,10 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
               onChange={handleChange}
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
-          </div>
+          </div> */}
 
           {/* Manager */}
-          <div className="flex flex-col gap-1">
+          {/* <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">Manager</label>
             <input
               type="text"
@@ -144,7 +131,7 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
               onChange={handleChange}
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
-          </div>
+          </div> */}
 
           {/* Save Button */}
           <div className="flex justify-center">

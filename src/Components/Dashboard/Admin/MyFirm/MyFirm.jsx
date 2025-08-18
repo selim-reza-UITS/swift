@@ -14,12 +14,14 @@ import { FaChevronRight } from "react-icons/fa";
 import ViewLawyerDetails from "./ViewLawyerDetails";
 import ViewMemberDetails from "./ViewMemberDetails";
 import EditLawyer from "./EditLawyer";
+import EditUser from "./EditUser";
 const MyFirm = () => {
   const [activeTab, setActiveTab] = useState("lawyers");
   const [searchTerm, setSearchTerm] = useState("");
   const [showLawyerModal, setShowLawyerModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedEditUser, setSelectedEditUser] = useState(null);
   const [selectedLawyer, setSelectedLawyer] = useState(null);
   const [selectedEditLawyer, setSelectedEditLawyer] = useState(null);
   const [currentLawyerPage, setCurrentLawyerPage] = useState(1);
@@ -211,12 +213,12 @@ const MyFirm = () => {
       setSelectedUser(data);
     }
   };
-  
-    const  handleEditDetails  = (type, data) => {
+
+  const handleEditDetails = (type, data) => {
     if (type === "lawyer") {
-     setSelectedEditLawyer(data);
+      setSelectedEditLawyer(data);
     } else {
-      setSelectedUser(data);
+      setSelectedEditUser(data);
     }
   };
 
@@ -349,7 +351,7 @@ const MyFirm = () => {
               data={lawyer}
               onDelete={() => handleDelete("lawyer", lawyer.id)}
               onView={() => handleViewDetails("lawyer", lawyer)}
-            onEdit={() => handleEditDetails("lawyer", lawyer)}
+              onEdit={() => handleEditDetails("lawyer", lawyer)}
             />
           ))}
 
@@ -360,6 +362,7 @@ const MyFirm = () => {
               data={member}
               onDelete={() => handleDelete("user", member.id)}
               onView={() => handleViewDetails("user", member)}
+              onEdit={() => handleEditDetails("user", member)}
             />
           ))}
       </div>
@@ -494,10 +497,16 @@ const MyFirm = () => {
           onClose={() => setSelectedLawyer(null)}
         />
       )}
-       {selectedEditLawyer&& (
+      {selectedEditLawyer && (
         <EditLawyer
           lawyer={selectedEditLawyer}
           onClose={() => setSelectedEditLawyer(null)}
+        />
+      )}
+      {selectedEditUser && (
+        <EditUser
+          member={selectedEditUser}
+          onClose={() => setSelectedEditUser(null)}
         />
       )}
       {selectedUser && (

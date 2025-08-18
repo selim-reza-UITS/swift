@@ -9,11 +9,9 @@ import {
   CartesianGrid,
   Cell,
 } from "recharts";
-import div from "../../../assets/div.png";
 import message from "../../../assets/message.png";
 import priority from "../../../assets/priority.png";
 import active from "../../../assets/active.png";
-import appoinment from "../../../assets/appoinment.png";
 
 const fakeClients = [
   { name: "Smith & Associates", status: "High Risk", added: "2 days ago" },
@@ -22,7 +20,7 @@ const fakeClients = [
   { name: "Legal Team A", status: "High Risk", added: "4 days ago" },
   { name: "Legal Team B", status: "High Risk", added: "6 days ago" },
   { name: "Legal Team C", status: "High Risk", added: "1 week ago" },
-  { name: "Law & Co", status: "Active", added: "1 day ago" }, // non-High Risk
+  { name: "Law & Co", status: "Active", added: "1 day ago" },
 ];
 
 const flaggedClients = [
@@ -52,7 +50,22 @@ const flaggedClients = [
   },
 ];
 
-const sentimentData = [
+// ✅ Convert daily → weekly
+const dailyData = [
+  { day: "Sun", value: 30 },
+  { day: "Mon", value: 40 },
+  { day: "Tue", value: 50 },
+  { day: "Wed", value: 60 },
+  { day: "Thu", value: 80 },
+  { day: "Fri", value: 60 },
+  { day: "Sat", value: 50 },
+  { day: "Sun", value: 20 },
+  { day: "Mon", value: 35 },
+  { day: "Tue", value: 45 },
+  { day: "Wed", value: 55 },
+  { day: "Thu", value: 65 },
+  { day: "Fri", value: 70 },
+  { day: "Sat", value: 40 },
   { day: "Sun", value: 30 },
   { day: "Mon", value: 40 },
   { day: "Tue", value: 50 },
@@ -62,13 +75,27 @@ const sentimentData = [
   { day: "Sat", value: 50 },
 ];
 
+const groupByWeek = (data) => {
+  const result = [];
+  let weekCount = 1;
+  for (let i = 0; i < data.length; i += 7) {
+    const weekData = data.slice(i, i + 7);
+    const total = weekData.reduce((sum, d) => sum + d.value, 0);
+    result.push({ week: `Week ${weekCount}`, value: total });
+    weekCount++;
+  }
+  return result;
+};
+
+const sentimentData = groupByWeek(dailyData);
+
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const value = payload[0].value;
-    const mood = value > 50 ? "😊 Happy" : "😔 Sad";
+    const mood = value > 300 ? "😊 Good" : "😔 Needs Attention";
     return (
-      <div className="p-2 text-white poppins rounded-3xl shadow bg-[#8C15FF] ">
-        <p className="text-sm"> {mood}</p>
+      <div className="p-2 text-white poppins rounded-3xl shadow bg-[#8C15FF]">
+        <p className="text-sm">{mood}</p>
       </div>
     );
   }
@@ -89,15 +116,11 @@ const getImageByTitle = (title) => {
 };
 
 const AdminDashboard = () => {
-  // আলাদা state দুটি সেকশনের জন্য
   const [showAllHighRisk, setShowAllHighRisk] = useState(false);
   const [showAllFlagged, setShowAllFlagged] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
 
-  // Filter only High Risk clients
   const highRiskClients = fakeClients.filter((c) => c.status === "High Risk");
-
-  // Display first 3 or all based on toggle
   const displayedHighRisk = showAllHighRisk
     ? highRiskClients
     : highRiskClients.slice(0, 3);
@@ -183,9 +206,11 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Client Sentiment Graph */}
+        {/* Average Firm Reputation */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
-          <h3 className="mb-4 text-lg font-semibold">Average Firm Reputation</h3>
+          <h3 className="mb-4 text-lg font-semibold">
+            Average Firm Reputation
+          </h3>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart
               data={sentimentData}
@@ -199,7 +224,7 @@ const AdminDashboard = () => {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis dataKey="day" stroke="#cbd5e1" />
+              <XAxis dataKey="week" stroke="#cbd5e1" />
               <YAxis stroke="#cbd5e1" />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="value" radius={[5, 5, 0, 0]}>
@@ -222,9 +247,9 @@ const AdminDashboard = () => {
             </h3>
             <button
               onClick={() => setShowAllFlagged(!showAllFlagged)}
-              className="text-xs font-semibold text-[#1e293b] bg-white px-2 py-1 rounded hover:bg-gray-200"
+              className="text-sm text-blue-400 hover:underline"
             >
-              {showAllFlagged ? "Hide All" : "Show All"}
+              {showAllFlagged ? "Show Less" : "Show All"}
             </button>
           </div>
 

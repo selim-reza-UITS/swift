@@ -9,7 +9,7 @@ const AddLawyer = ({ onClose }) => {
     fullName: "",
     email: "",
     specialization: "",
-    notes: "",
+    phone: "",
   });
 
   const handleChange = (e) => {
@@ -84,6 +84,17 @@ const AddLawyer = ({ onClose }) => {
               value={formData.email}
               onChange={handleChange}
               required
+              className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
+            />
+          </div>
+          
+                <div className="flex flex-col gap-1">
+            <label className="text-base poppins text-[#D1D5DB]">Phone *</label>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
           </div>
