@@ -1,7 +1,7 @@
 import React from "react";
-import { FaEye, FaTrash } from "react-icons/fa";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
-const MemberCard = ({ data, onDelete, onView }) => {
+const MemberCard = ({ data, onDelete, onView, onEdit }) => {
   return (
     <div className="bg-[#1e293b] p-4 rounded flex items-center justify-between poppins text-[#FFFFFF]">
       <div className="flex items-center gap-4">
@@ -18,7 +18,11 @@ const MemberCard = ({ data, onDelete, onView }) => {
       </div>
       <div className="flex gap-4 text-xl text-gray-400">
         <FaEye onClick={onView} className="cursor-pointer hover:text-white" />
-        <FaTrash  onClick={onDelete} className="cursor-pointer hover:text-red-500" />
+        <FaEdit onClick={onEdit} className="cursor-pointer hover:text-white" />
+        <FaTrash
+          onClick={onDelete}
+          className="cursor-pointer hover:text-red-500"
+        />
       </div>
     </div>
   );

@@ -10,9 +10,13 @@ import { MdGavel } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { PiClockCountdownLight } from "react-icons/pi";
 import { logout } from "../../../Redux/feature/auth/authSlice";
+import AddClientForm from "../../Shared/AddClientForm";
+import { Plus } from "lucide-react";
 const AdminSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSeetingsDropdownOpen, setSeetingsDropdownOpen] = useState(false);
+  const [showAddClientModal, setShowAddClientModal] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log(user);
@@ -57,9 +61,9 @@ const AdminSidebar = () => {
       <div className="flex flex-col py-4">
         <NavLink
           to="/"
-          className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-2 "
+          className="flex items-center justify-center w-full gap-2 mt-2 text-xl font-extrabold md:text-xl lg:text-2xl "
         >
-          <a className="block text-teal-60 text-2xl " href="#">
+          <a className="block text-2xl text-teal-60 " href="#">
             <img src={logo} alt="" className="w-[50px] h-[50px]" />
           </a>
         </NavLink>
@@ -134,6 +138,33 @@ const AdminSidebar = () => {
               </div>
             </div>
           </NavLink>
+          <NavLink
+            onClick={() => setShowAddClientModal(true)}
+            className="flex items-center justify-between w-[280px]"
+          >
+            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+              <div
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center bg-gradient-to-r from-[#747DE9] text-black rounded-xl
+                  `}
+              >
+                <Plus className="w-[22px] h-[22px] font-bold" />
+                <h1 className="text-xl font-medium poppins">New Client</h1>
+              </div>
+            </div>
+          </NavLink>
+          {showAddClientModal && (
+            <div
+              className="fixed inset-0 flex items-center justify-center bg-black z-60 bg-opacity-60"
+              onClick={() => setShowAddClientModal(false)}
+            >
+              <div
+                className="relative w-full max-w-lg p-0 rounded-lg shadow-lg bg-slate-800"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <AddClientForm setShowAddClientModal={setShowAddClientModal} />
+              </div>
+            </div>
+          )}
         </nav>
       </div>
 

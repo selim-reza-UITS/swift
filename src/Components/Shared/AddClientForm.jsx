@@ -113,7 +113,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
   return (
     <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full z-50">
       <Toaster />
-      <div className=" rounded-lg p-8 w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
+      <div className=" rounded-lg p-8 w-full max-h-[80vh] overflow-y-auto scrollbar-hide">
         {/* Header */}
         <div className="mb-6 text-center">
           <div className="flex items-center justify-center mb-2">
@@ -260,7 +260,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                     return (
                       <label
                         key={name}
-                        className="flex items-center gap-2 px-3 py-2 text-white hover:bg-slate-600 cursor-pointer"
+                        className="flex items-center gap-2 px-3 py-2 text-white cursor-pointer hover:bg-slate-600"
                       >
                         <input
                           type="checkbox"
@@ -345,7 +345,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                     consentToCommunicate: e.target.checked,
                   }))
                 }
-                className="h-4 w-4 text-purple-500 focus:ring-purple-400"
+                className="w-4 h-4 text-purple-500 focus:ring-purple-400"
                 required
               />
               <span>Client Consented to Communication</span>

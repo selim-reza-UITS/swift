@@ -12,7 +12,7 @@ const clientsData = [
     phone: "(555) 123-4567",
     manager: "John Smith",
     status: "Active",
-    priority: "High Priority",
+    priority: "High Risk",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
@@ -21,7 +21,7 @@ const clientsData = [
     phone: "(555) 987-6543",
     manager: "Emily Chen",
     status: "Paused",
-    priority: "Medium Priority",
+    priority: "Medium Risk",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
@@ -30,7 +30,7 @@ const clientsData = [
     phone: "(555) 456-7890",
     manager: "David Brown",
     status: "Recently Deleted",
-    priority: "Low Priority",
+    priority: "Low Risk",
     avatar: "https://randomuser.me/api/portraits/women/12.jpg",
   },
 ];
@@ -42,9 +42,9 @@ const statusColors = {
 };
 
 const priorityColors = {
-  "High Priority": "bg-[#DBEAFE] text-[#1E40AF]",
-  "Medium Priority": "bg-[#FFEDD5] text-[#9A3412]",
-  "Low Priority": "bg-[#FEE2E2] text-[#991B1B]",
+  "High Risk": "bg-[#DBEAFE] text-[#1E40AF]",
+  "Medium Risk": "bg-[#FFEDD5] text-[#9A3412]",
+  "Low Risk": "bg-[#FEE2E2] text-[#991B1B]",
 };
 
 const Client = () => {
