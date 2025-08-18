@@ -78,30 +78,30 @@ const getStatusLabel = (status) => {
   }
 };
 
-const getActionButton = (actionType) => {
-  switch (actionType) {
-    case "accept":
-      return (
-        <button className="px-4 py-1 bg-[#7C3AED] text-white rounded-md text-sm font-medium hover:bg-purple-700 transition-colors">
-          Accept
-        </button>
-      );
-    case "view":
-      return (
-        <button className="px-4 py-1 bg-gray-700 text-white rounded-md text-sm font-medium hover:bg-gray-600 transition-colors">
-          View
-        </button>
-      );
-    case "update":
-      return (
-        <button className="px-4 py-1 bg-gray-700 text-white rounded-md text-sm font-medium hover:bg-gray-600 transition-colors">
-          Update
-        </button>
-      );
-    default:
-      return null;
-  }
-};
+// const getActionButton = (actionType) => {
+//   switch (actionType) {
+//     case "accept":
+//       return (
+//         <button className="px-4 py-1 bg-[#7C3AED] text-white rounded-md text-sm font-medium hover:bg-purple-700 transition-colors">
+//           Accept
+//         </button>
+//       );
+//     case "view":
+//       return (
+//         <button className="px-4 py-1 bg-gray-700 text-white rounded-md text-sm font-medium hover:bg-gray-600 transition-colors">
+//           View
+//         </button>
+//       );
+//     case "update":
+//       return (
+//         <button className="px-4 py-1 bg-gray-700 text-white rounded-md text-sm font-medium hover:bg-gray-600 transition-colors">
+//           Update
+//         </button>
+//       );
+//     default:
+//       return null;
+//   }
+// };
 
 const statsData = [
   { title: "Active Clients", value: 24 },

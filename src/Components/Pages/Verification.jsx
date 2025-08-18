@@ -4,6 +4,7 @@ import login from "../../assets/login-banner.png"; // Assuming you have a login 
 import logo from "../../assets/loginlogo.png";
 import SetNew from "./SetNew";
 import Reset from "./Reset";
+import { useVerifyOtpMutation } from "../../Redux/feature/auth/authapi";
 
 const Verification = () => {
   const [code, setCode] = useState(["", "", "", ""]);
@@ -11,6 +12,7 @@ const Verification = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); // Suc
   const [otpSent, setOtpSent] = useState(false);
+  const [verifyOtp] = useVerifyOtpMutation();
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
     if (storedEmail) {
@@ -61,7 +63,8 @@ const Verification = () => {
     }
 
     try {
-      //   const response = await verifyPass({ email, otp }).unwrap(); // Send request
+      const response = await verifyOtp({ email, otp }).unwrap(); // Send request
+      console.log(response);
       console.log("OTP Verified:");
       //   if (response?.access_token) {
       //     localStorage.setItem("access_token", response.access_token); // Save token
@@ -95,11 +98,11 @@ const Verification = () => {
                     <h1 className="text-black poppins">Arviso</h1>
                   </div>
                   <p className="text-4xl font-bold text-blue-400 poppin poppins">
-                    OTP code verification 
+                    OTP code verification
                   </p>
                   <p className="text-[#54657E] w-2/3 mt-2 text-base poppins font-normal  poppins">
-                   Please enter the code below to verify your identity and reset your password.
- 
+                    Please enter the code below to verify your identity and
+                    reset your password.
                   </p>
                 </div>
 

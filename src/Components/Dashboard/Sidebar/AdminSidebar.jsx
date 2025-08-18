@@ -3,11 +3,13 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
 import { VscGraphLine } from "react-icons/vsc";
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { MdGavel } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { PiClockCountdownLight } from "react-icons/pi";
+import { logout } from "../../../Redux/feature/auth/authSlice";
 import AddClientForm from "../../Shared/AddClientForm";
 import { Plus } from "lucide-react";
 const AdminSidebar = () => {
@@ -16,6 +18,7 @@ const AdminSidebar = () => {
   const [showAddClientModal, setShowAddClientModal] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // console.log(user);
   const dropdownRef = useRef(null);
 
@@ -40,8 +43,16 @@ const AdminSidebar = () => {
     };
   }, []);
   const handleLogout = () => {
-    localStorage.removeItem("accessToken"); // Remove token from localStorage
-    navigate("/login", { replace: true }); // Redirect to login page
+    // Clear Redux state
+    dispatch(logout());
+
+    // Clear localStorage
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userId");
+
+    // Navigate to login
+    navigate("/login", { replace: true });
   };
   const toggleDropdownSettings = () => setSeetingsDropdownOpen((prev) => !prev);
   return (
