@@ -9,7 +9,6 @@ export default function SetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const params = useParams();
   const navigate = useNavigate();
-  console.log(params);
   const [setPassword, { isLoading }] = useSetPasswordMutation();
 
   const handleSubmit = async () => {
@@ -20,20 +19,19 @@ export default function SetPassword() {
 
     if (!params.uuid || !params.token) {
       toast.error("Invalid reset link. Please check your email.");
-      console.error("Missing params:", params);
       return;
     }
-
+    console.log("neeeee");
     try {
       const response = await setPassword({
         password: newPassword,
         uuid: params.uuid,
         token: params.token,
       });
-      if (response?.error) {
-        toast.error(response?.error?.data?.password[0]);
-      }
-
+      // if (response?.error) {
+      //   toast.error(response?.error?.data?.password[0]);
+      // }
+      console.log(response);
       if (response.data) {
         toast.success("Password set successfully!");
         navigate("/login");
