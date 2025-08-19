@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoNotificationsSharp } from "react-icons/io5";
 import getRole from "../../utils/role";
 import Feedback from "./../Pages/Feedback";
@@ -8,9 +8,23 @@ const Header = () => {
   const role = getRole();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-
+  const notificationRef = useRef(null); // ref for notification popup
   const allowedRoles = ["admin", "CaseManager", "IntekSpecialist"];
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setShowNotifications(false);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   if (!allowedRoles.includes(role) && role !== "superadmin") return null;
 
   return (
@@ -19,17 +33,20 @@ const Header = () => {
 
       <div className="flex items-center gap-6">
         {/* Notification Bell */}
-        <div className="relative">
-          <IoNotificationsSharp
-            className="text-2xl text-purple-500 cursor-pointer"
-            onClick={() => setShowNotifications(!showNotifications)}
-          />
+        <div
+          className="relative"
+          onClick={() => setShowNotifications(!showNotifications)}
+        >
+          <IoNotificationsSharp className="text-2xl text-purple-500 cursor-pointer" />
           {/* Notification Count Badge */}
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
             4
           </span>
+
           {showNotifications && (
-            <Notifications onClose={() => setShowNotifications(false)} />
+            <div ref={notificationRef}>
+              <Notifications onClose={() => setShowNotifications(false)} />
+            </div>
           )}
         </div>
 

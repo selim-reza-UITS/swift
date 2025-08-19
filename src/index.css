@@ -43,11 +43,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 60; /* Increase this number to make sure it's on top */
+  z-index: 60; 
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  background-color: rgba(0, 0, 0, 0.6); 
 }
 
 /* Scrollbar hide for all browsers */

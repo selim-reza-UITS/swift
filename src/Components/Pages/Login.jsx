@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi"; // 👈 Import eye icons
 import loginImage from "../../assets/loginpage.png";
-import login from "../../assets/login-banner.png";
+import loginPage from "../../assets/login-banner.png";
 import logo from "../../assets/loginlogo.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../Redux/feature/auth/authapi";
@@ -55,7 +55,7 @@ export default function Login() {
       <div className="relative flex items-center justify-start min-h-screen mx-auto containmer">
         <div
           className="rounded-lg p-10 w-full max-w-2xl shadow-2xl h-[800px] bg-center bg-cover justify-center items-center ml-12"
-          style={{ backgroundImage: `url(${login})` }}
+          style={{ backgroundImage: `url(${loginPage})` }}
         >
           <div className="flex flex-col justify-center w-full h-full">
             <div className="flex flex-col items-center mb-8">
@@ -63,9 +63,9 @@ export default function Login() {
                 <a className="block text-teal-600" href="#">
                   <img src={logo} alt="" />
                 </a>
-                <h1 className="text-white poppins">Arviso</h1>
+                {/* <h1 className="text-white poppins">Arviso</h1> */}
               </div>
-              <p className="text-4xl font-bold text-blue-400 poppins">
+              <p className="text-4xl font-bold poppins bg-gradient-to-r from-[#6366F1] to-[#06B6D4] bg-clip-text text-transparent">
                 Log in to your account
               </p>
             </div>
