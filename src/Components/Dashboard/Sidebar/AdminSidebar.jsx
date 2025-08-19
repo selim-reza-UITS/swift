@@ -144,7 +144,7 @@ const AdminSidebar = () => {
           >
             <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
               <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center bg-gradient-to-r from-[#747DE9] text-black rounded-xl
+                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center bg-gradient-to-r from-[#5d35bb] to-[#8A2BE2] text-white rounded-xl
                   `}
               >
                 <Plus className="w-[22px] h-[22px] font-bold" />
