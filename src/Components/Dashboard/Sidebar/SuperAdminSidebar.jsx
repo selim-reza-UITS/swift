@@ -43,12 +43,11 @@ const SuperAdminSidebar = () => {
       <div className="flex flex-col py-4">
         <NavLink
           to="/"
-          className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9"
+          className="flex items-center justify-center w-full gap-2 mt-2 text-xl font-extrabold md:text-xl lg:text-2xl "
         >
-          <a className="block text-teal-600" href="#">
-            <img src={logo} alt="" className="" />
+          <a className="block text-2xl text-teal-60 " href="#">
+            <img src={logo} alt="" className="w-[50px] h-[50px]" />
           </a>
-          <h1 className="text-3xl text-white ">Arviso</h1>
         </NavLink>
         {/* Menu Items */}
         <nav className="flex flex-col  text-[#364636] mt-9">
@@ -82,7 +81,7 @@ const SuperAdminSidebar = () => {
                    ${isActiveLawFirm ? "text-[#FFFFFF] " : "text-[#9CA3AF]"}`}
               >
                 <FaBalanceScale className="w-[22px] h-[22px] font-bold  " />{" "}
-                <h1 className="text-xl font-normal poppins">Law Firm</h1>
+                <h1 className="text-xl font-normal poppins">Law Firms</h1>
               </div>
             </div>
           </NavLink>
