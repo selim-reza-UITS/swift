@@ -10,6 +10,8 @@ import {
 const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
   const { data: lawyersData } = useGetAllLawyerQuery();
   const { data: usersData } = useGetAllUserQuery();
+  console.log(lawyersData)
+  console.log(usersData)
   const {
     data: clientData,
     isLoading,
