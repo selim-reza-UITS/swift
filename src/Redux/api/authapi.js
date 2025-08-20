@@ -1,33 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { api } from "./api";
 
-const baseQuery = fetchBaseQuery({
-  baseUrl: "http://10.10.13.20:8000/api/v1/",
-  prepareHeaders: (headers, { getState }) => {
-    const token = getState().auth?.access || null;
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`);
-    } else {
-      const authString = localStorage.getItem("auth");
-      let authData = null;
-      if (authString) {
-        try {
-          authData = JSON.parse(authString);
-        } catch (e) {
-          authData = null;
-        }
-      }
-      if (authData?.access) {
-        headers.set("authorization", `Bearer ${authData.access}`);
-      }
-    }
-    return headers;
-  },
-});
 
-export const authapi = createApi({
-  reducerPath: "authApi",
-  baseQuery: baseQuery,
-  tagTypes: ["users", "chatSessions"],
+export const authapi = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (body) => ({

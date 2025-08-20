@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Plus, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
+import {
+  useGetAllLawyerQuery,
+  useGetAllUserQuery,
+} from "../../Redux/api/intakeapi";
+import { useSelector } from "react-redux";
+import { selectAccessToken } from "../../Redux/feature/auth/authSlice";
+import { useCreateClientMutation } from "../../Redux/api/intakeapi";
 
 export default function AddClientForm({ setShowAddClientModal }) {
   const [formData, setFormData] = useState({
@@ -15,20 +22,42 @@ export default function AddClientForm({ setShowAddClientModal }) {
     consentToCommunicate: false,
   });
 
-  const lawyerOptions = [
-    "Robert Johnson",
-    "Jane Doe",
-    "Robert Smith",
-    "Michael Davis",
-    "Lisa Wilson",
-  ];
+  // Fetch dynamic dropdown data (skip until token is available)
+  const accessToken = useSelector(selectAccessToken);
+  let persistedToken = null;
+  try {
+    const authString = localStorage.getItem("auth");
+    if (authString) {
+      const auth = JSON.parse(authString);
+      persistedToken = auth?.access || null;
+    }
+  } catch (e) {
+    persistedToken = null;
+  }
+  const hasToken = Boolean(accessToken || persistedToken);
 
-  const managingUserOptions = [
-    "Dev Guru",
-    "Smith Dark",
-    "John Smith",
-    "Emily Clark",
-  ];
+  const { data: lawyersData, isLoading: isLawyersLoading } =
+    useGetAllLawyerQuery(undefined, { skip: !hasToken });
+  const { data: usersData, isLoading: isUsersLoading } = useGetAllUserQuery(
+    undefined,
+    { skip: !hasToken }
+  );
+  const [createClient, { isLoading: isCreating }] = useCreateClientMutation();
+  console.log(usersData);
+  console.log(lawyersData);
+
+  const lawyerOptions = Array.isArray(lawyersData)
+    ? lawyersData
+        .map((l) => ({ id: l?.id, name: l?.name }))
+        .filter((x) => x.id && x.name)
+    : [];
+  console.log(lawyerOptions);
+
+  const managingUserOptions = Array.isArray(usersData)
+    ? usersData
+        .map((u) => ({ id: u?.id, name: u?.name }))
+        .filter((x) => x.id && x.name)
+    : [];
 
   const [isManagingOpen, setIsManagingOpen] = useState(false);
   const managingRef = useRef(null);
@@ -70,29 +99,57 @@ export default function AddClientForm({ setShowAddClientModal }) {
     setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.consentToCommunicate) {
-      toast.error("Client consent is required to enable messaging.");
-      return;
-    }
     if (!formData.managingUsers || formData.managingUsers.length === 0) {
       toast.error("Please assign at least one managing user.");
       return;
     }
-    console.log("Form submitted:", formData);
-    toast.success("New Client Added.");
-    setFormData({
-      fullName: "",
-      lawyerName: "",
-      dateOfIncident: "",
-      gender: "",
-      managingUsers: [],
-      phoneNumber: "",
-      injurySustained: "",
-      generalCaseInfo: "",
-      consentToCommunicate: false,
-    });
+    try {
+      const normalizedDate = (formData.dateOfIncident || "").replaceAll(
+        "/",
+        "-"
+      );
+      const payload = {
+        full_name: formData.fullName,
+        gender: String(formData.gender || "").toLowerCase(),
+        lawyer: Number(formData.lawyerName),
+        phone_number: formData.phoneNumber?.replace(/\D/g, "") || "",
+        injuries_sustained: formData.injurySustained,
+        general_case_info: formData.generalCaseInfo,
+        date_of_incident: normalizedDate,
+        managing_users: formData.managingUsersIds || [],
+      };
+      const res = await createClient(payload);
+      if (res?.data) {
+        toast.success(res.data?.message || "Client created successfully");
+        // Ensure client list refreshes
+        try {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (_) {}
+        setFormData({
+          fullName: "",
+          lawyerName: "",
+          dateOfIncident: "",
+          gender: "",
+          managingUsers: [],
+          phoneNumber: "",
+          injurySustained: "",
+          generalCaseInfo: "",
+          consentToCommunicate: false,
+        });
+        setShowAddClientModal(false);
+      } else {
+        const msg =
+          res?.error?.data?.message ||
+          res?.error?.data?.detail ||
+          "Failed to create client";
+        toast.error(msg);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create client");
+    }
   };
 
   const handleCancel = () => {
@@ -158,8 +215,8 @@ export default function AddClientForm({ setShowAddClientModal }) {
                 <option value="" disabled>
                   Select a lawyer
                 </option>
-                {lawyerOptions.map((name) => (
-                  <option key={name} value={name}>
+                {lawyerOptions.map(({ id, name }) => (
+                  <option key={id} value={id}>
                     {name}
                   </option>
                 ))}
@@ -188,8 +245,9 @@ export default function AddClientForm({ setShowAddClientModal }) {
               Date of Incident<span className="text-red-400">*</span>
             </label>
             <input
-              type="date"
+              type="text"
               name="dateOfIncident"
+              placeholder="YYYY-MM-DD"
               value={formData.dateOfIncident}
               onChange={handleInputChange}
               className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
@@ -224,7 +282,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                 />
                 <span className="text-sm text-white">Male</span>
               </label>
-              <label className="flex items-center">
+              {/* <label className="flex items-center">
                 <input
                   type="radio"
                   name="gender"
@@ -234,7 +292,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                   className="mr-2 text-purple-400 focus:ring-purple-400"
                 />
                 <span className="text-sm text-white">Prefer not to say</span>
-              </label>
+              </label> */}
             </div>
           </div>
 
@@ -255,11 +313,11 @@ export default function AddClientForm({ setShowAddClientModal }) {
               </button>
               {isManagingOpen && (
                 <div className="absolute z-20 mt-1 w-full bg-[#1E293B] border border-slate-600 rounded-md shadow-lg max-h-48 overflow-auto">
-                  {managingUserOptions.map((name) => {
+                  {managingUserOptions.map(({ id, name }) => {
                     const checked = formData.managingUsers.includes(name);
                     return (
                       <label
-                        key={name}
+                        key={id}
                         className="flex items-center gap-2 px-3 py-2 text-white cursor-pointer hover:bg-slate-600"
                       >
                         <input
@@ -270,9 +328,15 @@ export default function AddClientForm({ setShowAddClientModal }) {
                               const set = new Set(prev.managingUsers);
                               if (e.target.checked) set.add(name);
                               else set.delete(name);
+                              const idSet = new Set(
+                                prev.managingUsersIds || []
+                              );
+                              if (e.target.checked) idSet.add(id);
+                              else idSet.delete(id);
                               return {
                                 ...prev,
                                 managingUsers: Array.from(set),
+                                managingUsersIds: Array.from(idSet),
                               };
                             });
                           }}

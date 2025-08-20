@@ -12,7 +12,8 @@ import Swal from "sweetalert2";
 import ViewClientDetails from "../Admin/Client/ViewClientDetails";
 import { FaEye } from "react-icons/fa6";
 import EditClientDetails from "./EditClientDetails";
-const IntakeSpecialistClients = () => {
+const IntakeSpecialistClients = ({ clients = [] }) => {
+  console.log(clients);
   const [formData, setFormData] = useState({
     fullName: "",
     lawyerName: "",
@@ -24,21 +25,6 @@ const IntakeSpecialistClients = () => {
     generalCaseInfo: "",
     consentToCommunicate: false,
   });
-
-  const lawyerOptions = [
-    "Robert Johnson",
-    "Jane Doe",
-    "Robert Smith",
-    "Michael Davis",
-    "Lisa Wilson",
-  ];
-
-  const managingUserOptions = [
-    "Dev Guru",
-    "Smith Dark",
-    "John Smith",
-    "Emily Clark",
-  ];
 
   const [isManagingOpen, setIsManagingOpen] = useState(false);
   const managingRef = useRef(null);
@@ -79,200 +65,55 @@ const IntakeSpecialistClients = () => {
     }
     setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
   };
-  const [clients, setClients] = useState([
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      phone: "(555) 123-4567",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 2,
-      name: "Michael Davis",
-      phone: "(555) 987-6543",
-      status: "paused",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 3,
-      name: "Lisa Wilson",
-      phone: "(555) 456-7890",
-      status: "recovery",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 4,
-      name: "Robert Martinez",
-      phone: "(555) 234-5678",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 5,
-      name: "Amanda Thompson",
-      phone: "(555) 345-6789",
-      status: "active",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 6,
-      name: "James Anderson",
-      phone: "(555) 567-8901",
-      status: "paused",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 7,
-      name: "Jennifer White",
-      phone: "(555) 678-9012",
-      status: "recovery",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 8,
-      name: "Christopher Lee",
-      phone: "(555) 789-0123",
-      status: "active",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 9,
-      name: "Michelle Brown",
-      phone: "(555) 890-1234",
-      status: "paused",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 10,
-      name: "Daniel Garcia",
-      phone: "(555) 901-2345",
-      status: "active",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 11,
-      name: "Ashley Miller",
-      phone: "(555) 012-3456",
-      status: "recovery",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 12,
-      name: "Matthew Wilson",
-      phone: "(555) 123-4567",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 13,
-      name: "Stephanie Taylor",
-      phone: "(555) 234-5678",
-      status: "paused",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 14,
-      name: "Kevin Moore",
-      phone: "(555) 345-6789",
-      status: "active",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 15,
-      name: "Rachel Jackson",
-      phone: "(555) 456-7890",
-      status: "recovery",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 16,
-      name: "Tyler Robinson",
-      phone: "(555) 567-8901",
-      status: "active",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 17,
-      name: "Brittany Clark",
-      phone: "(555) 678-9012",
-      status: "paused",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 18,
-      name: "Jonathan Lewis",
-      phone: "(555) 789-0123",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 19,
-      name: "Nicole Parker",
-      phone: "(555) 890-1234",
-      status: "recovery",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 20,
-      name: "Brandon Hughes",
-      phone: "(555) 901-2345",
-      status: "paused",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 21,
-      name: "Samantha Torres",
-      phone: "(555) 012-3456",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 22,
-      name: "Jason Mitchell",
-      phone: "(555) 123-4567",
-      status: "recovery",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 23,
-      name: "Catherine Adams",
-      phone: "(555) 234-5678",
-      status: "paused",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 24,
-      name: "Michael Scott",
-      phone: "(555) 345-6789",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-  ]);
+  const [displayClients, setDisplayClients] = useState([]);
+
+  useEffect(() => {
+    const mapStatus = (s) => {
+      if (!s) return "active";
+      const lower = String(s).toLowerCase();
+      if (lower.includes("pause")) return "paused";
+      if (lower.includes("delete")) return "recovery";
+      return "active"; // e.g., "Awaiting Consent"
+    };
+
+    const mapped = Array.isArray(clients)
+      ? clients.map((c) => ({
+          id: c.id,
+          name: c.full_name || c.name || "-",
+          phone: c.phone_number || "-",
+          status: mapStatus(c.status),
+          priority: "medium",
+          avatar: "/api/placeholder/40/40",
+        }))
+      : [];
+    setDisplayClients(mapped);
+  }, [clients]);
+
+  const handleUpdate = (updatedData) => {
+    // Handle the update logic here, e.g., updating the client in the state or making an API call
+    console.log("Updated Client Data:", updatedData);
+
+    // For example, if you're updating the client in the list
+    setDisplayClients((prevClients) =>
+      prevClients.map((client) =>
+        client.id === updatedData.id ? { ...client, ...updatedData } : client
+      )
+    );
+
+    // Optionally, close the modal
+    setIsEditModalOpen(false);
+    setEditSelectedClient(null);
+
+    // You can add more logic here to show a success message, etc.
+    Swal.fire({
+      title: "Updated Successfully!",
+      text: "Client information has been updated.",
+      icon: "success",
+      background: "#1f2937",
+      color: "#ffffff",
+      confirmButtonColor: "#6366F1",
+    });
+  };
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("all");
@@ -283,7 +124,7 @@ const IntakeSpecialistClients = () => {
   const [selectedEditClient, setEditSelectedClient] = useState(null);
   const itemsPerPage = 7;
 
-  const filteredClients = clients.filter((client) => {
+  const filteredClients = displayClients.filter((client) => {
     const matchesSearch =
       client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.phone.includes(searchTerm);
@@ -379,9 +220,7 @@ const IntakeSpecialistClients = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        setClients((prevClients) =>
-          prevClients.filter((client) => client.id !== id)
-        );
+        setDisplayClients((prev) => prev.filter((client) => client.id !== id));
         Swal.fire({
           title: "Deleted!",
           text: "Client has been deleted.",
@@ -420,7 +259,7 @@ const IntakeSpecialistClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            All 
+            All
           </button>
           <button
             onClick={() => handleViewChange("active")}
@@ -430,7 +269,7 @@ const IntakeSpecialistClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-             Active
+            Active
           </button>
           <button
             onClick={() => handleViewChange("paused")}
@@ -440,7 +279,7 @@ const IntakeSpecialistClients = () => {
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-             Paused
+            Paused
           </button>
           <button
             onClick={() => handleViewChange("recovery")}
@@ -458,7 +297,7 @@ const IntakeSpecialistClients = () => {
       {/* Client List */}
       <div className="flex-1 p-6 overflow-auto">
         <div className="space-y-4">
-          {currentClients.map((client) => (
+          {currentClients?.map((client) => (
             <div
               key={client.id}
               className="flex items-center justify-between p-4 transition-colors bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750"
@@ -583,13 +422,15 @@ const IntakeSpecialistClients = () => {
       )}
       {isEditModalOpen && selectedEditClient && (
         <EditClientDetails
-          client={selectedEditClient}
+          clientId={selectedEditClient.id} // Pass the client ID dynamically
           onClose={() => {
             setIsEditModalOpen(false);
             setEditSelectedClient(null);
           }}
+          onUpdate={handleUpdate}
         />
       )}
+
       {isModalOpen && selectedClient && (
         <ViewClientDetails
           client={selectedClient}

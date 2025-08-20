@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import logo from "../../assets/loginlogo.png";
-import { useSetPasswordMutation } from "../../Redux/feature/auth/authapi";
+import { useSetPasswordMutation } from "../../Redux/api/authapi";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 

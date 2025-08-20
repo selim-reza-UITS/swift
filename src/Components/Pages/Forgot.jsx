@@ -5,7 +5,7 @@ import logo from "../../assets/loginlogo.png";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import Verification from "./Verification";
-import { useForgotPasswordMutation } from "../../Redux/feature/auth/authapi";
+import { useForgotPasswordMutation } from "../../Redux/api/authapi";
 
 const Forgot = () => {
   const [email, setEmail] = useState("");
