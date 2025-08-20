@@ -10,7 +10,12 @@ export const superAdminApi = api.injectEndpoints({
       }),
       invalidatesTags: ["LawFirm"], // optional: cache invalidate
     }),
+    getDashboard: builder.query({
+      query: () => "firms/statistics/",
+
+      method: "GET",
+    }),
   }),
 });
 
-export const { useCreateLawFirmMutation } = superAdminApi;
+export const { useCreateLawFirmMutation, useGetDashboardQuery } = superAdminApi;
