@@ -4,7 +4,7 @@ import login from "../../assets/login-banner.png"; // Assuming you have a login 
 import logo from "../../assets/loginlogo.png";
 import SetNew from "./SetNew";
 import Reset from "./Reset";
-import { useVerifyOtpMutation } from "../../Redux/feature/auth/authapi";
+import { useVerifyOtpMutation } from "../../Redux/api/authapi";
 
 const Verification = () => {
   const [code, setCode] = useState(["", "", "", ""]);
