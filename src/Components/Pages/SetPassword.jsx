@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import logo from "../../assets/loginlogo.png";
-import { useSetPasswordMutation } from "../../Redux/api/authapi";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { useResetPasswordMutation } from "../../Redux/api/authapi";
+
+
+
 
 export default function SetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const params = useParams();
   const navigate = useNavigate();
-  const [setPassword, { isLoading }] = useSetPasswordMutation();
+  const [setPassword, { isLoading }] = useResetPasswordMutation();
 
   const handleSubmit = async () => {
     if (newPassword !== confirmPassword) {
@@ -43,20 +46,20 @@ export default function SetPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800">
       <div className="w-full max-w-md">
-        <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50">
+        <div className="p-8 border bg-slate-800/60 backdrop-blur-sm rounded-2xl border-slate-700/50">
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <img src={logo} alt="" />
           </div>
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-semibold text-white mb-2">
+          <div className="mb-8 text-center">
+            <h1 className="mb-2 text-2xl font-semibold text-white">
               Set Your Password
             </h1>
-            <p className="text-slate-400 text-sm">
+            <p className="text-sm text-slate-400">
               Secure your account to continue
             </p>
           </div>
@@ -64,7 +67,7 @@ export default function SetPassword() {
           {/* Form */}
           <div className="space-y-6">
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label className="block mb-2 text-sm font-medium text-white">
                 New Password
               </label>
               <input
@@ -72,12 +75,12 @@ export default function SetPassword() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 text-white transition-all duration-200 border rounded-lg bg-slate-700/50 border-slate-600 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label className="block mb-2 text-sm font-medium text-white">
                 Confirm Password
               </label>
               <input
@@ -85,7 +88,7 @@ export default function SetPassword() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm password"
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 text-white transition-all duration-200 border rounded-lg bg-slate-700/50 border-slate-600 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
@@ -98,7 +101,7 @@ export default function SetPassword() {
           </div>
 
           {/* Footer text */}
-          <p className="text-center text-slate-400 text-xs mt-6">
+          <p className="mt-6 text-xs text-center text-slate-400">
             If you didn't request this, you can ignore this page.
           </p>
         </div>
