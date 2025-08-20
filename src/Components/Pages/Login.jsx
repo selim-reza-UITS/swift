@@ -6,6 +6,8 @@ import logo from "../../assets/loginlogo.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../Redux/feature/auth/authapi";
 import toast from "react-hot-toast";
+import { setCredentials } from "../../Redux/feature/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,13 +16,14 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await login({ email, password }).unwrap();
-      console.log("Login response:", response.data.role);
+      console.log("Login response:", response);
 
       let role = "";
 
@@ -37,12 +40,35 @@ export default function Login() {
         return;
       }
 
+      // Redux dispatch
+      dispatch(
+        setCredentials({
+          access: response.access_token,
+          refresh: response.refresh_token,
+          user: {
+            name: response.data.name,
+            email: email,
+            role: role,
+            id: response.data.id,
+          },
+          profilePicture: response.data.profilePicture || null,
+        })
+      );
+
+      // LocalStorage persist (optional)
       localStorage.setItem("userRole", role);
       localStorage.setItem("userEmail", email);
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem(
+        "profilePicture",
+        response.data.profilePicture || ""
+      );
+
       setMessage(`Logged in as ${role}`);
       navigate("/dashboard");
     } catch (error) {
-      toast.error(error?.data?.detail[0]);
+      toast.error(error?.data?.detail[0] || "Login failed.");
       setMessage("Login failed. Please try again.");
     }
   };

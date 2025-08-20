@@ -1,11 +1,11 @@
-// LawFirm.jsx
 import React, { useState } from "react";
-import { FaPhone, FaMapMarkerAlt, FaPen, FaTrash } from "react-icons/fa";
+import { FaPhone, FaMapMarkerAlt, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { MdLocalPhone } from "react-icons/md";
 import AddLawFirm from "./AddLawFirm";
 import { FaRegEdit } from "react-icons/fa";
 import EditLawfirm from "./EditLawfirm";
+
 const fakeFirms = [
   {
     id: 1,
@@ -19,8 +19,13 @@ const fakeFirms = [
       { name: "Jane Doe", role: "Lawyer", tag: "bg-slate-600" },
     ],
     active: true,
+    billing: true, // switch
+    costPerAdmin: 299,
+    costPerCaseManager: 249,
+    costPerIntakeSpecialist: 29,
+    overageRate: 0.05,
+    nextBillingDate: "2025-09-01T10:00:00", // 1st of every month 10 AM PDT
   },
-
   {
     id: 2,
     name: "Lina & Associates",
@@ -33,8 +38,14 @@ const fakeFirms = [
       { name: "Jane Doe", role: "Lawyer", tag: "bg-slate-600" },
     ],
     active: true,
+    billing: true,
+    costPerAdmin: 299,
+    costPerCaseManager: 249,
+    costPerIntakeSpecialist: 29,
+    overageRate: 0.05,
+    nextBillingDate: "2025-09-01T10:00:00",
   },
-     {
+  {
     id: 3,
     name: "Zon & Associates",
     phone: "(555) 123-4567",
@@ -46,6 +57,12 @@ const fakeFirms = [
       { name: "Jane Doe", role: "Lawyer", tag: "bg-slate-600" },
     ],
     active: false,
+    billing: true,
+    costPerAdmin: 299,
+    costPerCaseManager: 249,
+    costPerIntakeSpecialist: 29,
+    overageRate: 0.05,
+    nextBillingDate: "2025-09-01T10:00:00",
   },
 ];
 
@@ -72,6 +89,7 @@ const LawFirm = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFirm, setSelectedFirm] = useState(null); // For editing
+
   const handleToggle = (id) => {
     Swal.fire({
       title: "Are you sure to deactivate?",
@@ -89,6 +107,7 @@ const LawFirm = () => {
       }
     });
   };
+
   // Filtered firms based on search
   const filteredFirms = firms.filter(
     (firm) =>
@@ -128,6 +147,7 @@ const LawFirm = () => {
     setSelectedFirm(firm);
     setIsEditModalOpen(true);
   };
+
   return (
     <div className="min-h-screen bg-[#0F172A] text-white p-6 poppins">
       <div className="flex items-center justify-between mb-6">
@@ -166,7 +186,7 @@ const LawFirm = () => {
                   handleToggle={() => handleToggle(item.id)}
                 />
                 <FaRegEdit
-                  onClick={() => handleEdit(item.id)}
+                  onClick={() => handleEdit(item)}
                   className="text-[#FFFFFF] cursor-pointer text-lg"
                 />
                 <FaTrash
@@ -187,9 +207,9 @@ const LawFirm = () => {
             </div>
 
             <p className="mb-2 text-sm text-[#D1D5DB]">Team Members:</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mb-3">
               {item.team.map((member, index) => {
-                let bgColor = "#3B82F633"; // default: others
+                let bgColor = "#3B82F633"; // default
 
                 if (member.role === "Admin") {
                   bgColor = "#7C3AED33";
@@ -208,9 +228,65 @@ const LawFirm = () => {
                 );
               })}
             </div>
+
+            {/* Billing Info */}
+            {/* Billing Info */}
+            <div className="p-4 mt-4 border border-gray-700 shadow-inner rounded-xl">
+              <h3 className="mb-3 text-base font-semibold text-cyan-400">
+                💳 Billing Information
+              </h3>
+              <div className="grid grid-cols-1 gap-2 text-sm text-gray-300">
+                <div className="flex justify-between">
+                  <span>Billing:</span>
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      item.billing
+                        ? "bg-green-500/20 text-green-400"
+                        : "bg-red-500/20 text-red-400"
+                    }`}
+                  >
+                    {item.billing ? "On" : "Off"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Cost per Admin:</span>
+                  <span className="font-semibold text-white">
+                    ${item.costPerAdmin}/month
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Cost per Case Manager:</span>
+                  <span className="font-semibold text-white">
+                    ${item.costPerCaseManager}/month
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Cost per Intake Specialist:</span>
+                  <span className="font-semibold text-white">
+                    ${item.costPerIntakeSpecialist}/month
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Overage Rate:</span>
+                  <span className="font-semibold text-white">
+                    ${item.overageRate} / message
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Next Billing Date:</span>
+                  <span className="text-cyan-300">
+                    {new Date(item.nextBillingDate).toLocaleString("en-US", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
+
       {isModalOpen && (
         <AddLawFirm
           onClose={() => {
