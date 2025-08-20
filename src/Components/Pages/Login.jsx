@@ -4,10 +4,12 @@ import loginImage from "../../assets/loginpage.png";
 import loginPage from "../../assets/login-banner.png";
 import logo from "../../assets/loginlogo.png";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../../Redux/feature/auth/authapi";
-import toast from "react-hot-toast";
-import { setCredentials } from "../../Redux/feature/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { setCredentials } from "../../Redux/feature/auth/authSlice";
+import toast from "react-hot-toast";
+import { useLoginMutation } from "../../Redux/api/authapi";
+
+
 
 export default function Login() {
   const [email, setEmail] = useState("");

@@ -4,8 +4,9 @@ const baseQuery = fetchBaseQuery({
   baseUrl: "http://10.10.13.20:8000/api/v1/",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth?.access || null;
+    console.log(token);
     if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     } else {
       const authString = localStorage.getItem("auth");
       let authData = null;
@@ -17,7 +18,7 @@ const baseQuery = fetchBaseQuery({
         }
       }
       if (authData?.access) {
-        headers.set("authorization", `Bearer ${authData.access}`);
+        headers.set("Authorization", `Bearer ${authData.access}`);
       }
     }
     return headers;

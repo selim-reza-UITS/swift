@@ -6,8 +6,8 @@ import { IoEyeOutline } from "react-icons/io5";
 import logo from "../../assets/loginlogo.png";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom"; // Make sure you are using React Router
-import { useResetPasswordMutation } from "../../Redux/feature/auth/authapi";
 import toast from "react-hot-toast";
+import { useResetPasswordMutation } from "../../Redux/api/authapi";
 
 const Reset = () => {
   const [password, setPassword] = useState("");

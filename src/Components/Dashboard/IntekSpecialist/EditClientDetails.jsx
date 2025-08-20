@@ -1,40 +1,50 @@
 import { useRef, useState, useEffect } from "react";
 import { TbXboxXFilled } from "react-icons/tb";
 import Swal from "sweetalert2";
+import {
+  useGetAllLawyerQuery,
+  useGetAllUserQuery,
+  useGetClientByIdQuery,
+} from "../../../Redux/api/intakeapi";
 
-const EditClientDetails = ({ onClose, client, onUpdate }) => {
+const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
+  const { data: lawyersData } = useGetAllLawyerQuery();
+  const { data: usersData } = useGetAllUserQuery();
+  const {
+    data: clientData,
+    isLoading,
+    error,
+  } = useGetClientByIdQuery(clientId); // Fetch client details by ID
+  const lawyerOptions = Array.isArray(lawyersData)
+    ? lawyersData
+        .map((l) => ({ id: l?.id, name: l?.name }))
+        .filter((x) => x.id && x.name)
+    : [];
+  console.log(lawyerOptions);
+  const managingUserOptions = Array.isArray(usersData)
+    ? usersData
+        .map((u) => ({ id: u?.id, name: u?.name }))
+        .filter((x) => x.id && x.name)
+    : [];
   const managingRef = useRef(null);
   const [isManagingOpen, setIsManagingOpen] = useState(false);
-
-  const lawyerOptions = [
-    "Robert Johnson",
-    "Jane Doe",
-    "Robert Smith",
-    "Michael Davis",
-    "Lisa Wilson",
-  ];
-
-  const managingUserOptions = [
-    "Dev Guru",
-    "Smith Dark",
-    "John Smith",
-    "Emily Clark",
-  ];
-
   const [formData, setFormData] = useState({
-    fullName: client.name || "",
-    phoneNumber: client.phone || "",
-    managingUsers: client.managingUsers || [],
-    gender: client.gender || "Female",
-    dateOfIncident: client.dateOfIncident || "2024-01-15",
-    lawyerName: client.lawyerName || "Robert Johnson",
-    injurySustained: client.injurySustained || "Lower back pain and stiffness.",
+    fullName: clientData?.full_name || "",
+    phoneNumber: clientData?.phone_number || "",
+    managingUsers: clientData?.managing_users?.map((user) => user.name) || [],
+    gender: clientData?.gender || "Female",
+    dateOfIncident: clientData?.date_of_incident || "2024/01/15",
+    lawyerName: clientData?.lawyer?.name || "",
+    injurySustained:
+      clientData?.injurySustained || "Lower back pain and stiffness.",
     generalCaseInfo:
-      client.generalCaseInfo || "Client reported back pain after accident.",
-    consentToCommunicate: client.consentToCommunicate || false,
-    sentiment: client.sentiment || "Positive",
-    concernLevel: client.concernLevel || "High",
+      clientData?.generalCaseInfo ||
+      "Client reported back pain after accident.",
+    consentToCommunicate: clientData?.consentToCommunicate || true,
+    sentiment: clientData?.sentiment || "Positive",
+    concernLevel: clientData?.concernLevel || "High",
   });
+  console.log(formData?.lawyerName);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -87,6 +97,8 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
 
     onClose();
   };
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading client details.</div>;
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">
       <div className="relative w-[450px] bg-[#0f172a] text-white rounded-xl p-4 ">
@@ -99,29 +111,12 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
 
         <div className="mt-2 text-center">
           <img
-            src={client.avatar}
-            alt={formData.fullName || client.name}
+            src={clientData?.avatar}
+            alt={formData.fullName || clientData.full_name}
             className="object-cover w-20 h-20 mx-auto border-2 border-blue-500 rounded-full"
           />
         </div>
 
-        {/* Editable Fields
-        <div className="mt-4 space-y-2 text-sm">
-          {["name", "phone", "manager", "gender", "incidentDate", "lawyer"].map(
-            (field) => (
-              <div key={field} className="flex flex-col">
-                <label className="text-sm capitalize">{field}:</label>
-                <input
-                  type="text"
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleInputChange}
-                  className="p-2 rounded bg-[#1e293b] border border-gray-700 text-sm focus:outline-none"
-                />
-              </div>
-            )
-          )}
-        </div> */}
         {/* Full Name */}
         <div>
           <label className="block mb-2 text-sm font-medium text-white">
@@ -130,7 +125,7 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
           <input
             type="text"
             name="fullName"
-            value={formData.fullName}
+            value={clientData?.full_name}
             onChange={handleInputChange}
             placeholder="e.g., John Doe"
             className="w-full bg-[#1e293b] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
@@ -144,7 +139,7 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
           <input
             type="tel"
             name="phoneNumber"
-            value={formData.phoneNumber}
+            value={clientData?.phone_number}
             onChange={handlePhoneChange}
             placeholder="(XXX) XXX-XXXX"
             className="w-full bg-[#1e293b] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
@@ -162,34 +157,35 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
               className="w-full bg-[#1e293b] text-white border border-slate-500 rounded-md px-3 py-2 text-left"
             >
               {formData.managingUsers.length > 0
-                ? formData.managingUsers.join(", ")
+                ? formData.managingUsers.join(", ") // Display pre-selected managing users as comma-separated
                 : "Select managing users"}
             </button>
+
             {isManagingOpen && (
               <div className="absolute z-20 mt-1 w-full bg-[#1E293B] border border-slate-600 rounded-md shadow-lg max-h-48 overflow-auto">
-                {managingUserOptions.map((name) => {
-                  const checked = formData.managingUsers.includes(name);
+                {managingUserOptions.map((user) => {
+                  const checked = formData.managingUsers.includes(user.name); // Check if user is pre-selected
                   return (
                     <label
-                      key={name}
+                      key={user.id}
                       className="flex items-center gap-2 px-3 py-2 text-white hover:bg-slate-600 cursor-pointer"
                     >
                       <input
                         type="checkbox"
-                        checked={checked}
+                        checked={checked} // Pre-select checkbox if the user is selected
                         onChange={(e) => {
                           setFormData((prev) => {
                             const set = new Set(prev.managingUsers);
-                            if (e.target.checked) set.add(name);
-                            else set.delete(name);
+                            if (e.target.checked) set.add(user.name);
+                            else set.delete(user.name);
                             return {
                               ...prev,
-                              managingUsers: Array.from(set),
+                              managingUsers: Array.from(set), // Update managing users
                             };
                           });
                         }}
                       />
-                      <span>{name}</span>
+                      <span>{user.name}</span>
                     </label>
                   );
                 })}
@@ -228,7 +224,7 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
               />
               <span className="text-sm text-white">Male</span>
             </label>
-            <label className="flex items-center">
+            {/* <label className="flex items-center">
               <input
                 type="radio"
                 name="gender"
@@ -238,7 +234,7 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
                 className="mr-2 text-purple-400 focus:ring-purple-400"
               />
               <span className="text-sm text-white">Prefer not to say</span>
-            </label>
+            </label> */}
           </div>
         </div>
         {/* Date of Incident */}
@@ -247,8 +243,9 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
             Date of Incident<span className="text-red-400">*</span>
           </label>
           <input
-            type="date"
+            type="text"
             name="dateOfIncident"
+            placeholder="yyyy/mm/dd"
             value={formData.dateOfIncident}
             onChange={handleInputChange}
             className="w-full bg-[#1e293b] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
@@ -262,15 +259,15 @@ const EditClientDetails = ({ onClose, client, onUpdate }) => {
           <div className="relative">
             <select
               name="lawyerName"
-              value={formData.lawyerName}
+              defaultValue={clientData?.lawyer?.name}
               onChange={handleInputChange}
               className="w-full bg-[#1e293b] text-white border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
             >
               <option value="" disabled>
                 Select a lawyer
               </option>
-              {lawyerOptions.map((name) => (
-                <option key={name} value={name}>
+              {lawyerOptions.map(({ id, name }) => (
+                <option key={id} value={id}>
                   {name}
                 </option>
               ))}

@@ -4,6 +4,7 @@ import active from "../../../assets/active.png";
 import { FaPlus } from "react-icons/fa";
 import AddClientForm from "../../Shared/AddClientForm";
 import IntakeSpecialistClients from "./IntakeSpecialistClients";
+import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
 const assignments = [
   {
     id: 1,
@@ -118,6 +119,8 @@ const getImageByTitle = (title) => {
 const IntakeSpecialistDashboard = () => {
   const [showAddClientModal, setShowAddClientModal] = React.useState(false);
 
+  const { data: clients = [], isLoading } = useGetAllClientsQuery();
+
   return (
     <div className="h-[85vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
@@ -145,7 +148,7 @@ const IntakeSpecialistDashboard = () => {
               aria-label="Close"
             >
               &times;
-            </button> */} 
+            </button> */}
             <AddClientForm setShowAddClientModal={setShowAddClientModal} />
           </div>
         </div>
@@ -170,10 +173,11 @@ const IntakeSpecialistDashboard = () => {
         ))}
       </div>
 
-      {/* Middle Section */}
+      {/* Clients Table */}
       <div className="p-6">
-      <IntakeSpecialistClients />
+        <IntakeSpecialistClients clients={clients} />
       </div>
+    
     </div>
   );
 };

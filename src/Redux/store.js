@@ -2,7 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./feature/auth/authSlice";
-import { authapi } from "./feature/auth/authapi";
+import { api } from "./api/api";
 
 const persistConfig = {
   key: "root",
@@ -10,7 +10,7 @@ const persistConfig = {
   whitelist: ["auth"],
 };
 const rootReducer = combineReducers({
-  [authapi.reducerPath]: authapi.reducer,
+  [api.reducerPath]: api.reducer,
   auth: authReducer,
 });
 
@@ -23,7 +23,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
       },
-    }).concat(authapi.middleware),
+    }).concat(api.middleware),
 });
 
 export const persistor = persistStore(store);
