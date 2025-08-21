@@ -13,7 +13,6 @@ import div from "../../../assets/div.png";
 import message from "../../../assets/message.png";
 import priority from "../../../assets/priority.png";
 import active from "../../../assets/active.png";
-import appoinment from "../../../assets/appoinment.png";
 import { FaPlus } from "react-icons/fa";
 import AddClientForm from "../../Shared/AddClientForm";
 

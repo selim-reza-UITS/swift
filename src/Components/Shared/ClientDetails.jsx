@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Send,
   Bot,
@@ -8,8 +8,17 @@ import {
   AlertTriangle,
   Edit,
 } from "lucide-react";
+import { useGetClientByIdQuery } from "../../Redux/api/intakeapi";
 
 function ClientDetails() {
+  const params = useParams(); // Get the clientId from URL parameters
+  console.log(params.id)
+  const {
+    data: clientData,
+    isLoading,
+    error,
+  } = useGetClientByIdQuery(params.id); // Fetch client data dynamically
+  console.log(clientData)
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
     {
@@ -48,8 +57,8 @@ function ClientDetails() {
     consentToCommunicate: false,
   });
   const navigate = useNavigate();
-  console.log(openModal);
 
+  // Handling message send
   const handleSendMessage = () => {
     const trimmed = message.trim();
     if (trimmed === "") return;
@@ -60,19 +69,27 @@ function ClientDetails() {
     setMessage("");
   };
 
+  // Handling the client info update
   const handleEditSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically save the changes to your backend
     console.log("Updated client data:", editForm);
     setShowEditModal(false);
   };
 
+  // Handling input change for the edit form
   const handleInputChange = (field, value) => {
     setEditForm((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
+
+  // Check if client data is being loaded or there is an error
+  if (isLoading) return <div>Loading client data...</div>;
+  if (error) return <div>Error loading client data</div>;
+
+  // Get client data dynamically from API
+  const clientDetails = clientData?.data; // Assuming clientData has 'data' property
   return (
     <div className="h-[86vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
@@ -106,8 +123,8 @@ function ClientDetails() {
             <User className="w-8 h-8 text-gray-300" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold">Sarah Johnson</h2>
-            <p className="text-gray-400 text-center">(555) 123-4567</p>
+            <h2 className="text-xl font-semibold">{clientData?.full_name}</h2>
+            <p className="text-gray-400 text-center">{clientData?.phone_number}</p>
           </div>
         </div>
         <div
@@ -121,31 +138,30 @@ function ClientDetails() {
         <div className="space-y-4 mb-8">
           <div className="flex justify-between">
             <span className="text-gray-400">Incident Date:</span>
-            <span>2025-9-15</span>
+            <span>{clientData?.date_of_incident}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Client Status:</span>
             <span className="bg-blue-600 px-2 py-1 rounded text-sm">
-              On Going
+            {clientData?.status}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Gender:</span>
-            <span>Female</span>
+            <span>{clientData?.gender}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Managing User(s):</span>
-            <span>John Smith</span>
+            <span>{clientData?.managing_users.map(user=>user.name).join(", ")}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Lawyer:</span>
-            <span>Robert Johnson</span>
+            <span>{clientData?.lawyer?.name}n</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Injury's Sustained:</span>
-            <span> Lower back pain and stiffness.</span>
+            <span> {clientData?.injuries_sustained}</span>
           </div>
-        
         </div>
 
         {/* Communication Status */}
@@ -160,11 +176,11 @@ function ClientDetails() {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Client Sentiment:</span>
-              <span className="text-green-400">Positive</span>
+              <span className="text-green-400">{clientData?.sentiment}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Risk Level:</span>
-              <span className="text-red-400">High</span>
+              <span className="text-red-400">{clientData?.concern_level}</span>
             </div>
           </div>
         </div>
@@ -174,11 +190,10 @@ function ClientDetails() {
           <h3 className="text-lg font-semibold mb-4">General Case Info</h3>
           <div className="bg-gray-700 p-4 rounded-lg">
             <p className="text-gray-300 text-sm">
-              Client reported back pain after accident.
+            {clientData?.general_case_info}
             </p>
           </div>
         </div>
-       
       </div>
 
       {/* Main Content Area */}

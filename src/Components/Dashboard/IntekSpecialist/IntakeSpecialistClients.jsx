@@ -433,7 +433,7 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
 
       {isModalOpen && selectedClient && (
         <ViewClientDetails
-          client={selectedClient}
+         clientId={selectedClient?.id}
           onClose={() => {
             setIsModalOpen(false);
             setSelectedClient(null);
