@@ -3,21 +3,24 @@ import { TbXboxXFilled } from "react-icons/tb";
 import { FaUserPlus } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import "animate.css";
+import { useUpdateLawFirmMutation } from "../../../../Redux/feature/SuperAdmin/superAdmin";
 
 const EditLawfirm = ({ onClose, firmToEdit }) => {
   const [formData, setFormData] = useState({
     firmname: "",
-    number: "",
+    area_code: "",
     location: "",
     website: "",
   });
+
+  const [updateLawFirm, { isLoading }] = useUpdateLawFirmMutation();
 
   // Auto-fill edit data
   useEffect(() => {
     if (firmToEdit) {
       setFormData({
         firmname: firmToEdit.name || "",
-        number: firmToEdit.phone || "",
+        area_code: firmToEdit.area_code || "",
         location: firmToEdit.address || "",
         website: firmToEdit.website || "",
       });
@@ -29,25 +32,46 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    Swal.fire({
-      icon: "success",
-      title: "Firm Updated!",
-      text: "The law firm details have been updated successfully.",
-      background: "#1e293b",
-      color: "#fff",
-      confirmButtonColor: "#22c55e",
-      showClass: {
-        popup: "animate__animated animate__zoomIn",
-      },
-      hideClass: {
-        popup: "animate__animated animate__zoomOut",
-      },
-    });
+    try {
+      await updateLawFirm({
+        id: firmToEdit.id,
+        body: {
+          name: formData.firmname,
+          area_code: formData.area_code,
+          address: formData.location,
+          website: formData.website,
+        },
+      }).unwrap();
 
-    onClose();
+      Swal.fire({
+        icon: "success",
+        title: "Firm Updated!",
+        text: "The law firm details have been updated successfully.",
+        background: "#1e293b",
+        color: "#fff",
+        confirmButtonColor: "#22c55e",
+        showClass: {
+          popup: "animate__animated animate__zoomIn",
+        },
+        hideClass: {
+          popup: "animate__animated animate__zoomOut",
+        },
+      });
+
+      onClose();
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed to update!",
+        text: error?.data?.message || "Something went wrong.",
+        background: "#1e293b",
+        color: "#fff",
+        confirmButtonColor: "#ef4444",
+      });
+    }
   };
 
   return (
@@ -69,7 +93,6 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-3">
-          {/* Firm Name */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">
               Firm Name*
@@ -84,7 +107,6 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
             />
           </div>
 
-          {/* Contact Number */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">
               Contact Number*
@@ -92,14 +114,13 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
             <input
               type="text"
               name="number"
-              value={formData.number}
+              value={formData.area_code}
               onChange={handleChange}
               required
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
           </div>
 
-          {/* Location */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">
               Location*
@@ -114,7 +135,6 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
             />
           </div>
 
-          {/* Website */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">Website*</label>
             <input
@@ -127,13 +147,13 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
             />
           </div>
 
-          {/* Save Button */}
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-1/2 py-2 mt-4 text-white rounded bg-gradient-to-r from-blue-600 to-cyan-400"
+              disabled={isLoading}
+              className="w-1/2 py-2 mt-4 text-white rounded bg-gradient-to-r from-blue-600 to-cyan-400 disabled:opacity-50"
             >
-              Save
+              {isLoading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
