@@ -1,7 +1,7 @@
-// components/SecuritySettings.jsx
 import React, { useState } from "react";
 import { MdOutlineSecurity } from "react-icons/md";
 import Swal from "sweetalert2";
+import { useChangePasswordMutation } from "../../../../Redux/feature/Shared/Share";
 
 const SecuritySettings = () => {
   const [formData, setFormData] = useState({
@@ -10,19 +10,18 @@ const SecuritySettings = () => {
     confirmPassword: "",
   });
 
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { currentPassword, newPassword, confirmPassword } = formData;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-          Swal.fire({
+      return Swal.fire({
         icon: "warning",
         title: "Incomplete Preferences",
         text: "Please fill all required preferences before saving.",
@@ -30,32 +29,49 @@ const SecuritySettings = () => {
         color: "#f9fafb",
         confirmButtonColor: "#8B5CF6",
       });
-    
-      return;
     }
 
     if (newPassword !== confirmPassword) {
-             Swal.fire({
+      return Swal.fire({
         icon: "warning",
         title: "Mismatch",
-        text:  "New passwords do not match", 
+        text: "New passwords do not match",
         background: "#1f2937",
         color: "#f9fafb",
         confirmButtonColor: "#8B5CF6",
       });
-    
-      return;
     }
 
-    Swal.fire("Success", "Password updated successfully!", "success");
-    console.log("Password Change Info:", formData);
+    try {
+      await changePassword({
+        old_password: currentPassword,
+        new_password: newPassword,
+      }).unwrap();
 
-    // Optionally reset the form
-    setFormData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Password updated successfully!",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+
+      setFormData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error?.data?.message || "Failed to update password",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    }
   };
 
   return (
@@ -67,9 +83,8 @@ const SecuritySettings = () => {
         Security
       </h2>
       <div className="flex flex-col gap-4">
-        {/* current password */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm  text-[#D1D5DB]">Current password*</label>
+          <label className="text-sm text-[#D1D5DB]">Current password*</label>
           <input
             name="currentPassword"
             className="w-full p-3 rounded-lg bg-[#334155] focus:outline-none text-white"
@@ -79,8 +94,6 @@ const SecuritySettings = () => {
             onChange={handleChange}
           />
         </div>
-
-        {/* new password */}
         <div className="flex flex-col gap-1">
           <label className="text-sm text-[#D1D5DB]">New password</label>
           <input
@@ -92,13 +105,11 @@ const SecuritySettings = () => {
             onChange={handleChange}
           />
         </div>
-
-        {/* confirm password */}
         <div className="flex flex-col gap-1">
-          <label className="text-sm  text-[#D1D5DB]">Confirm password*</label>
+          <label className="text-sm text-[#D1D5DB]">Confirm password*</label>
           <input
             name="confirmPassword"
-            className="w-full p-3 rounded-lg bg-[#334155]  focus:outline-none text-white"
+            className="w-full p-3 rounded-lg bg-[#334155] focus:outline-none text-white"
             placeholder="Confirm new password"
             type="password"
             value={formData.confirmPassword}
@@ -108,9 +119,10 @@ const SecuritySettings = () => {
         <div className="flex justify-end">
           <button
             onClick={handleSubmit}
+            disabled={isLoading}
             className="px-4 py-2 mt-4 text-white rounded-lg bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] hover:opacity-90 justify-end"
           >
-            Change Password
+            {isLoading ? "Updating..." : "Change Password"}
           </button>
         </div>
       </div>

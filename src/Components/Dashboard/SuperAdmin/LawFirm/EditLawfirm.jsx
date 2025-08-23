@@ -108,13 +108,11 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-base poppins text-[#D1D5DB]">
-              Contact Number*
-            </label>
+            <label className="text-base poppins text-[#D1D5DB]">Email*</label>
             <input
               type="text"
-              name="number"
-              value={formData.area_code}
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
