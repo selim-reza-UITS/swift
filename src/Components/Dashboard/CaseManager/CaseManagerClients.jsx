@@ -15,17 +15,8 @@ const CaseManagerClients = () => {
   const [displayClients, setDisplayClients] = useState([]);
 
   const { data: clients = [], isLoading } = useGetAllClientsQuery();
-  const [formData, setFormData] = useState({
-    fullName: "",
-    lawyerName: "",
-    dateOfIncident: "",
-    gender: "",
-    managingUsers: [],
-    phoneNumber: "",
-    injurySustained: "",
-    generalCaseInfo: "",
-    consentToCommunicate: false,
-  });
+  console.log(clients)
+
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,10 +72,10 @@ const CaseManagerClients = () => {
       }
     };
   }, [deleteTimer]);
-  const filteredClients = displayClients.filter((client) => {
+  const filteredClients = clients.filter((client) => {
     const matchesSearch =
-      client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.phone.includes(searchTerm);
+      client.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.phone_number.includes(searchTerm);
 
     if (activeView === "active")
       return matchesSearch && client.status === "active";
@@ -164,27 +155,27 @@ const CaseManagerClients = () => {
       setCurrentPage(page);
     }
   };
-  useEffect(() => {
-    const mapStatus = (s) => {
-      if (!s) return "active";
-      const lower = String(s).toLowerCase();
-      if (lower.includes("pause")) return "paused";
-      if (lower.includes("delete")) return "recovery";
-      return "active"; // e.g., "Awaiting Consent"
-    };
+  // useEffect(() => {
+  //   const mapStatus = (s) => {
+  //     if (!s) return "active";
+  //     const lower = String(s).toLowerCase();
+  //     if (lower.includes("pause")) return "paused";
+  //     if (lower.includes("delete")) return "recovery";
+  //     return "active"; // e.g., "Awaiting Consent"
+  //   };
 
-    const mapped = Array.isArray(clients)
-      ? clients.map((c) => ({
-          id: c.id,
-          name: c.full_name || c.name || "-",
-          phone: c.phone_number || "-",
-          status: mapStatus(c.status),
-          priority: "medium",
-          avatar: "/api/placeholder/40/40",
-        }))
-      : [];
-    setDisplayClients(mapped);
-  }, [clients]);
+  //   const mapped = Array.isArray(clients)
+  //     ? clients.map((c) => ({
+  //         id: c.id,
+  //         name: c.full_name || c.name || "-",
+  //         phone: c.phone_number || "-",
+  //         status: mapStatus(c.status),
+  //         priority: "medium",
+  //         avatar: "/api/placeholder/40/40",
+  //       }))
+  //     : [];
+  //   setDisplayClients(mapped);
+  // }, [clients]);
 
   const handleDeleteClient = (id) => {
     Swal.fire({
@@ -313,7 +304,7 @@ const CaseManagerClients = () => {
                 <div className="relative">
                   <img
                     src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
-                    alt={client.name}
+                    alt={client.full_name}
                     className="w-12 h-12 bg-gray-600 rounded-full"
                   />
                   <div
@@ -325,9 +316,9 @@ const CaseManagerClients = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-white">
-                    {client.name}
+                    {client.full_name}
                   </h3>
-                  <p className="text-sm text-gray-400">{client.phone}</p>
+                  <p className="text-sm text-gray-400">{client.phone_number}</p>
                 </div>
               </div>
 
@@ -337,7 +328,7 @@ const CaseManagerClients = () => {
                     client.status
                   )} text-white`}
                 >
-                  {getStatusLabel(client.status)}
+                  {client?.status}
                 </span>
 
                 <span
@@ -345,7 +336,7 @@ const CaseManagerClients = () => {
                     client.priority
                   )}`}
                 >
-                  {getPriorityLabel(client.priority)}
+                 {client?.concern_level}
                 </span>
 
                 <Link to={`/dashboard/caseManagerClients/${client.id}`}>

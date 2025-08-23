@@ -64,13 +64,13 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
         dateOfIncident: clientData?.date_of_incident || "2024/01/15",
         lawyerName: clientData?.lawyer?.id || "",
         injurySustained:
-          clientData?.injurySustained || "Lower back pain and stiffness.",
+          clientData?.injuries_sustained || "Lower back pain and stiffness.",
         generalCaseInfo:
-          clientData?.generalCaseInfo ||
+          clientData?.general_case_info ||
           "Client reported back pain after accident.",
-        consentToCommunicate: clientData?.consentToCommunicate || false,
+        consentToCommunicate: clientData?.consent_to_communicate || false,
         sentiment: clientData?.sentiment || "Positive",
-        concernLevel: clientData?.concernLevel || "High",
+        concernLevel: clientData?.concern_level || "High",
       });
     }
   }, [clientData]);

@@ -1,6 +1,7 @@
 import { Check, CheckCheck, X } from "lucide-react";
 import { TbXboxXFilled } from "react-icons/tb";
 import { useGetClientByIdQuery } from "../../../../Redux/api/intakeapi";
+import avatar from "../../../../assets/avatar.png";
 
 const ViewClientDetails = ({ onClose, clientId }) => {
   console.log(clientId);
@@ -22,7 +23,7 @@ const ViewClientDetails = ({ onClose, clientId }) => {
 
         <div className="mt-2 text-center">
           <img
-            src={clientData?.avatar}
+            src={avatar}
             alt={clientData?.full_name}
             className="object-cover w-20 h-20 mx-auto border-2 border-blue-500 rounded-full"
           />
@@ -82,7 +83,16 @@ const ViewClientDetails = ({ onClose, clientId }) => {
               Scheduled Next Send:
             </span>
             <span className="px-2 py-1 text-xs text-white bg-blue-600 rounded-full">
-              {clientData?.next_send_date || "N/A"}
+              {new Date(clientData.scheduled_time)
+                    .toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                    .replace(",", " at")}
             </span>
           </div>
           <div className="flex justify-between mb-3">
@@ -118,17 +128,13 @@ const ViewClientDetails = ({ onClose, clientId }) => {
             </span>
           </div>
           <div className="flex justify-between my-2">
-            <span className="text-[#FFFFFF] text-base">Insights:</span>
-            <span className="text-[#FFFFFF] text-base">
-              {clientData?.insights ||
+            <span className="text-[#FFFFFF] text-base mr-1">Insights: </span>
+            <span className="text-[#FFFFFF] text-base text-justify">
+              {clientData?.insight ||
                 "Client reported back pain after accident"}
             </span>
           </div>
         </div>
-
-        {/* <button className="mt-4 w-full bg-[#2C2F48] hover:bg-[#3b3e5b] text-sm text-white py-2 rounded-lg border border-[#3A3A3A]">
-          + Log Case Update
-        </button> */}
       </div>
     </div>
   );
