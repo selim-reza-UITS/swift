@@ -8,10 +8,12 @@ import { useCreateLawFirmMutation } from "../../../../Redux/feature/SuperAdmin/s
 const businessOptions = [
   "LLC",
   "PLLC",
-  "Partnership",
-  "Corporation",
-  "Professional Corporation",
+  "PROFESSIONAL CORPORATION",
+  "CORPORATION",
+  "PARTNERSHIP",
+  "SOLE_PROP",
   "LLP",
+  "OTHER",
 ];
 
 const AddLawFirm = ({ onClose }) => {
@@ -178,17 +180,15 @@ const AddLawFirm = ({ onClose }) => {
 
           {/* Managing User */}
           <div>
-            <label className="block mb-2 text-sm">Select Managing User*</label>
-            <select
+            <label className="block mb-2 text-sm">Admin Name*</label>
+            <input
+              type="text"
               name="manager"
               value={formData.manager}
               onChange={handleChange}
+              placeholder="Enter admin name"
               className="w-full px-3 py-2 rounded-lg bg-[#1e293b] text-white text-sm outline-none"
-            >
-              <option value=""></option>
-              <option value="Ahmed Kabir">Ahmed Kabir</option>
-              <option value="John Smith">John Smith</option>
-            </select>
+            />
           </div>
 
           {/* Address */}

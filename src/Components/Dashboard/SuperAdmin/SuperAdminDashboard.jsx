@@ -9,42 +9,23 @@ import { FaPlus, FaSync, FaUpload } from "react-icons/fa";
 import { BsQuestionCircle } from "react-icons/bs";
 import { MdSettingsSuggest } from "react-icons/md";
 import AddLawFirm from "./LawFirm/AddLawFirm";
-const fakeClients = [
-  {
-    name: "Smith & Associates",
-    status: "Active",
-    added: "2 days ago",
-  },
-  {
-    name: "Legal Partners LLC",
-    status: "Pending",
-    added: "5 days ago",
-  },
-  {
-    name: "Smith & Associates",
-    status: "Active",
-    added: "2 days ago",
-  },
-  {
-    name: "Legal Partners LLC",
-    status: "Pending",
-    added: "5 days ago",
-  },
-];
-const statsData = [
-  { title: "Active Users", value: 24 },
+import { useGetDashboardQuery } from "../../../Redux/feature/SuperAdmin/superAdmin";
 
-  { title: "Total Firms", value: 25 },
-];
-// Helper function to return image based on title
-const getImageByTitle = (title) => {
-  if (title === "Active Users") return active;
-
-  if (title === "Total Firms") return appoinment;
-  return null; // default if no match
-};
 const SuperAdminDashboard = () => {
   const [activeIndex, setActiveIndex] = React.useState(null);
+  const { data: dashboard, refetch } = useGetDashboardQuery();
+  console.log(dashboard, "dashboard");
+  const statsData = [
+    { title: "Active Users", value: dashboard?.active_users || 0 },
+    { title: "Total Firms", value: dashboard?.total_firms || 0 },
+  ];
+  // Helper function to return image based on title
+  const getImageByTitle = (title) => {
+    if (title === "Active Users") return active;
+
+    if (title === "Total Firms") return appoinment;
+    return null; // default if no match
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#0f172a] text-white p-6">
