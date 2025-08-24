@@ -15,6 +15,10 @@ import ViewLawyerDetails from "./ViewLawyerDetails";
 import ViewMemberDetails from "./ViewMemberDetails";
 import EditLawyer from "./EditLawyer";
 import EditUser from "./EditUser";
+import {
+  useGetDashboardQuery,
+  useGetFirmChartQuery,
+} from "../../../../Redux/feature/Admin/admin";
 const MyFirm = () => {
   const [activeTab, setActiveTab] = useState("lawyers");
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,13 +31,14 @@ const MyFirm = () => {
   const [currentLawyerPage, setCurrentLawyerPage] = useState(1);
   const [currentMemberPage, setCurrentMemberPage] = useState(1);
   const itemsPerPage = 4;
-
+  const { data: firmScores } = useGetFirmChartQuery();
+  const { data: firm } = useGetDashboardQuery();
   const firmStats = {
-    performanceScore: 85,
-    reputation: 70,
-    totalClients: 247,
-    activeCases: 89,
-    teamMembers: 158,
+    performanceScore: firmScores?.firm_health_score,
+    reputation: firmScores?.firm_reputation_score,
+    totalClients: firm?.total_clients,
+
+    teamMembers: firm?.team_members,
   };
 
   const [lawyerList, setLawyerList] = useState([
@@ -269,7 +274,7 @@ const MyFirm = () => {
             </div>
             <img src={bag} alt="" />
           </div>
-          <div className="bg-[#1e293b] p-6 rounded-lg flex items-center justify-between">
+          {/* <div className="bg-[#1e293b] p-6 rounded-lg flex items-center justify-between">
             <div>
               <h2 className="text-lg font-normal text-[#E5E7EB]">
                 Active Cases
@@ -277,7 +282,7 @@ const MyFirm = () => {
               <p className="mt-2 text-2xl font-bold">{firmStats.activeCases}</p>
             </div>
             <img src={clock} alt="" />
-          </div>
+          </div> */}
           <div className="bg-[#1e293b] p-6 rounded-lg flex items-center justify-between">
             <div>
               <h2 className="text-lg font-normal text-[#E5E7EB]">

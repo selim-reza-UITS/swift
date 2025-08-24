@@ -1,5 +1,5 @@
 import { api } from "../../api/api";
-import { use } from 'react';
+import { use } from "react";
 
 export const adminapi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,30 +16,40 @@ export const adminapi = api.injectEndpoints({
 
       method: "GET",
     }),
-     getHighRisk: builder.query({
+        getDashboard: builder.query({
+      query: () => "firms-statistics/",
+
+      method: "GET",
+    }),
+    getHighRisk: builder.query({
       query: () => "high-risk-clients/",
 
       method: "GET",
     }),
-      getFlaggedClient: builder.query({
+    getFlaggedClient: builder.query({
       query: () => "flagged-clients/",
 
       method: "GET",
     }),
-      getFirmChart: builder.query({
+    getFirmChart: builder.query({
       query: () => "chats/firm-scores/",
 
       method: "GET",
     }),
-    getLawFirm: builder.query({
-      query: () => "lawfirms/list/",
+    getClient: builder.query({
+      query: () => "clients/",
 
       method: "GET",
-      providesTags: ["LawFirm"],
+      providesTags: ["intake"],
     }),
-   
-
-
+       createFeedback: builder.mutation({
+      query: (data) => ({
+        url: "cores/feedback/",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["LawFirm"],
+    }),
   }),
 });
 
@@ -49,6 +59,8 @@ export const {
   useGetAdminDashboardQuery,
   useGetFlaggedClientQuery,
   useGetFirmChartQuery,
+  useGetClientQuery,
+  useGetDashboardQuery,
+  useCreateFeedbackMutation,
   useGetLawFirmQuery,
-  
 } = adminapi;
