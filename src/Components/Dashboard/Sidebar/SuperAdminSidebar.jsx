@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { FaBalanceScale } from "react-icons/fa";
+
 const SuperAdminSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSeetingsDropdownOpen, setSeetingsDropdownOpen] = useState(false);
@@ -16,6 +17,7 @@ const SuperAdminSidebar = () => {
   const isActiveDashboard = location.pathname === "/dashboard/superadmin";
   const isActiveLawFirm = location.pathname.startsWith("/dashboard/law-Firm");
   const isActiveSettings = location.pathname === "/dashboard/settings";
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
