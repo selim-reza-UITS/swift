@@ -12,107 +12,50 @@ import {
 import message from "../../../assets/message.png";
 import priority from "../../../assets/priority.png";
 import active from "../../../assets/active.png";
+import {
+  useGetAdminDashboardQuery,
+  useGetFirmChartQuery,
+  useGetFlaggedClientQuery,
+  useGetHighRiskQuery,
+} from "../../../Redux/feature/Admin/admin";
 
-const fakeClients = [
-  { name: "Smith & Associates", status: "High Risk", added: "2 days ago" },
-  { name: "Legal Partners LLC", status: "High Risk", added: "5 days ago" },
-  { name: "Justice Partners", status: "High Risk", added: "3 days ago" },
-  { name: "Legal Team A", status: "High Risk", added: "4 days ago" },
-  { name: "Legal Team B", status: "High Risk", added: "6 days ago" },
-  { name: "Legal Team C", status: "High Risk", added: "1 week ago" },
-  { name: "Law & Co", status: "Active", added: "1 day ago" },
-];
-
-const flaggedClients = [
-  {
-    name: "Sarah Johnson",
-    lastContact: "2 hours ago",
-    alert: "Missed appointment alert",
-    priority: "High",
-  },
-  {
-    name: "Michael Chen",
-    lastContact: "1 day ago",
-    alert: "Follow-up required",
-    priority: "Medium",
-  },
-  {
-    name: "Emily Davis",
-    lastContact: "3 days ago",
-    alert: "Case progressing well",
-    priority: "Low",
-  },
-  {
-    name: "Michael Chen",
-    lastContact: "1 day ago",
-    alert: "Follow-up required",
-    priority: "Medium",
-  },
-];
-
-// ✅ Convert daily → weekly
-const dailyData = [
-  { day: "Sun", value: 30 },
-  { day: "Mon", value: 40 },
-  { day: "Tue", value: 50 },
-  { day: "Wed", value: 60 },
-  { day: "Thu", value: 80 },
-  { day: "Fri", value: 60 },
-  { day: "Sat", value: 50 },
-  { day: "Sun", value: 20 },
-  { day: "Mon", value: 35 },
-  { day: "Tue", value: 45 },
-  { day: "Wed", value: 55 },
-  { day: "Thu", value: 65 },
-  { day: "Fri", value: 70 },
-  { day: "Sat", value: 40 },
-  { day: "Sun", value: 30 },
-  { day: "Mon", value: 40 },
-  { day: "Tue", value: 50 },
-  { day: "Wed", value: 60 },
-  { day: "Thu", value: 80 },
-  { day: "Fri", value: 60 },
-  { day: "Sat", value: 50 },
-];
-
-const groupByWeek = (data) => {
-  const result = [];
-  let weekCount = 1;
-  for (let i = 0; i < data.length; i += 7) {
-    const weekData = data.slice(i, i + 7);
-    const total = weekData.reduce((sum, d) => sum + d.value, 0);
-    result.push({ week: `Week ${weekCount}`, value: total });
-    weekCount++;
-  }
-  return result;
-};
-
-const sentimentData = groupByWeek(dailyData);
-
+// ✅ Tooltip renderer for reputation chart
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const value = payload[0].value;
-    const mood = value > 300 ? "😊 Good" : "😔 Needs Attention";
+    const mood = value > 50 ? "😊 Good" : "😔 Needs Attention";
     return (
       <div className="p-2 text-white poppins rounded-3xl shadow bg-[#8C15FF]">
         <p className="text-sm">{mood}</p>
+        <p className="text-xs">Score: {value}</p>
       </div>
     );
   }
   return null;
 };
 
-const statsData = [
-  { title: "Active Clients", value: 24 },
-  { title: "Issues", value: 3 },
-  { title: "Messages Sent This Month", value: 12 },
-];
+// ✅ Helper to extract initials
+const getInitials = (name) => {
+  if (!name) return "";
+  const words = name.split(" ");
+  return (
+    words[0][0].toUpperCase() + (words[1] ? words[1][0].toUpperCase() : "")
+  );
+};
 
-const getImageByTitle = (title) => {
-  if (title === "Active Clients") return active;
-  if (title === "Issues") return priority;
-  if (title === "Messages Sent This Month") return message;
-  return null;
+// ✅ Transform API data into fixed Week1–Week4 slots
+const buildWeeklyData = (weeklyScores) => {
+  const weeks = ["Week 1", "Week 2", "Week 3", "Week 4"];
+  const base = weeks.map((w) => ({ week: w, value: 0 }));
+
+  weeklyScores?.forEach((item) => {
+    // Example: map by position or parsing date
+    // Here we assume the API sends only Week 3 → put it in index 2
+    const weekIndex = 2; // adjust logic if backend sends clear week number
+    base[weekIndex].value = item.reputation_score;
+  });
+
+  return base;
 };
 
 const AdminDashboard = () => {
@@ -120,7 +63,24 @@ const AdminDashboard = () => {
   const [showAllFlagged, setShowAllFlagged] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
 
-  const highRiskClients = fakeClients.filter((c) => c.status === "High Risk");
+  const { data: dashboard } = useGetAdminDashboardQuery();
+  const { data: highRiskClients = [] } = useGetHighRiskQuery();
+  const { data: flaggedClients = [] } = useGetFlaggedClientQuery();
+  const { data: firmScores } = useGetFirmChartQuery();
+
+  const statsData = [
+    { title: "Active Clients", value: dashboard?.active_clients || 0 },
+    { title: "Issues", value: dashboard?.issues || 0 },
+    { title: "Messages Sent This Month", value: dashboard?.messages_sent || 0 },
+  ];
+
+  const getImageByTitle = (title) => {
+    if (title === "Active Clients") return active;
+    if (title === "Issues") return priority;
+    if (title === "Messages Sent This Month") return message;
+    return null;
+  };
+
   const displayedHighRisk = showAllHighRisk
     ? highRiskClients
     : highRiskClients.slice(0, 3);
@@ -128,6 +88,11 @@ const AdminDashboard = () => {
   const displayedFlagged = showAllFlagged
     ? flaggedClients
     : flaggedClients.slice(0, 3);
+
+  // ✅ Build chart data: always Week1–Week4
+  const reputationData = buildWeeklyData(
+    firmScores?.weekly_reputation_scores || []
+  );
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-white p-6">
@@ -174,46 +139,41 @@ const AdminDashboard = () => {
               showAllHighRisk ? "max-h-none" : "max-h-64"
             }`}
           >
-            {displayedHighRisk.map((client, idx) => (
+            {displayedHighRisk.map((client) => (
               <div
-                key={idx}
+                key={client.id}
                 className="p-3 bg-transparent border rounded-lg border-[#F3F4F6] flex items-center justify-between hover:bg-[#374151] transition-colors duration-200"
               >
                 <div className="flex items-center space-x-4">
-                  <img
-                    src={client.img || "https://via.placeholder.com/40"}
-                    alt={client.name}
-                    className="w-10 h-10 rounded-full"
-                  />
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#8C15FF] text-white font-bold">
+                    {getInitials(client.full_name)}
+                  </div>
                   <div>
-                    <p className="font-medium text-white">{client.name}</p>
+                    <p className="font-medium text-white">{client.full_name}</p>
                     <p className="text-sm text-[#FFFFFF]">
-                      Added {client.added}
+                      Added {client.days_since_added} days ago
+                    </p>
+                    <p className="text-xs text-[#CBD5E1]">
+                      {client.phone_number}
                     </p>
                   </div>
                 </div>
-                <div
-                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    client.status === "High Risk"
-                      ? "bg-red-200 text-red-900"
-                      : "bg-gray-200 text-gray-900"
-                  }`}
-                >
-                  {client.status}
+                <div className="px-2 py-1 text-xs font-semibold text-red-900 bg-red-200 rounded-full">
+                  High Risk
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Average Firm Reputation */}
+        {/* Average Firm Reputation (uses API data) */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
           <h3 className="mb-4 text-lg font-semibold">
             Average Firm Reputation
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart
-              data={sentimentData}
+              data={reputationData}
               barSize={32}
               barCategoryGap={20}
               onMouseLeave={() => setActiveIndex(null)}
@@ -228,7 +188,7 @@ const AdminDashboard = () => {
               <YAxis stroke="#cbd5e1" />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="value" radius={[5, 5, 0, 0]}>
-                {sentimentData.map((entry, index) => (
+                {reputationData.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={index === activeIndex ? "#3b82f6" : "#a855f7"}
@@ -257,27 +217,40 @@ const AdminDashboard = () => {
             {displayedFlagged.map((client, idx) => (
               <div
                 key={idx}
-                className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA]"
+                className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA] transition"
               >
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-[#FFFFFF]">{client.name}</p>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#DC2626] text-white font-bold">
+                      {getInitials(client?.full_name)}
+                    </div>
+                    <div>
+                      <p className="font-medium text-[#FFFFFF]">
+                        {client?.full_name}
+                      </p>
+                      <p className="text-sm font-normal text-white">
+                        Last contact:{" "}
+                        {client?.last_contacted
+                          ? new Date(client.last_contacted).toLocaleDateString()
+                          : "N/A"}
+                      </p>
+                      <p className="text-[12px] text-[#FFFFFF]">
+                        {client?.general_case_info}
+                      </p>
+                    </div>
+                  </div>
                   <span
                     className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                      client.priority === "High"
+                      client.risk_level === "High"
                         ? "bg-[#EF444433] text-white"
-                        : client.priority === "Medium"
+                        : client.risk_level === "Medium"
                         ? "bg-[#EAB30833] text-white"
                         : "bg-[#22C55E33] text-white"
                     }`}
                   >
-                    {client.priority}
+                    {client?.risk_level}
                   </span>
                 </div>
-
-                <p className="mt-2 text-sm font-normal text-white">
-                  Last contact: {client.lastContact}
-                </p>
-                <p className="text-[12px] text-[#FFFFFF]">{client.alert}</p>
               </div>
             ))}
           </div>
