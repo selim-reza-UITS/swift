@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { FaTrashAlt, FaEdit } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 import { FaEye } from "react-icons/fa6";
-import ViewClientDetails from "./ViewClientDetails";
 import { NavLink } from "react-router-dom";
 import { useGetClientQuery } from "../../../../Redux/feature/Admin/admin";
 import AddClientForm from "../../../Shared/AddClientForm";
 import { Plus } from "lucide-react";
+import DeleteUserFlow from "./DeleteUserFlow";
+
 const statusColors = {
   Active: "bg-[#A855F7] text-[#FFFFFF]",
   Paused: "bg-[#F59E0B] text-[#161E2F]",
@@ -18,7 +19,6 @@ const priorityColors = {
   "Low Risk": "bg-[#FEE2E2] text-[#991B1B]",
 };
 
-// Helper function to determine status
 const getClientStatus = (client) => {
   if (client.opt_out) return "Recently Deleted";
   if (client.is_paused) return "Paused";
@@ -26,19 +26,17 @@ const getClientStatus = (client) => {
   return "Unknown";
 };
 
-const Client = () => {
+const Client = ({ managers }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAddClientModal, setShowAddClientModal] = useState(false);
-  // ✅ Fetch clients from API
+  const [deleteUserId, setDeleteUserId] = useState(null);
+
   const { data: clients = [], isLoading, isError } = useGetClientQuery();
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading clients!</p>;
 
-  // Filter clients based on search & status
   const filteredClients = clients.filter((client) => {
     const matchesSearch = client.full_name
       ?.toLowerCase()
@@ -50,61 +48,52 @@ const Client = () => {
     return matchesSearch && matchesFilter;
   });
 
+  const handleDelete = (id) => {
+    console.log("Delete user id:", id);
+    setDeleteUserId(id);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteUserId(null);
+  };
+
   return (
     <div className="p-4 mx-auto mt-6 rounded-md bg-[#0f172a] text-white">
       <div className="flex items-center justify-end gap-5 rounded-md poppins">
-        <NavLink
+        <button
           onClick={() => setShowAddClientModal(true)}
-          className="flex items-center justify-between w-[280px] mb-6 -mt-6"
+          className="flex items-center gap-2 w-[250px] h-[50px] p-5 text-white bg-gradient-to-r from-[#5d35bb] to-[#8A2BE2] rounded-xl"
         >
-          <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
-            <div
-              className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center bg-gradient-to-r from-[#5d35bb] to-[#8A2BE2] text-white rounded-xl
-                  `}
-            >
-              <Plus className="w-[22px] h-[22px] font-bold" />
-              <h1 className="text-xl font-medium poppins">New Client</h1>
-            </div>
-          </div>
-        </NavLink>
+          <Plus className="w-6 h-6" />
+          <h1 className="text-xl font-medium poppins">New Client</h1>
+        </button>
       </div>
+
       {/* Search & Filters */}
       <div className="flex items-center justify-between gap-5 mb-4 bg-[#161E2F] px-4 py-4 rounded-md poppins">
-        <div className="w-1/2">
-          <input
-            type="text"
-            placeholder="Search clients..."
-            className="flex-1 px-4 py-2 text-[#ADAEBC] bg-transparent border border-[#2A2E37] rounded-xl w-1/2"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
+        <input
+          type="text"
+          placeholder="Search clients..."
+          className="flex-1 px-4 py-2 text-[#ADAEBC] bg-transparent border border-[#2A2E37] rounded-xl"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setFilter("All")}
-            className="px-3 py-2 text-sm text-[#FFFFFF] bg-[#6366F1] rounded-md hover:bg-[#2f31af]"
-          >
-            All Clients
-          </button>
-          <button
-            onClick={() => setFilter("Active")}
-            className="px-3 py-2 text-sm text-[#FFFFFF] bg-[#6366F1] rounded-md hover:bg-[#2f31af]"
-          >
-            Active
-          </button>
-          <button
-            onClick={() => setFilter("Paused")}
-            className="px-3 py-2 text-sm text-[#374151] bg-[#E5E7EB] rounded-md hover:bg-[#acaeb1]"
-          >
-            Paused
-          </button>
-          <button
-            onClick={() => setFilter("Recently Deleted")}
-            className="px-3 py-2 text-sm text-[#161E2F] bg-[#F59E0B] rounded-md hover:bg-[#f1b142]"
-          >
-            Recently Deleted
-          </button>
+          {["All", "Active", "Paused", "Recently Deleted"].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3 py-2 text-sm rounded-md ${
+                f === "Paused"
+                  ? "text-[#374151] bg-[#E5E7EB] hover:bg-[#acaeb1]"
+                  : f === "Recently Deleted"
+                  ? "text-[#161E2F] bg-[#F59E0B] hover:bg-[#f1b142]"
+                  : "text-white bg-[#6366F1] hover:bg-[#2f31af]"
+              }`}
+            >
+              {f} Clients
+            </button>
+          ))}
         </div>
       </div>
 
@@ -141,8 +130,6 @@ const Client = () => {
               >
                 {getClientStatus(client)}
               </span>
-
-              {/* Priority based on concern_level */}
               <span
                 className={`text-sm px-4 py-2 rounded-full ${
                   priorityColors[
@@ -165,21 +152,16 @@ const Client = () => {
                 </button>
               </NavLink>
 
-              <FaTrashAlt className="text-gray-300 cursor-pointer hover:text-red-500" />
+              <FaTrashAlt
+                className="text-gray-300 cursor-pointer hover:text-red-500"
+               onClick={() => handleDeleteUser(client)}
+              />
             </div>
           </div>
         ))}
       </div>
 
-      {isModalOpen && selectedClient && (
-        <ViewClientDetails
-          client={selectedClient}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedClient(null);
-          }}
-        />
-      )}
+      {/* Add Client Modal */}
       {showAddClientModal && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black z-60 bg-opacity-60"
@@ -192,6 +174,16 @@ const Client = () => {
             <AddClientForm setShowAddClientModal={setShowAddClientModal} />
           </div>
         </div>
+      )}
+
+      {/* Delete Modal */}
+      {deleteUserId && (
+        <DeleteUserFlow
+          user={clients.find((c) => c.id === deleteUserId)}
+          managers={managers}
+          onDelete={handleDelete}
+          onClose={closeDeleteModal}
+        />
       )}
     </div>
   );

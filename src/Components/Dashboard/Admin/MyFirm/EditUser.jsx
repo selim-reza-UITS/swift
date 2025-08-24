@@ -72,7 +72,7 @@ const EditUser = ({ member, onClose, onSave }) => {
               <input
                 type="text"
                 name="phone"
-                value={formData.phone}
+                value={formData.phone_number}
                 onChange={handleChange}
                 className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
               />

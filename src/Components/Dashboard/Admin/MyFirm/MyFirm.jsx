@@ -1,16 +1,13 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import LawyerCard from "./LawyerCard";
 import MemberCard from "./MemberCard";
 import bag from "../../../../assets/bag.png";
 import right from "../../../../assets/right.png";
-import clock from "../../../../assets/clock.png";
 import { GoPlusCircle } from "react-icons/go";
 import AddUser from "./AddUser";
 import AddLawyer from "./AddLawyer";
 import Swal from "sweetalert2";
-import ViewClientDetails from "../Client/ViewClientDetails";
-import { FaChevronLeft } from "react-icons/fa6";
-import { FaChevronRight } from "react-icons/fa";
 import ViewLawyerDetails from "./ViewLawyerDetails";
 import ViewMemberDetails from "./ViewMemberDetails";
 import EditLawyer from "./EditLawyer";
@@ -18,7 +15,10 @@ import EditUser from "./EditUser";
 import {
   useGetDashboardQuery,
   useGetFirmChartQuery,
+  useGetLawyerQuery,
 } from "../../../../Redux/feature/Admin/admin";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+
 const MyFirm = () => {
   const [activeTab, setActiveTab] = useState("lawyers");
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,130 +31,59 @@ const MyFirm = () => {
   const [currentLawyerPage, setCurrentLawyerPage] = useState(1);
   const [currentMemberPage, setCurrentMemberPage] = useState(1);
   const itemsPerPage = 4;
+
   const { data: firmScores } = useGetFirmChartQuery();
-  const { data: firm } = useGetDashboardQuery();
+  const { data: firm, isLoading: isMembersLoading } = useGetDashboardQuery();
+  const { data: lawyerApiData = [], isLoading, isError } = useGetLawyerQuery();
+
   const firmStats = {
     performanceScore: firmScores?.firm_health_score,
     reputation: firmScores?.firm_reputation_score,
     totalClients: firm?.total_clients,
-
     teamMembers: firm?.team_members,
   };
 
-  const [lawyerList, setLawyerList] = useState([
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      email: "sarah.johnson@example.com",
-      phone: "(555) 123-4567",
-      role: "Lawyer",
-      specialization: "Family Law",
-      cases: 12,
-      firm: "Johnson Legal Group",
-      manager: "John Smith",
-      image: "https://i.pravatar.cc/150?img=1",
-    },
-    {
-      id: 2,
-      name: "Michael Davis",
-      email: "michael.davis@example.com",
-      phone: "(555) 987-6543",
-      role: "Lawyer",
-      specialization: "Criminal Defense",
-      cases: 18,
-      firm: "Davis & Co.",
-      manager: "Emily Chen",
-      image: "https://i.pravatar.cc/150?img=2",
-    },
-    {
-      id: 3,
-      name: "Lisa Wilson",
-      email: "lisa.wilson@example.com",
-      phone: "(555) 456-7890",
-      role: "Lawyer",
-      specialization: "Immigration",
-      cases: 9,
-      firm: "Global Law Associates",
-      manager: "David Brown",
-      image: "https://i.pravatar.cc/150?img=3",
-    },
-    {
-      id: 4,
-      name: "Robert Smith",
-      email: "robert.smith@example.com",
-      phone: "(555) 111-2222",
-      role: "Lawyer",
-      specialization: "Corporate Law",
-      cases: 22,
-      firm: "Smith & Partners",
-      manager: "Mark White",
-      image: "https://i.pravatar.cc/150?img=6",
-    },
-    {
-      id: 5,
-      name: "Emily Clark",
-      email: "emily.clark@example.com",
-      phone: "(555) 333-4444",
-      role: "Lawyer",
-      specialization: "Intellectual Property",
-      cases: 15,
-      firm: "Clark Legal Solutions",
-      manager: "Samantha Lee",
-      image: "https://i.pravatar.cc/150?img=7",
-    },
-  ]);
+  // API gives direct array of lawyers
+  const lawyerList = Array.isArray(lawyerApiData) ? lawyerApiData : [];
+  const memberList = React.useMemo(() => {
+    if (!firm) return [];
 
-  const [memberList, setMemberList] = useState([
-    {
-      id: 1,
-      name: "Jacob Lee",
-      email: "jacob@example.com",
-      role: "Intake Specialist",
-      image: "https://i.pravatar.cc/150?img=4",
-      lawyerId: 1, // Under Sarah Johnson
-    },
-    {
-      id: 2,
-      name: "Nina Patel",
-      email: "nina@example.com",
-      role: "Intake Specialist",
-      image: "https://i.pravatar.cc/150?img=5",
-      lawyerId: 2, // Under Michael Davis
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Assistant",
-      image: "https://i.pravatar.cc/150?img=8",
-      lawyerId: 3, // Under Lisa Wilson
-    },
-    {
-      id: 4,
-      name: "Sophia Liu",
-      email: "sophia@example.com",
-      role: "Paralegal",
-      image: "https://i.pravatar.cc/150?img=9",
-      lawyerId: 1, // Under Sarah Johnson
-    },
-    {
-      id: 5,
-      name: "Rahim Mia",
-      email: "rahim@example.com",
-      role: "Intake Specialist",
-      image: "https://i.pravatar.cc/150?img=10",
-      lawyerId: 4, // Under Robert Smith
-    },
-  ]);
+    const caseManagers = firm.case_managers.map((member) => ({
+      id: member.id,
+      name: member.name,
+      email: member.email,
+      role: member.role,
+      image: member.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("") // initials like "JD" for "John Doe"
+        .toUpperCase(), // default placeholder image
+    }));
+
+    const intakeSpecialists = firm.intake_specialists.map((member) => ({
+      id: member.id,
+      name: member.name,
+      email: member.email,
+      role: member.role,
+      image: member.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("") // initials like "NP" for "Nina Patel"
+        .toUpperCase(), // default placeholder image
+    }));
+
+    return [...caseManagers, ...intakeSpecialists];
+  }, [firm]);
 
   const filteredLawyers = lawyerList.filter((lawyer) =>
-    lawyer.name.toLowerCase().includes(searchTerm.toLowerCase())
+    lawyer.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredMembers = memberList.filter((member) =>
     member.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // pagination
   const indexOfLastLawyer = currentLawyerPage * itemsPerPage;
   const indexOfFirstLawyer = indexOfLastLawyer - itemsPerPage;
   const currentLawyers = filteredLawyers.slice(
@@ -184,28 +113,27 @@ const MyFirm = () => {
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
-      cancelButtonColor: "#4b5563", // Tailwind gray-700
+      cancelButtonColor: "#4b5563",
       confirmButtonText: "Yes, delete it!",
-      background: "#1f2937", // dark background
-      color: "#ffffff", // white text
+      background: "#1f2937",
+      color: "#ffffff",
     }).then((result) => {
       if (result.isConfirmed) {
         if (type === "lawyer") {
-          const updated = lawyerList.filter((lawyer) => lawyer.id !== id);
-          setLawyerList(updated);
+          console.log("Delete lawyer", id);
+          // API delete mutation should go here
         } else {
           const updated = memberList.filter((member) => member.id !== id);
           setMemberList(updated);
         }
 
-        // Show success alert
         Swal.fire({
           title: "Deleted!",
           text: "The entry has been deleted.",
           icon: "success",
           background: "#1f2937",
           color: "#ffffff",
-          confirmButtonColor: "#6366F1", // Tailwind indigo-500
+          confirmButtonColor: "#6366F1",
         });
       }
     });
@@ -229,7 +157,7 @@ const MyFirm = () => {
 
   return (
     <div className="min-h-screen bg-[#0F172A] p-6 text-white">
-      {/* Stats Section */}
+      {/* Firm Stats */}
       <div className="flex flex-row items-center gap-8 mb-8">
         <div className="bg-[#1e293b] p-4 rounded-lg w-1/2">
           <h2 className="text-2xl font-bold">Firm Health Score</h2>
@@ -246,6 +174,7 @@ const MyFirm = () => {
             />
           </div>
         </div>
+
         <div className="bg-[#1e293b] p-4 rounded-lg w-1/2">
           <h2 className="text-2xl font-bold">Firm Reputation</h2>
           <div className="flex flex-col items-center gap-3">
@@ -274,15 +203,6 @@ const MyFirm = () => {
             </div>
             <img src={bag} alt="" />
           </div>
-          {/* <div className="bg-[#1e293b] p-6 rounded-lg flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-normal text-[#E5E7EB]">
-                Active Cases
-              </h2>
-              <p className="mt-2 text-2xl font-bold">{firmStats.activeCases}</p>
-            </div>
-            <img src={clock} alt="" />
-          </div> */}
           <div className="bg-[#1e293b] p-6 rounded-lg flex items-center justify-between">
             <div>
               <h2 className="text-lg font-normal text-[#E5E7EB]">
@@ -353,7 +273,12 @@ const MyFirm = () => {
           currentLawyers.map((lawyer) => (
             <LawyerCard
               key={lawyer.id}
-              data={lawyer}
+              data={{
+                image: "/default-avatar.png",
+                name: lawyer.name,
+                phone: lawyer.phone_number,
+                manager: lawyer.law_firm?.name || "N/A",
+              }}
               onDelete={() => handleDelete("lawyer", lawyer.id)}
               onView={() => handleViewDetails("lawyer", lawyer)}
               onEdit={() => handleEditDetails("lawyer", lawyer)}
@@ -361,6 +286,7 @@ const MyFirm = () => {
           ))}
 
         {activeTab === "users" &&
+          !isMembersLoading &&
           currentMembers.map((member) => (
             <MemberCard
               key={member.id}
@@ -370,9 +296,12 @@ const MyFirm = () => {
               onEdit={() => handleEditDetails("user", member)}
             />
           ))}
+
+        {activeTab === "users" && isMembersLoading && (
+          <p className="text-white">Loading members...</p>
+        )}
       </div>
 
-      {/* Pagination */}
       {/* Lawyer Pagination */}
       {activeTab === "lawyers" && filteredLawyers.length > itemsPerPage && (
         <div className="flex justify-end gap-2 mt-6">
@@ -389,7 +318,6 @@ const MyFirm = () => {
           >
             <FaChevronLeft />
           </button>
-
           {Array.from(
             { length: Math.ceil(filteredLawyers.length / itemsPerPage) },
             (_, i) => (
@@ -406,7 +334,6 @@ const MyFirm = () => {
               </button>
             )
           )}
-
           <button
             disabled={
               currentLawyerPage ===
@@ -448,7 +375,6 @@ const MyFirm = () => {
           >
             <FaChevronLeft />
           </button>
-
           {Array.from(
             { length: Math.ceil(filteredMembers.length / itemsPerPage) },
             (_, i) => (
@@ -465,7 +391,6 @@ const MyFirm = () => {
               </button>
             )
           )}
-
           <button
             disabled={
               currentMemberPage ===

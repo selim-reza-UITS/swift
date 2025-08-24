@@ -6,14 +6,12 @@ const LawyerCard = ({ data, onDelete, onView, onEdit }) => {
   return (
     <div className="bg-[#1e293b] p-4 rounded flex items-center justify-between poppins text-[#FFFFFF]">
       <div className="flex items-center gap-4">
-        <img
-          src={data.image}
-          alt={data.name}
-          className="object-cover w-12 h-12 rounded-full"
-        />
+        <div className="flex items-center justify-center w-12 h-12 text-sm font-semibold uppercase bg-gray-600 rounded-full">
+          {data.name ? data.name.charAt(0) : "?"}
+        </div>
         <div>
           <h3 className="text-lg font-semibold">{data.name}</h3>
-          <p className="mt-1 mb-1 text-sm font-normal ">{data.phone}</p>
+          <p className="mt-1 mb-1 text-sm font-normal">{data.phone}</p>
           <p className="text-sm font-normal">Managing User: {data.manager}</p>
         </div>
       </div>
