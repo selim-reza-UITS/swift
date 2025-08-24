@@ -13,62 +13,13 @@ import div from "../../../assets/div.png";
 import message from "../../../assets/message.png";
 import priority from "../../../assets/priority.png";
 import active from "../../../assets/active.png";
-import appoinment from "../../../assets/appoinment.png";
 import { FaPlus } from "react-icons/fa";
 import AddClientForm from "../../Shared/AddClientForm";
-
-const fakeClients = [
-  {
-    name: "Smith & Associates",
-    status: "Active",
-    added: "2 days ago",
-  },
-  {
-    name: "Legal Partners LLC",
-    status: "Pending",
-    added: "5 days ago",
-  },
-  {
-    name: "Johnson Law Group",
-    status: "Active",
-    added: "1 day ago",
-  },
-  {
-    name: "Davis & Associates",
-    status: "Pending",
-    added: "3 days ago",
-  },
-  {
-    name: "Wilson Legal Services",
-    status: "Active",
-    added: "4 days ago",
-  },
-  {
-    name: "Brown Law Firm",
-    status: "Pending",
-    added: "6 days ago",
-  },
-  {
-    name: "Miller & Co.",
-    status: "Active",
-    added: "1 week ago",
-  },
-  {
-    name: "Taylor Legal Partners",
-    status: "Pending",
-    added: "2 weeks ago",
-  },
-  {
-    name: "Anderson & Sons",
-    status: "Active",
-    added: "3 weeks ago",
-  },
-  {
-    name: "Garcia Legal",
-    status: "Pending",
-    added: "1 month ago",
-  },
-];
+import {
+  useGetAllFlaggedClientsQuery,
+  useGetAllHighRiskClientsQuery,
+  useGetCaseStatsQuery,
+} from "../../../Redux/api/caseapi";
 
 const flaggedClients = [
   {
@@ -140,11 +91,6 @@ const CustomTooltip = ({ active, payload }) => {
   }
   return null;
 };
-const statsData = [
-  { title: "Active Clients", value: 24 },
-  { title: "Issues", value: 3 },
-  { title: "Messages Sent This Month", value: 12 },
-];
 
 // Helper function to return image based on title
 const getImageByTitle = (title) => {
@@ -160,13 +106,14 @@ const CaseMangerDashboard = () => {
   const [showAddClientModal, setShowAddClientModal] = useState(false);
   const [showAllClients, setShowAllClients] = useState(false);
   const [showAllFlaggedClients, setShowAllFlaggedClients] = useState(false);
-
-  const initialFakeClients = showAllClients
-    ? fakeClients
-    : fakeClients.slice(0, 4);
-  const initialFlaggedClients = showAllFlaggedClients
-    ? flaggedClients
-    : flaggedClients.slice(0, 3);
+  const { data: highRiskClients } = useGetAllHighRiskClientsQuery();
+  const { data: flaggedClientsData } = useGetAllFlaggedClientsQuery();
+  const { data: caseStats } = useGetCaseStatsQuery();
+  const statsData = [
+    { title: "Active Clients", value: caseStats?.active_clients },
+    { title: "Issues", value: caseStats?.issues },
+    { title: "Messages Sent This Month", value: caseStats?.messages_sent },
+  ];
 
   return (
     <div className="h-[86vh] bg-[#0f172a] text-white p-6">
@@ -222,7 +169,7 @@ const CaseMangerDashboard = () => {
 
       {/* Middle Section */}
       <div className="grid grid-cols-1 gap-6 2xl:grid-cols-3">
-        {/* High Concern Clients */}
+        {/* High Risk Clients */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Clients at High Risk</h3>
@@ -238,7 +185,7 @@ const CaseMangerDashboard = () => {
               showAllClients ? "overflow-y-auto max-h-[400px] pr-2" : ""
             }`}
           >
-            {initialFakeClients.map((client, idx) => (
+            {highRiskClients?.map((client, idx) => (
               <div
                 key={idx}
                 className="p-3 bg-transparent border rounded-lg border-[#F3F4F6] flex items-center justify-between hover:bg-[#374151] transition-colors duration-200"
@@ -252,21 +199,17 @@ const CaseMangerDashboard = () => {
                   </div>
                   {/* content */}
                   <div>
-                    <p className="font-medium">{client.name}</p>
+                    <p className="font-medium">{client.full_name}</p>
                     <p className="text-sm font-normal text-[#FFFFFF]">
-                      Added {client.added}
+                      Added {client?.days_since_added} days ago
                     </p>
                   </div>
                 </div>
                 {/* right */}
                 <div
-                  className={`mt-1 inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                    client.status === "Active"
-                      ? "bg-green-200 text-green-900"
-                      : "bg-yellow-200 text-yellow-900"
-                  }`}
+                  className={`mt-1 inline-block px-2 py-1 rounded-full bg-red-200 text-red-900 text-xs font-semibold`}
                 >
-                  {client.status}
+                  High Risk
                 </div>
               </div>
             ))}
@@ -322,13 +265,15 @@ const CaseMangerDashboard = () => {
               showAllFlaggedClients ? "overflow-y-auto max-h-[400px] pr-2" : ""
             }`}
           >
-            {initialFlaggedClients.map((client, idx) => (
+            {flaggedClientsData?.map((client, idx) => (
               <div
                 key={idx}
                 className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA]"
               >
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-[#FFFFFF]">{client.name}</p>
+                  <p className="font-medium text-[#FFFFFF]">
+                    {client?.full_name}
+                  </p>
                   <span
                     className={`text-xs font-semibold px-2 py-1 rounded-full ${
                       client.priority === "High"
@@ -338,12 +283,23 @@ const CaseMangerDashboard = () => {
                         : "bg-[#22C55E33] text-white"
                     }`}
                   >
-                    {client.priority}
+                    {client.risk_level}
                   </span>
                 </div>
                 <p className="mt-2 text-sm font-normal text-white">
-                  Last contact: {client.lastContact}
+                  Last contact:
+                  {new Date(client.last_contacted)
+                    .toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                    .replace(",", " at")}
                 </p>
+
                 <p className="text-[12px] text-[#FFFFFF]">{client.alert}</p>
               </div>
             ))}

@@ -1,20 +1,20 @@
 import { api } from "./api";
 
-export const intakeapi = api.injectEndpoints({
+export const caseapi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getAllUser: builder.query({
-      query: () => "users/",
-      invalidatesTags: ["intake"],
+    getAllHighRiskClients: builder.query({
+      query: () => "high-risk-clients/",
+      invalidatesTags: ["case"],
     }),
 
-    getAllLawyer: builder.query({
-      query: () => "lawyers/list/",
-      invalidatesTags: ["intake"],
+    getCaseStats: builder.query({
+      query: () => "clients/statistics/",
+      invalidatesTags: ["case"],
     }),
 
-    getAllClients: builder.query({
-      query: () => "clients/",
-      providesTags: ["intake"],
+    getAllFlaggedClients: builder.query({
+      query: () => "flagged-clients/",
+      providesTags: ["case"],
     }),
 
     createClient: builder.mutation({
@@ -49,11 +49,14 @@ export const intakeapi = api.injectEndpoints({
 
 export const {
   // Newly added hooks for dynamic dropdowns
+  useGetAllHighRiskClientsQuery,
+  useGetAllFlaggedClientsQuery,
+  useGetCaseStatsQuery,
   useGetAllUserQuery,
   useGetClientByIdQuery,
   useGetAllLawyerQuery,
   useGetAllClientsQuery,
   useCreateClientMutation,
   useUpdateClientMutation,
-  useGetStatsQuery
-} = intakeapi;
+  useGetStatsQuery,
+} = caseapi;
