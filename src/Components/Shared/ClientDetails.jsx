@@ -28,7 +28,6 @@ function ClientDetails() {
     isLoading,
     error,
   } = useGetClientByIdQuery(params.id);
-  const [clientOptOut] = useClientOptOutMutation();
 
   const { data: microInsights } = useGetMicroInsightsQuery(params.id);
   console.log("microInsights", microInsights);
