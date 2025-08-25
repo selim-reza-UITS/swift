@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import "animate.css";
 import { useCreateLawyerMutation } from "../../../../Redux/feature/Admin/admin";
 
-
 const AddLawyer = ({ onClose }) => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -37,8 +36,10 @@ const AddLawyer = ({ onClose }) => {
       Swal.fire({
         icon: "success",
         title: "Lawyer Added!",
-        text: "Check your email and set the password.",
+        text: "The lawyer has been added successfully.",
         confirmButtonColor: "#3085d6",
+        background: "#1e293b", // dark background
+        color: "#f1f5f9", // light text
         showClass: { popup: "animate__animated animate__zoomIn" },
         hideClass: { popup: "animate__animated animate__zoomOut" },
       });
@@ -50,6 +51,8 @@ const AddLawyer = ({ onClose }) => {
         title: "Error!",
         text: error?.data?.message || "Something went wrong",
         confirmButtonColor: "#3085d6",
+        background: "#1e293b", // dark background
+        color: "#f1f5f9", // light text
       });
     }
   };
@@ -70,14 +73,57 @@ const AddLawyer = ({ onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
-          <input type="text" name="fullName" placeholder="Full Name*" value={formData.fullName} onChange={handleChange} required className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none" />
-          <input type="email" name="email" placeholder="Email*" value={formData.email} onChange={handleChange} required className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none" />
-          <input type="text" name="phone" placeholder="Phone*" value={formData.phone} onChange={handleChange} required className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none" />
-          <input type="text" name="specialization" placeholder="Specialization*" value={formData.specialization} onChange={handleChange} required className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none" />
-          <input type="text" name="notes" placeholder="Notes" value={formData.notes} onChange={handleChange} className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none" />
+          <input
+            type="text"
+            name="fullName"
+            placeholder="Full Name*"
+            value={formData.fullName}
+            onChange={handleChange}
+            required
+            className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email*"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
+          />
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone*"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
+          />
+          <input
+            type="text"
+            name="specialization"
+            placeholder="Specialization*"
+            value={formData.specialization}
+            onChange={handleChange}
+            required
+            className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
+          />
+          <input
+            type="text"
+            name="notes"
+            placeholder="Notes"
+            value={formData.notes}
+            onChange={handleChange}
+            className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
+          />
 
           <div className="flex justify-center">
-            <button type="submit" disabled={isLoading} className="w-1/2 py-2 mt-4 text-white rounded bg-gradient-to-r from-blue-600 to-cyan-400">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-1/2 py-2 mt-4 text-white rounded bg-gradient-to-r from-blue-600 to-cyan-400"
+            >
               {isLoading ? "Saving..." : "Save"}
             </button>
           </div>

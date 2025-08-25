@@ -13,6 +13,7 @@ import ViewMemberDetails from "./ViewMemberDetails";
 import EditLawyer from "./EditLawyer";
 import EditUser from "./EditUser";
 import {
+  useDeleteLawyerMutation,
   useGetDashboardQuery,
   useGetFirmChartQuery,
   useGetLawyerQuery,
@@ -106,23 +107,27 @@ const MyFirm = () => {
     }
   };
 
-  const handleDelete = (type, id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#4b5563",
-      confirmButtonText: "Yes, delete it!",
-      background: "#1f2937",
-      color: "#ffffff",
-    }).then((result) => {
-      if (result.isConfirmed) {
+ const [deleteLawyer] = useDeleteLawyerMutation(); // import this from your RTK slice
+
+const handleDelete = async (type, id) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#4b5563",
+    confirmButtonText: "Yes, delete it!",
+    background: "#1f2937",
+    color: "#ffffff",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
         if (type === "lawyer") {
-          console.log("Delete lawyer", id);
-          // API delete mutation should go here
+          // Call RTK Query mutation
+          await deleteLawyer({ id }).unwrap();
         } else {
+          // Local deletion for users
           const updated = memberList.filter((member) => member.id !== id);
           setMemberList(updated);
         }
@@ -135,9 +140,21 @@ const MyFirm = () => {
           color: "#ffffff",
           confirmButtonColor: "#6366F1",
         });
+      } catch (error) {
+        console.error("Delete failed:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong.",
+          icon: "error",
+          background: "#1f2937",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1",
+        });
       }
-    });
-  };
+    }
+  });
+};
+
 
   const handleViewDetails = (type, data) => {
     if (type === "lawyer") {
