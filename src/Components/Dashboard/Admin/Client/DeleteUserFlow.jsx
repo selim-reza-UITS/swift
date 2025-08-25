@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { useDeleteUserMutation } from "../../../../Redux/feature/Admin/admin";
 
-const MemberCard = ({ data, managers, onView, onEdit }) => {
-  const [deleteUser] = useDeleteUserMutation();
+const DeleteUserFlow = ({ user, managers = [], onDelete }) => {
   const [step, setStep] = useState(1);
   const [reassignOption, setReassignOption] = useState("");
   const [newManager, setNewManager] = useState("");
 
   const handleDeleteClick = () => {
-    // Step 1 popup
     Swal.fire({
       icon: "warning",
       title: "You are about to delete a user",
@@ -19,21 +15,27 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
       confirmButtonText: "Continue to reassignment",
       cancelButtonText: "Cancel",
     }).then((result) => {
-      if (result.isConfirmed) setStep(2);
+      if (result.isConfirmed) {
+        setStep(2); // move to reassignment step
+      }
     });
   };
 
   const handleConfirm = () => {
-    const body = {
+    if (!user?.id) {
+      Swal.fire("Error", "User ID not found", "error");
+      return;
+    }
+
+    const payload = {
       option: reassignOption,
       newManager: reassignOption.includes("Move") ? newManager : null,
     };
 
-    deleteUser({ id: data.id, body })
-      .unwrap()
+    // Call the onDelete function passed as prop
+    onDelete(user.id, payload)
       .then(() => {
         Swal.fire("Deleted!", "User deletion flow completed.", "success");
-        // Reset all states
         setStep(1);
         setReassignOption("");
         setNewManager("");
@@ -44,35 +46,18 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
   };
 
   return (
-    <>
-      <div className="bg-[#1e293b] p-4 rounded flex items-center justify-between poppins text-[#FFFFFF]">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-12 h-12 text-lg font-bold text-white bg-purple-600 rounded-full">
-            {data.image || data.name?.[0]}
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold">{data.name}</h3>
-            <p className="mt-1 mb-1 text-sm font-normal">{data.email}</p>
-            <p className="text-sm font-normal">Role: {data.role}</p>
-          </div>
-        </div>
+    <div>
+      {/* Trigger button */}
+      <button
+        onClick={handleDeleteClick}
+        className="text-red-500 hover:text-red-700"
+      >
+        Delete User
+      </button>
 
-        <div className="flex gap-4 text-xl text-gray-400">
-          <FaEye onClick={onView} className="cursor-pointer hover:text-white" />
-          <FaEdit
-            onClick={onEdit}
-            className="cursor-pointer hover:text-white"
-          />
-          <FaTrash
-            onClick={handleDeleteClick}
-            className="cursor-pointer hover:text-red-500"
-          />
-        </div>
-      </div>
-
-      {/* Step 2: Reassignment form */}
+      {/* Step 2: Reassignment Form */}
       {step === 2 && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40">
           <div className="bg-[#0f172a] p-6 rounded-lg text-white w-[400px]">
             <h2 className="mb-4 text-lg font-semibold">Reassign Clients</h2>
 
@@ -115,7 +100,7 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
               </label>
             </div>
 
-            {/* Only show new manager dropdown if Move option */}
+            {/* Show new manager dropdown only if Move option is selected */}
             {reassignOption.includes("Move") && (
               <select
                 value={newManager}
@@ -133,11 +118,7 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
 
             <div className="flex justify-end gap-3 mt-4">
               <button
-                onClick={() => {
-                  setStep(1);
-                  setReassignOption("");
-                  setNewManager("");
-                }}
+                onClick={() => setStep(1)}
                 className="px-4 py-2 bg-gray-600 rounded hover:bg-gray-500"
               >
                 Cancel
@@ -156,8 +137,8 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
-export default MemberCard;
+export default DeleteUserFlow;

@@ -180,7 +180,7 @@ const handleSubmit = async (e) => {
   return (
     <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full z-50">
       <Toaster />
-      <div className=" rounded-lg p-8 w-full max-h-[80vh] overflow-y-auto scrollbar-hide">
+      <div className=" rounded-lg p-8 w-full max-h-[80vh] overflow-y-auto ">
         {/* Header */}
         <div className="mb-6 text-center">
           <div className="flex items-center justify-center mb-2">
@@ -434,7 +434,7 @@ const handleSubmit = async (e) => {
             <button
               type="button"
               onClick={handleSubmit}
-              className="flex items-center justify-center flex-1 px-4 py-2 font-medium text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700"
+              className="flex items-center justify-center flex-1 px-4 py-2 font-medium text-white transition-colors duration-200 bg-purple-700 rounded-md hover:bg-purple-900"
             >
               <Plus className="w-4 h-4 mr-2" />
               <span className="mb-0.5"> Create</span>

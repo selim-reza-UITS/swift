@@ -1,33 +1,42 @@
 import React, { useState } from "react";
 import { TbXboxXFilled } from "react-icons/tb";
+import { useUpdateLawyerMutation } from "../../../../Redux/feature/Admin/admin";
+
 
 const EditLawyer = ({ lawyer, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     name: lawyer.name || "",
     email: lawyer.email || "",
-    phone: lawyer.phone || "",
- 
+    phone_number: lawyer.phone_number || "",
     specialization: lawyer.specialization || "",
-  
-    
-    
   });
+
+  const [updateLawyer, { isLoading }] = useUpdateLawyerMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(formData);
-    onClose();
+    try {
+      const updatedLawyer = await updateLawyer({
+        id: lawyer.id,
+        body: formData,
+      }).unwrap(); // unwrap returns the actual data or throws error
+
+      if (onSave) onSave(updatedLawyer);
+      onClose();
+    } catch (error) {
+      console.error("Failed to update lawyer:", error);
+      alert("Failed to update lawyer. Please try again.");
+    }
   };
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">
       <div className="animate__animated animate__fadeInDown relative w-[350px] md:w-[500px] bg-[#0f172a] text-white rounded-xl p-6">
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute text-gray-400 top-2 right-2 hover:text-red-400"
@@ -35,14 +44,11 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
           <TbXboxXFilled className="w-6 h-6" />
         </button>
 
-        {/* Modal Title */}
-        <div className="flex items-center justify-center w-full gap-2 mb-4">
-          <h2 className="text-lg font-semibold poppins">Edit Lawyer</h2>
-        </div>
+        <h2 className="mb-4 text-lg font-semibold text-center poppins">
+          Edit Lawyer
+        </h2>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-3">
-          {/* Name */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">
               Full Name*
@@ -57,7 +63,6 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
             />
           </div>
 
-          {/* Email */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">Email*</label>
             <input
@@ -70,31 +75,17 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
             />
           </div>
 
-          {/* Phone */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">Phone</label>
             <input
               type="text"
-              name="phone"
-              value={formData.phone}
+              name="phone_number"
+              value={formData.phone_number}
               onChange={handleChange}
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
           </div>
 
-          {/* Role */}
-          {/* <div className="flex flex-col gap-1">
-            <label className="text-base poppins text-[#D1D5DB]">Role</label>
-            <input
-              type="text"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
-            />
-          </div> */}
-
-          {/* Specialization */}
           <div className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">
               Specialization
@@ -108,38 +99,13 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
             />
           </div>
 
-
-          {/* Firm */}
-          {/* <div className="flex flex-col gap-1">
-            <label className="text-base poppins text-[#D1D5DB]">Firm</label>
-            <input
-              type="text"
-              name="firm"
-              value={formData.firm}
-              onChange={handleChange}
-              className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
-            />
-          </div> */}
-
-          {/* Manager */}
-          {/* <div className="flex flex-col gap-1">
-            <label className="text-base poppins text-[#D1D5DB]">Manager</label>
-            <input
-              type="text"
-              name="manager"
-              value={formData.manager}
-              onChange={handleChange}
-              className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
-            />
-          </div> */}
-
-          {/* Save Button */}
           <div className="flex justify-center">
             <button
               type="submit"
+              disabled={isLoading}
               className="w-1/2 py-2 mt-4 text-white rounded bg-gradient-to-r from-blue-600 to-cyan-400"
             >
-              Save Changes
+              {isLoading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

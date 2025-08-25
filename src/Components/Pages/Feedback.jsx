@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
-import "animate.css"; // Import animation
+import "animate.css";
 import { TbXboxXFilled } from "react-icons/tb";
-import { FaUserPlus } from "react-icons/fa6";
+import { useCreateFeedbackMutation } from "../../Redux/feature/Admin/admin";
+
 const Feedback = ({ onClose }) => {
   const [formData, setFormData] = useState({
-    feedback: "",
+    message: "",
   });
+
+  // ✅ RTK mutation hook
+  const [createFeedback, { isLoading }] = useCreateFeedbackMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,24 +19,37 @@ const Feedback = ({ onClose }) => {
       [name]: value,
     }));
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      // ✅ Call API
+      await createFeedback(formData).unwrap();
 
-    Swal.fire({
-      icon: "success",
-      title: "User Added!",
-      text: "Check your email and set the password.",
-      confirmButtonColor: "#3085d6",
-      showClass: {
-        popup: "animate__animated animate__zoomIn",
-      },
-      hideClass: {
-        popup: "animate__animated animate__zoomOut",
-      },
-    });
+      Swal.fire({
+        icon: "success",
+        title: "Feedback Submitted!",
+        text: "Thank you for sharing your thoughts.",
+        confirmButtonColor: "#3085d6",
+        showClass: {
+          popup: "animate__animated animate__zoomIn",
+        },
+        hideClass: {
+          popup: "animate__animated animate__zoomOut",
+        },
+      });
 
-    onClose();
+      onClose();
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: error?.data?.message || "Something went wrong. Please try again.",
+        confirmButtonColor: "#d33",
+      });
+    }
   };
+
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">
       <div className="animate__animated animate__fadeInDown relative w-[350px] md:w-[500px] bg-[#0f172a] text-white rounded-xl p-6">
@@ -47,7 +64,7 @@ const Feedback = ({ onClose }) => {
         {/* Title */}
         <div className="flex flex-col items-start gap-1 mb-4">
           <h2 className="text-lg font-semibold poppins text-[#2E5CE8]">
-            Submit Feed back
+            Submit Feedback
           </h2>
           <p className="text-base text-white poppins">
             We’d love to hear your thoughts!
@@ -56,25 +73,25 @@ const Feedback = ({ onClose }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex flex-col gap-1 ">
+          <div className="flex flex-col gap-1">
             <textarea
-              name="feedback"
+              name="message"
               placeholder="Your Feedback"
-              value={formData.feedback}
+              value={formData.message}
               onChange={handleChange}
               required
               className="w-full p-4 rounded-lg poppins bg-[#1e293b] focus:outline-none mt-2 text-white"
             />
           </div>
-          {/* email */}
 
           {/* Save Button */}
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-1/2 py-2 mt-4 text-white rounded bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2]"
+              disabled={isLoading}
+              className="w-1/2 py-2 mt-4 text-white rounded bg-gradient-to-r from-[#0129B3] via-[#007BCC] to-[#77D7D2] disabled:opacity-50"
             >
-              Save
+              {isLoading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
