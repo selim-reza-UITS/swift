@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Search,
   Eye,
@@ -9,255 +9,68 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
+import { useGetClientByIdQuery } from "../../../Redux/api/caseapi";
 
 const CaseManagerClients = () => {
-  const [clients, setClients] = useState([
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      phone: "(555) 123-4567",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 2,
-      name: "Michael Davis",
-      phone: "(555) 987-6543",
-      status: "paused",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 3,
-      name: "Lisa Wilson",
-      phone: "(555) 456-7890",
-      status: "recovery",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 4,
-      name: "Robert Martinez",
-      phone: "(555) 234-5678",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 5,
-      name: "Amanda Thompson",
-      phone: "(555) 345-6789",
-      status: "active",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 6,
-      name: "James Anderson",
-      phone: "(555) 567-8901",
-      status: "paused",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 7,
-      name: "Jennifer White",
-      phone: "(555) 678-9012",
-      status: "recovery",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 8,
-      name: "Christopher Lee",
-      phone: "(555) 789-0123",
-      status: "active",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 9,
-      name: "Michelle Brown",
-      phone: "(555) 890-1234",
-      status: "paused",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 10,
-      name: "Daniel Garcia",
-      phone: "(555) 901-2345",
-      status: "active",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 11,
-      name: "Ashley Miller",
-      phone: "(555) 012-3456",
-      status: "recovery",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 12,
-      name: "Matthew Wilson",
-      phone: "(555) 123-4567",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 13,
-      name: "Stephanie Taylor",
-      phone: "(555) 234-5678",
-      status: "paused",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 14,
-      name: "Kevin Moore",
-      phone: "(555) 345-6789",
-      status: "active",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 15,
-      name: "Rachel Jackson",
-      phone: "(555) 456-7890",
-      status: "recovery",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 16,
-      name: "Tyler Robinson",
-      phone: "(555) 567-8901",
-      status: "active",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 17,
-      name: "Brittany Clark",
-      phone: "(555) 678-9012",
-      status: "paused",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 18,
-      name: "Jonathan Lewis",
-      phone: "(555) 789-0123",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 19,
-      name: "Nicole Parker",
-      phone: "(555) 890-1234",
-      status: "recovery",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 20,
-      name: "Brandon Hughes",
-      phone: "(555) 901-2345",
-      status: "paused",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 21,
-      name: "Samantha Torres",
-      phone: "(555) 012-3456",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 22,
-      name: "Jason Mitchell",
-      phone: "(555) 123-4567",
-      status: "recovery",
-      priority: "low",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 23,
-      name: "Catherine Adams",
-      phone: "(555) 234-5678",
-      status: "paused",
-      priority: "medium",
-      avatar: "/api/placeholder/40/40",
-    },
-    {
-      id: 24,
-      name: "Michael Scott",
-      phone: "(555) 345-6789",
-      status: "active",
-      priority: "high",
-      avatar: "/api/placeholder/40/40",
-    },
-  ]);
-
+  const [clientId, setClientId] = useState(null);
+  const { data: clients = [], isLoading } = useGetAllClientsQuery();
+  const managingRef = useRef(null);
+  const { data: clientData } = useGetClientByIdQuery(clientId);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
-  const [deleteProgress, setDeleteProgress] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteTimer, setDeleteTimer] = useState(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (managingRef.current && !managingRef.current.contains(event.target)) {
+        setIsManagingOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const handleDeleteClick = () => {
-    setIsDeleting(true);
-    setDeleteProgress(0);
-
-    const timer = setInterval(() => {
-      setDeleteProgress((prev) => {
-        const newProgress = prev + 100 / 30; // 30 intervals over 3 seconds
-        if (newProgress >= 100) {
-          clearInterval(timer);
-          setShowDeleteModal(true);
-          setIsDeleting(false);
-          setDeleteProgress(0);
-          return 100;
-        }
-        return newProgress;
-      });
-    }, 100);
-
-    setDeleteTimer(timer);
-  };
-
-
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     setShowDeleteModal(false);
-    // Add your delete logic here
-    console.log("Case deleted");
+
+    // Call your API to delete the client
+    const result = await clientOptOut(clientId);
+
+    if (result) {
+      // If the client was deleted successfully, update the UI
+
+      // Show success message
+      Swal.fire({
+        title: "Deleted!",
+        text: "Client has been deleted.",
+        icon: "success",
+        background: "#1f2937",
+        color: "#fff",
+        confirmButtonColor: "#6366F1",
+      });
+    } else {
+      // Handle failure (e.g., show error message)
+      Swal.fire({
+        title: "Error!",
+        text: "There was an error deleting the client.",
+        icon: "error",
+        background: "#1f2937",
+        color: "#fff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
   };
 
   const handleDeleteModalClose = () => {
     setShowDeleteModal(false);
   };
 
-  useEffect(() => {
-    return () => {
-      if (deleteTimer) {
-        clearInterval(deleteTimer);
-      }
-    };
-  }, [deleteTimer]);
   const filteredClients = clients.filter((client) => {
     const matchesSearch =
-      client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.phone.includes(searchTerm);
+      client.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.phone_number.includes(searchTerm);
 
     if (activeView === "active")
       return matchesSearch && client.status === "active";
@@ -288,19 +101,6 @@ const CaseManagerClients = () => {
     }
   };
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "active":
-        return "Active";
-      case "paused":
-        return "Paused";
-      case "recovery":
-        return "Recently Deleted";
-      default:
-        return "Unknown";
-    }
-  };
-
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "high":
@@ -311,19 +111,6 @@ const CaseManagerClients = () => {
         return "bg-[#FEE2E2] text-[#991B1B]";
       default:
         return "bg-gray-500 text-white";
-    }
-  };
-
-  const getPriorityLabel = (priority) => {
-    switch (priority) {
-      case "high":
-        return "High Risk";
-      case "medium":
-        return "Medium Risk";
-      case "low":
-        return "Low Risk";
-      default:
-        return "Unknown";
     }
   };
 
@@ -339,32 +126,27 @@ const CaseManagerClients = () => {
   };
 
   const handleDeleteClient = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      background: "#1f2937", // dark bg
-      color: "#fff", // text color
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#4b5563",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setClients((prevClients) =>
-          prevClients.filter((client) => client.id !== id)
-        );
-        Swal.fire({
-          title: "Deleted!",
-          text: "Client has been deleted.",
-          icon: "success",
-          background: "#1f2937",
-          color: "#fff",
-          confirmButtonColor: "#6366F1",
-        });
-      }
-    });
+    setClientId(id); // Set the client ID
+    // Wait until client data is fetched and then show the confirmation modal
+    if (clientData) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You are about to delete ${clientData.full_name}. Once deleted, this client will no longer receive messages. They will remain recoverable for 35 days before being permanently removed.`,
+        icon: "warning",
+        background: "#1f2937", // dark bg
+        color: "#fff", // text color
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#4b5563",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleDeleteConfirm();
+        }
+      });
+    }
   };
+  
 
   return (
     <div className="h-[80vh] bg-gray-900 text-white flex flex-col">
@@ -439,7 +221,7 @@ const CaseManagerClients = () => {
                 <div className="relative">
                   <img
                     src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
-                    alt={client.name}
+                    alt={client.full_name}
                     className="w-12 h-12 bg-gray-600 rounded-full"
                   />
                   <div
@@ -451,9 +233,9 @@ const CaseManagerClients = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-white">
-                    {client.name}
+                    {client.full_name}
                   </h3>
-                  <p className="text-sm text-gray-400">{client.phone}</p>
+                  <p className="text-sm text-gray-400">{client.phone_number}</p>
                 </div>
               </div>
 
@@ -463,7 +245,7 @@ const CaseManagerClients = () => {
                     client.status
                   )} text-white`}
                 >
-                  {getStatusLabel(client.status)}
+                  {client?.status}
                 </span>
 
                 <span
@@ -471,7 +253,7 @@ const CaseManagerClients = () => {
                     client.priority
                   )}`}
                 >
-                  {getPriorityLabel(client.priority)}
+                  {client?.concern_level}
                 </span>
 
                 <Link to={`/dashboard/caseManagerClients/${client.id}`}>
@@ -482,28 +264,13 @@ const CaseManagerClients = () => {
 
                 <button
                   className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700"
-                  onClick={() => handleDeleteClient(client.id)}
+                  onClick={() => {
+                    setClientId(client.id);
+                    handleDeleteClient(client.id);
+                  }}
                 >
                   <Trash2 />
                 </button>
-                {/* Delete Button with Progress */}
-                {/* <button
-                  onClick={isDeleting ? handleDeleteCancel : handleDeleteClick}
-                  disabled={isDeleting}
-                  className="relative flex items-center w-full p-3 space-x-3 overflow-hidden text-left transition-colors bg-red-900 rounded-lg hover:bg-red-800"
-                >
-                  <div
-                    className="absolute top-0 left-0 h-full transition-all duration-100 ease-linear bg-red-600"
-                    style={{ width: `${deleteProgress}%` }}
-                  />
-
-                  <div className="relative z-10 flex items-center space-x-3">
-                    <Trash2 className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">
-                      {isDeleting ? "Deleting..." : "Delete"}
-                    </span>
-                  </div>
-                </button> */}
               </div>
             </div>
           ))}

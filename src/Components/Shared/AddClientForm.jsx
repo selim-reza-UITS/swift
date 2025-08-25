@@ -19,7 +19,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
     phoneNumber: "",
     injurySustained: "",
     generalCaseInfo: "",
-    consentToCommunicate: false,
+    consentToCommunicate: true,
   });
 
   // Fetch dynamic dropdown data (skip until token is available)
@@ -99,58 +99,68 @@ export default function AddClientForm({ setShowAddClientModal }) {
     setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.managingUsers || formData.managingUsers.length === 0) {
-      toast.error("Please assign at least one managing user.");
-      return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Check if Consent to Communicate is checked
+  if (!formData.consentToCommunicate) {
+    toast.error("You must give consent to communicate before submitting.");
+    return;
+  }
+
+  // Validate if Managing Users are assigned
+  if (!formData.managingUsers || formData.managingUsers.length === 0) {
+    toast.error("Please assign at least one managing user.");
+    return;
+  }
+
+  try {
+    const normalizedDate = (formData.dateOfIncident || "").replaceAll("/", "-");
+    const payload = {
+      full_name: formData.fullName,
+      gender: String(formData.gender || "").toLowerCase(),
+      lawyer: Number(formData.lawyerName),
+      phone_number: formData.phoneNumber?.replace(/\D/g, "") || "",
+      injuries_sustained: formData.injurySustained,
+      general_case_info: formData.generalCaseInfo,
+      date_of_incident: normalizedDate,
+      managing_users: formData.managingUsersIds || [],
+    };
+    
+    const res = await createClient(payload);
+    
+    if (res?.data) {
+      toast.success(res.data?.message || "Client created successfully");
+      // Ensure client list refreshes
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (_) {}
+      
+      setFormData({
+        fullName: "",
+        lawyerName: "",
+        dateOfIncident: "",
+        gender: "",
+        managingUsers: [],
+        phoneNumber: "",
+        injurySustained: "",
+        generalCaseInfo: "",
+        consentToCommunicate: false,
+      });
+      setShowAddClientModal(false);
+    } else {
+      const msg =
+        res?.error?.data?.message ||
+        res?.error?.data?.detail ||
+        "Failed to create client";
+      toast.error(msg);
     }
-    try {
-      const normalizedDate = (formData.dateOfIncident || "").replaceAll(
-        "/",
-        "-"
-      );
-      const payload = {
-        full_name: formData.fullName,
-        gender: String(formData.gender || "").toLowerCase(),
-        lawyer: Number(formData.lawyerName),
-        phone_number: formData.phoneNumber?.replace(/\D/g, "") || "",
-        injuries_sustained: formData.injurySustained,
-        general_case_info: formData.generalCaseInfo,
-        date_of_incident: normalizedDate,
-        managing_users: formData.managingUsersIds || [],
-      };
-      const res = await createClient(payload);
-      if (res?.data) {
-        toast.success(res.data?.message || "Client created successfully");
-        // Ensure client list refreshes
-        try {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        } catch (_) {}
-        setFormData({
-          fullName: "",
-          lawyerName: "",
-          dateOfIncident: "",
-          gender: "",
-          managingUsers: [],
-          phoneNumber: "",
-          injurySustained: "",
-          generalCaseInfo: "",
-          consentToCommunicate: false,
-        });
-        setShowAddClientModal(false);
-      } else {
-        const msg =
-          res?.error?.data?.message ||
-          res?.error?.data?.detail ||
-          "Failed to create client";
-        toast.error(msg);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to create client");
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to create client");
+  }
+};
+
 
   const handleCancel = () => {
     setFormData({

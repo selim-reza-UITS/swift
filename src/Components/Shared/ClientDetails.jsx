@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Send,
   Bot,
@@ -8,8 +8,32 @@ import {
   AlertTriangle,
   Edit,
 } from "lucide-react";
+import { useGetClientByIdQuery } from "../../Redux/api/intakeapi";
+import {
+  useClientOptOutMutation,
+  useGetAllLawyerQuery,
+  useGetAllUserQuery,
+  useGetMicroInsightsQuery,
+  useUpdateClientMutation,
+} from "../../Redux/api/caseapi";
+import Swal from "sweetalert2";
 
 function ClientDetails() {
+  const params = useParams(); // Get the clientId from URL parameters
+  const { data: lawyersData } = useGetAllLawyerQuery();
+  const { data: usersData } = useGetAllUserQuery();
+  const {
+    data: clientData,
+    refetch,
+    isLoading,
+    error,
+  } = useGetClientByIdQuery(params.id);
+  const [clientOptOut] = useClientOptOutMutation();
+
+  const { data: microInsights } = useGetMicroInsightsQuery(params.id);
+  console.log("microInsights", microInsights);
+  const [updateClient, { isLoading: isUpdating, error: updateError }] =
+    useUpdateClientMutation();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
     {
@@ -28,28 +52,109 @@ function ClientDetails() {
       time: "1 hour ago",
     },
   ]);
-  const [openModal, setOpenModal] = useState(false);
+  // console.log(clientData);
+
+  // Lawyer options mapping
+  const lawyerOptions = Array.isArray(lawyersData)
+    ? lawyersData
+        .map((l) => ({ id: l?.id, name: l?.name }))
+        .filter((x) => x.id && x.name)
+    : [];
+
+  // Managing users options mapping
+  const managingUserOptions = Array.isArray(usersData)
+    ? usersData
+        .map((u) => ({ id: u?.id, name: u?.name }))
+        .filter((x) => x.id && x.name)
+    : [];
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    managingUsers: [],
+    managingUsersIds: [],
+    gender: "Female", // Default gender
+    dateOfIncident: "2024/01/15",
+    lawyerName: "",
+    injuriesSustained: "Lower back pain and stiffness.",
+    generalCaseInfo: "Client reported back pain after accident.",
+    consentToCommunicate: false,
+    sentiment: "Positive",
+    status: "",
+    scheduledTime: "",
+    concernLevel: "High",
+  });
+
+  useEffect(() => {
+    if (clientData) {
+      setFormData({
+        fullName: clientData?.full_name || "",
+        phoneNumber: clientData?.phone_number || "",
+        managingUsers:
+          clientData?.managing_users?.map((user) => user.name) || [], // Pre-select managing users here
+        managingUsersIds:
+          clientData?.managing_users?.map((user) => user.id) || [], // Pre-select managing users here
+        gender: clientData?.gender || "Female", // Set gender from clientData or default to Female
+        dateOfIncident: clientData?.date_of_incident || "2024/01/15",
+        lawyerName: clientData?.lawyer?.id || "",
+        injuriesSustained:
+          clientData?.injuries_sustained || "Lower back pain and stiffness.",
+        generalCaseInfo:
+          clientData?.general_case_info ||
+          "Client reported back pain after accident.",
+        consentToCommunicate: clientData?.consent_to_communicate || false,
+        sentiment: clientData?.sentiment || "Positive",
+        concernLevel: clientData?.concern_level || "High",
+        scheduledTime: clientData?.scheduled_time || "",
+      });
+    }
+  }, [clientData]);
+  const managingRef = useRef(null);
+  const [isManagingOpen, setIsManagingOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (managingRef.current && !managingRef.current.contains(event.target)) {
+        setIsManagingOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlePhoneChange = (e) => {
+    const raw = e.target.value || "";
+    const digits = raw.replace(/\D/g, "").slice(0, 10);
+    let formatted = "";
+    if (digits.length === 0) {
+      formatted = "";
+    } else if (digits.length < 4) {
+      formatted = `(${digits}`;
+    } else if (digits.length < 7) {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
+        6,
+        10
+      )}`;
+    }
+    setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
+  };
+
   const [isPaused, setIsPaused] = useState(false);
   const [showClientInsights, setShowClientInsights] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editForm, setEditForm] = useState({
-    name: "Sarah Johnson",
-    phone: "(555) 123-4567",
-    incidentDate: "2025-9-15",
-    clientStatus: "On Going",
-    gender: "Female",
-    managingUser: "John Smith",
-    lawyer: "Robert Johnson",
-    scheduledNextSend: "2025-9-20",
-    clientSentiment: "Positive",
-    riskLevel: "High",
-    generalCaseInfo: "Client reported back pain after accident",
-    injuriesSustained: "Lower back pain and stiffness",
-    consentToCommunicate: false,
-  });
-  const navigate = useNavigate();
-  console.log(openModal);
 
+  const navigate = useNavigate();
+
+  // Handling message send
   const handleSendMessage = () => {
     const trimmed = message.trim();
     if (trimmed === "") return;
@@ -60,19 +165,74 @@ function ClientDetails() {
     setMessage("");
   };
 
+  // Handling the client info update
   const handleEditSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically save the changes to your backend
-    console.log("Updated client data:", editForm);
     setShowEditModal(false);
   };
+  // Update client data (send back to parent)
+  const handleUpdate = async () => {
+    const userIds = usersData
+      .filter((user) => formData.managingUsers.includes(user.name)) // Filter based on user names
+      .map((user) => user.id); // Map the filtered users to their IDs
 
-  const handleInputChange = (field, value) => {
-    setEditForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    formData.managingUsers = userIds;
+    const payload = {
+      id: params.id, // Send the client ID with the payload
+      full_name: formData.fullName,
+      gender: formData.gender?.toLowerCase(), // Convert gender to lowercase (if required by backend)
+      lawyer: formData.lawyerName, // Assuming lawyerName is directly the ID, not an object
+      phone_number: formData.phoneNumber.replace(/\D/g, ""), // Clean phone number
+      injuries_sustained: formData.injuriesSustained,
+      sentiment: formData.sentiment?.toLowerCase(),
+      status: formData.status,
+      concern_level: formData.concernLevel?.toLowerCase(),
+      general_case_info: formData.generalCaseInfo,
+      date_of_incident: formData.dateOfIncident,
+      managing_users: formData.managingUsers, // This should now be an array of user IDs
+      consentToCommunicate: false,
+    };
+    console.log(payload);
+
+    try {
+      const response = await updateClient(payload);
+      console.log(response.data);
+      refetch();
+      if (response?.data) {
+        Swal.fire({
+          title: "Updated Successfully!",
+          text: "Client information has been updated.",
+          icon: "success",
+          background: "#1f2937",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1",
+        });
+      } else {
+        Swal.fire({
+          title: "Update Failed",
+          text: "There was an issue updating the client.",
+          icon: "error",
+          background: "#1f2937",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while updating the client.",
+        icon: "error",
+        background: "#1f2937",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
   };
+
+  // Loading and error states
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading client details.</div>;
+
   return (
     <div className="h-[86vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
@@ -106,8 +266,10 @@ function ClientDetails() {
             <User className="w-8 h-8 text-gray-300" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold">Sarah Johnson</h2>
-            <p className="text-gray-400 text-center">(555) 123-4567</p>
+            <h2 className="text-xl font-semibold">{clientData?.full_name}</h2>
+            <p className="text-gray-400 text-center">
+              {clientData?.phone_number}
+            </p>
           </div>
         </div>
         <div
@@ -121,31 +283,32 @@ function ClientDetails() {
         <div className="space-y-4 mb-8">
           <div className="flex justify-between">
             <span className="text-gray-400">Incident Date:</span>
-            <span>2025-9-15</span>
+            <span>{clientData?.date_of_incident}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Client Status:</span>
             <span className="bg-blue-600 px-2 py-1 rounded text-sm">
-              On Going
+              {clientData?.status}
             </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Gender:</span>
-            <span>Female</span>
+            <span>{clientData?.gender}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Managing User(s):</span>
-            <span>John Smith</span>
+            <span>
+              {clientData?.managing_users.map((user) => user.name).join(", ")}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Lawyer:</span>
-            <span>Robert Johnson</span>
+            <span>{clientData?.lawyer?.name}n</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Injury's Sustained:</span>
-            <span> Lower back pain and stiffness.</span>
+            <span> {clientData?.injuries_sustained}</span>
           </div>
-        
         </div>
 
         {/* Communication Status */}
@@ -155,16 +318,20 @@ function ClientDetails() {
             <div className="flex justify-between">
               <span className="text-gray-400">Scheduled Next Send:</span>
               <span className="bg-blue-600 px-2 py-1 rounded text-sm">
-                2025-9-20
+                {
+                  new Date(clientData?.scheduled_time)
+                    .toISOString()
+                    .split("T")[0]
+                }
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Client Sentiment:</span>
-              <span className="text-green-400">Positive</span>
+              <span className="text-green-400">{clientData?.sentiment}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Risk Level:</span>
-              <span className="text-red-400">High</span>
+              <span className="text-red-400">{clientData?.concern_level}</span>
             </div>
           </div>
         </div>
@@ -174,11 +341,10 @@ function ClientDetails() {
           <h3 className="text-lg font-semibold mb-4">General Case Info</h3>
           <div className="bg-gray-700 p-4 rounded-lg">
             <p className="text-gray-300 text-sm">
-              Client reported back pain after accident.
+              {clientData?.general_case_info}
             </p>
           </div>
         </div>
-       
       </div>
 
       {/* Main Content Area */}
@@ -226,31 +392,6 @@ function ClientDetails() {
                 </span>
               </div>
             </div>
-            {/* {openModal && (
-              <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30"
-                onClick={() => setOpenModal(false)}
-                tabIndex={-1}
-                onKeyDown={(e) => {
-                  if (e.key === "Escape") setOpenModal(false);
-                }}
-              >
-                <div
-                  className="absolute top-12 right-10 w-64 bg-gray-800 border border-gray-700 rounded-lg p-4 z-10"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-                  <div className="space-y-3">
-                    <button className="w-full flex items-center space-x-3 text-left p-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
-                      <Pause className="w-4 h-4 text-blue-400" />
-                      <span className="text-blue-400">
-                        Pause Communications
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )} */}
           </div>
         </div>
 
@@ -295,7 +436,7 @@ function ClientDetails() {
               </div>
             )
           )}
-          {!editForm.consentToCommunicate && (
+          {!formData.consentToCommunicate && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-80 text-center px-6">
               <p className="text-gray-300 max-w-xl">
                 It looks like this client hasn’t completed the consent form. For
@@ -322,13 +463,13 @@ function ClientDetails() {
                 placeholder="Type your response..."
                 className="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 rows={3}
-                disabled={!editForm.consentToCommunicate}
+                disabled={!formData.consentToCommunicate}
               />
             </div>
             <button
               className="bg-blue-600 p-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSendMessage}
-              disabled={!editForm.consentToCommunicate}
+              disabled={!formData.consentToCommunicate}
             >
               <Send className="w-5 h-5" />
             </button>
@@ -359,47 +500,52 @@ function ClientDetails() {
             </div>
 
             <div className="space-y-4">
-              {/* First Alert */}
-              <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
-                <div className="flex items-start space-x-3">
-                  <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="text-gray-200 mb-2">
-                      Client missed 2 previous appointments. Expressed
-                      frustration about case speed during automated check-in.
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">
-                        May 10, 2025 - Concern
-                      </span>
-                      {/* <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
+              {!microInsights ? (
+                <p>No insights found for this client.</p>
+              ) : (
+                <>
+                  {" "}
+                  {/* First Alert */}
+                  <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        {/* <p className="text-gray-200 mb-2">
+                     {microInsights?.most_recent_micro_insight}
+                    </p> */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-400 text-sm">
+                            May 10, 2025 - Concern
+                          </span>
+                          {/* <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
                         Action Required
                       </button> */}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Second Alert */}
-              <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
-                <div className="flex items-start space-x-3">
-                  <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="text-gray-200 mb-2">
-                      Client asked a question about medical records. Message
-                      flagged for review.
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">
-                        May 18, 2025 - Flagged Message
-                      </span>
-                      {/* <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
-                        Action Required
-                      </button> */}
+                  {/* Second Alert */}
+                  <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <p className="text-gray-200 mb-2">
+                          Client asked a question about medical records. Message
+                          flagged for review.
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-400 text-sm">
+                            May 18, 2025 - Flagged Message
+                          </span>
+                          <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
+                            Action Required
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -408,14 +554,14 @@ function ClientDetails() {
       {/* Edit Client Modal */}
       {showEditModal && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60 overflow-y-auto"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60 py-10 overflow-y-auto "
           onClick={() => setShowEditModal(false)}
         >
           <div
-            className="relative w-full max-w-4xl p-6 rounded-lg shadow-lg bg-slate-800 mx-4 my-8"
+            className="relative w-full max-w-4xl p-6 rounded-lg shadow-lg bg-slate-800 mx-4 mt-8 "
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between my-6">
+            <div className="flex items-center justify-between mt-6">
               <h2 className="text-xl font-semibold text-blue-400">
                 Edit Client Information
               </h2>
@@ -436,8 +582,9 @@ function ClientDetails() {
                   </label>
                   <input
                     type="text"
-                    value={editForm.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -447,8 +594,9 @@ function ClientDetails() {
                   </label>
                   <input
                     type="tel"
-                    value={editForm.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handlePhoneChange}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -458,10 +606,9 @@ function ClientDetails() {
                   </label>
                   <input
                     type="date"
-                    value={editForm.incidentDate}
-                    onChange={(e) =>
-                      handleInputChange("incidentDate", e.target.value)
-                    }
+                    name="dateOfIncident"
+                    value={formData.dateOfIncident}
+                    onChange={handleInputChange}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -470,15 +617,13 @@ function ClientDetails() {
                     Gender
                   </label>
                   <select
-                    value={editForm.gender}
-                    onChange={(e) =>
-                      handleInputChange("gender", e.target.value)
-                    }
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    name="gender"
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
-                    <option value="Other">Other</option>
                   </select>
                 </div>
               </div>
@@ -490,43 +635,87 @@ function ClientDetails() {
                     Client Status
                   </label>
                   <select
-                    value={editForm.clientStatus}
-                    onChange={(e) =>
-                      handleInputChange("clientStatus", e.target.value)
-                    }
+                    value={formData.status}
+                    name="status"
+                    onChange={handleInputChange}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="On Going">On Going</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Closed">Closed</option>
+                    <option value="Awaiting">Awaiting Consent</option>
+                    <option value="Active">Active</option>
+                    <option value="Paused">Paused</option>
+                    <option value="Recovery">Recovery</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Managing User
+                    Managing User(s)
                   </label>
-                  <input
-                    type="text"
-                    value={editForm.managingUser}
-                    onChange={(e) =>
-                      handleInputChange("managingUser", e.target.value)
-                    }
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsManagingOpen((s) => !s)}
+                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-md p-3 text-left"
+                    >
+                      {formData.managingUsers.length > 0
+                        ? formData.managingUsers.join(", ") // Display pre-selected managing users as comma-separated
+                        : "Select managing users"}
+                    </button>
+
+                    {isManagingOpen && (
+                      <div className="absolute z-20 mt-1 w-full bg-[#1E293B] border border-slate-600 rounded-md shadow-lg max-h-48 overflow-auto">
+                        {managingUserOptions.map((user) => {
+                          const checked = formData.managingUsers.includes(
+                            user.name
+                          ); // Check if user is pre-selected
+                          return (
+                            <label
+                              key={user.id}
+                              className="flex items-center gap-2 px-3 py-2 text-white hover:bg-slate-600 cursor-pointer"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={checked} // Pre-select checkbox if the user is selected
+                                onChange={(e) => {
+                                  setFormData((prev) => {
+                                    const set = new Set(prev.managingUsers);
+                                    if (e.target.checked) set.add(user.name);
+                                    else set.delete(user.name);
+                                    return {
+                                      ...prev,
+                                      managingUsers: Array.from(set), // Update managing users
+                                    };
+                                  });
+                                }}
+                              />
+                              <span>{user.name}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Lawyer
                   </label>
-                  <input
-                    type="text"
-                    value={editForm.lawyer}
-                    onChange={(e) =>
-                      handleInputChange("lawyer", e.target.value)
-                    }
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <div className="relative">
+                    <select
+                      name="lawyerName"
+                      value={formData.lawyerName}
+                      onChange={handleInputChange}
+                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
+                    >
+                      <option value="" disabled>
+                        Select a lawyer
+                      </option>
+                      {lawyerOptions.map(({ id, name }) => (
+                        <option key={id} value={id}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -534,9 +723,19 @@ function ClientDetails() {
                   </label>
                   <input
                     type="date"
-                    value={editForm.scheduledNextSend}
+                    value={
+                      formData?.scheduledTime
+                        ? new Date(formData.scheduledTime)
+                            .toISOString()
+                            .split("T")[0]
+                        : ""
+                    }
+                    name="scheduledTime"
                     onChange={(e) =>
-                      handleInputChange("scheduledNextSend", e.target.value)
+                      setFormData((prev) => ({
+                        ...prev,
+                        scheduledTime: e.target.value,
+                      }))
                     }
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -545,58 +744,19 @@ function ClientDetails() {
 
               {/* Communication Status */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Client’s consent to communicate
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleInputChange(
-                          "consentToCommunicate",
-                          !editForm.consentToCommunicate
-                        )
-                      }
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                        editForm.consentToCommunicate
-                          ? "bg-green-600"
-                          : "bg-red-600"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          editForm.consentToCommunicate
-                            ? "translate-x-6"
-                            : "translate-x-1"
-                        }`}
-                      />
-                    </button>
-                    <span
-                      className={`text-sm font-medium ${
-                        editForm.consentToCommunicate
-                          ? "text-green-400"
-                          : "text-red-400"
-                      }`}
-                    >
-                      {editForm.consentToCommunicate ? "True" : "False"}
-                    </span>
-                  </div>
-                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Client Sentiment
                   </label>
                   <select
-                    value={editForm.clientSentiment}
-                    onChange={(e) =>
-                      handleInputChange("clientSentiment", e.target.value)
-                    }
+                    value={formData.sentiment}
+                    name="sentiment"
+                    onChange={handleInputChange}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="Positive">Positive</option>
-                    <option value="Neutral">Neutral</option>
-                    <option value="Negative">Negative</option>
+                    <option value="positive">Positive</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="negative">Negative</option>
                   </select>
                 </div>
                 <div>
@@ -604,10 +764,9 @@ function ClientDetails() {
                     Risk Level
                   </label>
                   <select
-                    value={editForm.riskLevel}
-                    onChange={(e) =>
-                      handleInputChange("riskLevel", e.target.value)
-                    }
+                    value={formData.concernLevel}
+                    name="concernLevel"
+                    onChange={handleInputChange}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Low">Low</option>
@@ -624,10 +783,9 @@ function ClientDetails() {
                     General Case Info
                   </label>
                   <textarea
-                    value={editForm.generalCaseInfo}
-                    onChange={(e) =>
-                      handleInputChange("generalCaseInfo", e.target.value)
-                    }
+                    value={formData.generalCaseInfo}
+                    name="generalCaseInfo"
+                    onChange={handleInputChange}
                     rows={3}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   />
@@ -637,10 +795,9 @@ function ClientDetails() {
                     Injuries Sustained
                   </label>
                   <textarea
-                    value={editForm.injuriesSustained}
-                    onChange={(e) =>
-                      handleInputChange("injuriesSustained", e.target.value)
-                    }
+                    value={formData.injuriesSustained}
+                    name="injuriesSustained"
+                    onChange={handleInputChange}
                     rows={3}
                     className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   />
@@ -657,7 +814,7 @@ function ClientDetails() {
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  onClick={handleUpdate}
                   className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Save Changes

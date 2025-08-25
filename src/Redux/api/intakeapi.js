@@ -25,8 +25,23 @@ export const intakeapi = api.injectEndpoints({
       }),
       invalidatesTags: ["intake"],
     }),
+
     getClientById: builder.query({
       query: (id) => `clients/${id}/detail/`, // Use the dynamic ID here
+      providesTags: ["intake"],
+    }),
+
+    updateClient: builder.mutation({
+      query: (body) => ({
+        url: `clients/${body.id}/update/`, // Use dynamic client ID
+        method: "PATCH",
+        body, // Send the body with the updated data
+      }),
+      invalidatesTags: ["intake"], // Invalidate cached clients data
+    }),
+
+    getStats: builder.query({
+      query: () => `clients/stats/`, // Use the dynamic ID here
       providesTags: ["intake"],
     }),
   }),
@@ -39,4 +54,6 @@ export const {
   useGetAllLawyerQuery,
   useGetAllClientsQuery,
   useCreateClientMutation,
+  useUpdateClientMutation,
+  useGetStatsQuery
 } = intakeapi;

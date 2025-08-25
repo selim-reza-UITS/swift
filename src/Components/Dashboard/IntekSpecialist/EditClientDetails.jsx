@@ -5,6 +5,7 @@ import {
   useGetAllLawyerQuery,
   useGetAllUserQuery,
   useGetClientByIdQuery,
+  useUpdateClientMutation,
 } from "../../../Redux/api/intakeapi";
 
 const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
@@ -14,37 +15,70 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
     data: clientData,
     isLoading,
     error,
-  } = useGetClientByIdQuery(clientId); // Fetch client details by ID
+  } = useGetClientByIdQuery(clientId);
+  const [updateClient, { isLoading: isUpdating, error: updateError }] =
+    useUpdateClientMutation();
+
+  // Lawyer options mapping
   const lawyerOptions = Array.isArray(lawyersData)
     ? lawyersData
         .map((l) => ({ id: l?.id, name: l?.name }))
         .filter((x) => x.id && x.name)
     : [];
-  console.log(lawyerOptions);
+
+  // Managing users options mapping
   const managingUserOptions = Array.isArray(usersData)
     ? usersData
         .map((u) => ({ id: u?.id, name: u?.name }))
         .filter((x) => x.id && x.name)
     : [];
+
+  // Initializing formData with default values or fetched data
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    managingUsers: [],
+    managingUsersIds: [],
+    gender: "Female", // Default gender
+    dateOfIncident: "2024/01/15",
+    lawyerName: "",
+    injurySustained: "Lower back pain and stiffness.",
+    generalCaseInfo: "Client reported back pain after accident.",
+    consentToCommunicate: false,
+    sentiment: "Positive",
+    concernLevel: "High",
+  });
+  console.log(formData.managingUsers);
+
+  // Populate formData with the fetched client data when available
+  useEffect(() => {
+    if (clientData) {
+      setFormData({
+        fullName: clientData?.full_name || "",
+        phoneNumber: clientData?.phone_number || "",
+        managingUsers:
+          clientData?.managing_users?.map((user) => user.name) || [], // Pre-select managing users here
+        managingUsersIds:
+          clientData?.managing_users?.map((user) => user.id) || [], // Pre-select managing users here
+        gender: clientData?.gender || "Female", // Set gender from clientData or default to Female
+        dateOfIncident: clientData?.date_of_incident || "2024/01/15",
+        lawyerName: clientData?.lawyer?.id || "",
+        injurySustained:
+          clientData?.injuries_sustained || "Lower back pain and stiffness.",
+        generalCaseInfo:
+          clientData?.general_case_info ||
+          "Client reported back pain after accident.",
+        consentToCommunicate: clientData?.consent_to_communicate || false,
+        sentiment: clientData?.sentiment || "Positive",
+        concernLevel: clientData?.concern_level || "High",
+      });
+    }
+  }, [clientData]);
+  console.log(formData.managingUsers);
+
+  // Handle clicking outside the managing users dropdown to close it
   const managingRef = useRef(null);
   const [isManagingOpen, setIsManagingOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: clientData?.full_name || "",
-    phoneNumber: clientData?.phone_number || "",
-    managingUsers: clientData?.managing_users?.map((user) => user.name) || [],
-    gender: clientData?.gender || "Female",
-    dateOfIncident: clientData?.date_of_incident || "2024/01/15",
-    lawyerName: clientData?.lawyer?.name || "",
-    injurySustained:
-      clientData?.injurySustained || "Lower back pain and stiffness.",
-    generalCaseInfo:
-      clientData?.generalCaseInfo ||
-      "Client reported back pain after accident.",
-    consentToCommunicate: clientData?.consentToCommunicate || true,
-    sentiment: clientData?.sentiment || "Positive",
-    concernLevel: clientData?.concernLevel || "High",
-  });
-  console.log(formData?.lawyerName);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -56,6 +90,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Handle input changes for text fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -63,6 +98,8 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
       [name]: value,
     }));
   };
+
+  // Handle phone number formatting
   const handlePhoneChange = (e) => {
     const raw = e.target.value || "";
     const digits = raw.replace(/\D/g, "").slice(0, 10);
@@ -81,24 +118,70 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
     }
     setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
   };
-  const handleUpdate = () => {
-    // Update parent data (optional if needed)
-    if (onUpdate) onUpdate(formData);
 
-    // SweetAlert
-    Swal.fire({
-      title: "Updated Successfully!",
-      text: "Client information has been updated.",
-      icon: "success",
-      background: "#1f2937",
-      color: "#ffffff",
-      confirmButtonColor: "#6366F1",
-    });
+  // Update client data (send back to parent)
+  const handleUpdate = async () => {
+    // Map the selected managing user names to their corresponding IDs
+    const userIds = usersData
+      .filter((user) => formData.managingUsers.includes(user.name)) // Filter based on user names
+      .map((user) => user.id); // Map the filtered users to their IDs
 
-    onClose();
+    formData.managingUsers = userIds; // Update the managing users with their IDs
+
+    const payload = {
+      id: clientId, // Send the client ID with the payload
+      full_name: formData.fullName,
+      gender: formData.gender.toLowerCase(), // Convert gender to lowercase (if required by backend)
+      lawyer: formData.lawyerName, // Assuming lawyerName is directly the ID, not an object
+      phone_number: formData.phoneNumber.replace(/\D/g, ""), // Clean phone number
+      injuries_sustained: formData.injurySustained,
+      general_case_info: formData.generalCaseInfo,
+      date_of_incident: formData.dateOfIncident,
+      managing_users: formData.managingUsers, // This should now be an array of user IDs
+    };
+
+    console.log(payload);
+
+    try {
+      const response = await updateClient(payload).unwrap();
+      console.log(response);
+
+      if (response?.data) {
+        Swal.fire({
+          title: "Updated Successfully!",
+          text: "Client information has been updated.",
+          icon: "success",
+          background: "#1f2937",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1",
+        });
+        onClose(); // Close the modal
+      } else {
+        Swal.fire({
+          title: "Update Failed",
+          text: "There was an issue updating the client.",
+          icon: "error",
+          background: "#1f2937",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while updating the client.",
+        icon: "error",
+        background: "#1f2937",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
   };
+
+  // Loading and error states
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading client details.</div>;
+
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">
       <div className="relative w-[450px] bg-[#0f172a] text-white rounded-xl p-4 ">
@@ -125,12 +208,13 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
           <input
             type="text"
             name="fullName"
-            value={clientData?.full_name}
+            value={formData.fullName}
             onChange={handleInputChange}
             placeholder="e.g., John Doe"
             className="w-full bg-[#1e293b] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
           />
         </div>
+
         {/* Phone Number */}
         <div className="mt-4">
           <label className="block mb-2 text-sm font-medium text-white">
@@ -139,12 +223,13 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
           <input
             type="tel"
             name="phoneNumber"
-            value={clientData?.phone_number}
+            value={formData.phoneNumber}
             onChange={handlePhoneChange}
             placeholder="(XXX) XXX-XXXX"
             className="w-full bg-[#1e293b] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
           />
         </div>
+
         {/* Select Managing User(s) */}
         <div className="mt-4" ref={managingRef}>
           <label className="block mb-2 text-sm font-medium text-white">
@@ -196,6 +281,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
             Link one or more managers from your firm to this client.
           </p>
         </div>
+
         {/* Gender */}
         <div className="mt-4">
           <label className="block mb-2 text-sm font-medium text-white">
@@ -207,7 +293,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
                 type="radio"
                 name="gender"
                 value="Female"
-                checked={formData.gender === "Female"}
+                checked={formData?.gender === "Female"} // Dynamically check based on formData.gender
                 onChange={handleInputChange}
                 className="mr-2 text-purple-400 focus:ring-purple-400"
               />
@@ -218,25 +304,15 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
                 type="radio"
                 name="gender"
                 value="Male"
-                checked={formData.gender === "Male"}
+                checked={formData?.gender === "Male"} // Dynamically check based on formData.gender
                 onChange={handleInputChange}
                 className="mr-2 text-purple-400 focus:ring-purple-400"
               />
               <span className="text-sm text-white">Male</span>
             </label>
-            {/* <label className="flex items-center">
-              <input
-                type="radio"
-                name="gender"
-                value="Prefer not to say"
-                checked={formData.gender === "Prefer not to say"}
-                onChange={handleInputChange}
-                className="mr-2 text-purple-400 focus:ring-purple-400"
-              />
-              <span className="text-sm text-white">Prefer not to say</span>
-            </label> */}
           </div>
         </div>
+
         {/* Date of Incident */}
         <div className="mt-4">
           <label className="block mb-2 text-sm font-medium text-white">
@@ -251,6 +327,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
             className="w-full bg-[#1e293b] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
           />
         </div>
+
         {/* Lawyer Name */}
         <div className="mt-4">
           <label className="block mb-2 text-sm font-medium text-white">
@@ -259,7 +336,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
           <div className="relative">
             <select
               name="lawyerName"
-              defaultValue={clientData?.lawyer?.name}
+              value={formData.lawyerName}
               onChange={handleInputChange}
               className="w-full bg-[#1e293b] text-white border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
             >
@@ -272,23 +349,9 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
                 </option>
               ))}
             </select>
-            <div className="absolute transform -translate-y-1/2 pointer-events-none right-3 top-1/2">
-              <svg
-                className="w-4 h-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
           </div>
         </div>
+
         {/* Case Notes */}
         <div className="mt-6">
           <p className="mb-2 text-sm font-semibold poppins">Case Notes</p>
