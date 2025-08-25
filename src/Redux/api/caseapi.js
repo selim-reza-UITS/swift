@@ -23,12 +23,19 @@ export const caseapi = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["intake"],
+      invalidatesTags: ["case"],
+    }),
+    clientOptOut: builder.mutation({
+      query: (id) => ({
+        url: `/clients/${id}/opt-out/`,
+        method: "POST",
+      }),
+      invalidatesTags: ["case"],
     }),
 
     getClientById: builder.query({
       query: (id) => `clients/${id}/detail/`, // Use the dynamic ID here
-      providesTags: ["intake"],
+      providesTags: ["case"],
     }),
 
     updateClient: builder.mutation({
@@ -37,12 +44,17 @@ export const caseapi = api.injectEndpoints({
         method: "PATCH",
         body, // Send the body with the updated data
       }),
-      invalidatesTags: ["intake"], // Invalidate cached clients data
+      invalidatesTags: ["case"], // Invalidate cached clients data
     }),
 
     getStats: builder.query({
       query: () => `clients/stats/`, // Use the dynamic ID here
-      providesTags: ["intake"],
+      providesTags: ["case"],
+    }),
+
+    getMicroInsights: builder.query({
+      query: (id) => `chats/client/${id}/client-insights/`, // Use the dynamic ID here
+      providesTags: ["case"],
     }),
   }),
 });
@@ -59,4 +71,6 @@ export const {
   useCreateClientMutation,
   useUpdateClientMutation,
   useGetStatsQuery,
+  useGetMicroInsightsQuery,
+  useClientOptOutMutation
 } = caseapi;

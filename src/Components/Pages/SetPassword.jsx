@@ -2,17 +2,14 @@ import React, { useState } from "react";
 import logo from "../../assets/loginlogo.png";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { useResetPasswordMutation } from "../../Redux/api/authapi";
-
-
-
+import { useSetPasswordMutation } from "../../Redux/api/authapi";
 
 export default function SetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const params = useParams();
   const navigate = useNavigate();
-  const [setPassword, { isLoading }] = useResetPasswordMutation();
+  const [setPassword, { isLoading }] = useSetPasswordMutation();
 
   const handleSubmit = async () => {
     if (newPassword !== confirmPassword) {

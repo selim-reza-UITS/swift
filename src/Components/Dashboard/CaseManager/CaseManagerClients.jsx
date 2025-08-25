@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Search,
   Eye,
@@ -10,21 +10,18 @@ import {
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
+import { useGetClientByIdQuery } from "../../../Redux/api/caseapi";
 
 const CaseManagerClients = () => {
-  const [displayClients, setDisplayClients] = useState([]);
-
+  const [clientId, setClientId] = useState(null);
   const { data: clients = [], isLoading } = useGetAllClientsQuery();
-  console.log(clients)
-
+  const managingRef = useRef(null);
+  const { data: clientData } = useGetClientByIdQuery(clientId);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
-  const [deleteProgress, setDeleteProgress] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteTimer, setDeleteTimer] = useState(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (managingRef.current && !managingRef.current.contains(event.target)) {
@@ -34,44 +31,42 @@ const CaseManagerClients = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  const handleDeleteClick = () => {
-    setIsDeleting(true);
-    setDeleteProgress(0);
 
-    const timer = setInterval(() => {
-      setDeleteProgress((prev) => {
-        const newProgress = prev + 100 / 30; // 30 intervals over 3 seconds
-        if (newProgress >= 100) {
-          clearInterval(timer);
-          setShowDeleteModal(true);
-          setIsDeleting(false);
-          setDeleteProgress(0);
-          return 100;
-        }
-        return newProgress;
-      });
-    }, 100);
-
-    setDeleteTimer(timer);
-  };
-
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     setShowDeleteModal(false);
-    // Add your delete logic here
-    console.log("Case deleted");
+
+    // Call your API to delete the client
+    const result = await clientOptOut(clientId);
+
+    if (result) {
+      // If the client was deleted successfully, update the UI
+
+      // Show success message
+      Swal.fire({
+        title: "Deleted!",
+        text: "Client has been deleted.",
+        icon: "success",
+        background: "#1f2937",
+        color: "#fff",
+        confirmButtonColor: "#6366F1",
+      });
+    } else {
+      // Handle failure (e.g., show error message)
+      Swal.fire({
+        title: "Error!",
+        text: "There was an error deleting the client.",
+        icon: "error",
+        background: "#1f2937",
+        color: "#fff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
   };
 
   const handleDeleteModalClose = () => {
     setShowDeleteModal(false);
   };
 
-  useEffect(() => {
-    return () => {
-      if (deleteTimer) {
-        clearInterval(deleteTimer);
-      }
-    };
-  }, [deleteTimer]);
   const filteredClients = clients.filter((client) => {
     const matchesSearch =
       client.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -106,19 +101,6 @@ const CaseManagerClients = () => {
     }
   };
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "active":
-        return "Active";
-      case "paused":
-        return "Paused";
-      case "recovery":
-        return "Recently Deleted";
-      default:
-        return "Unknown";
-    }
-  };
-
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "high":
@@ -132,19 +114,6 @@ const CaseManagerClients = () => {
     }
   };
 
-  const getPriorityLabel = (priority) => {
-    switch (priority) {
-      case "high":
-        return "High Risk";
-      case "medium":
-        return "Medium Risk";
-      case "low":
-        return "Low Risk";
-      default:
-        return "Unknown";
-    }
-  };
-
   const handleViewChange = (view) => {
     setActiveView(view);
     setCurrentPage(1);
@@ -155,81 +124,29 @@ const CaseManagerClients = () => {
       setCurrentPage(page);
     }
   };
-  // useEffect(() => {
-  //   const mapStatus = (s) => {
-  //     if (!s) return "active";
-  //     const lower = String(s).toLowerCase();
-  //     if (lower.includes("pause")) return "paused";
-  //     if (lower.includes("delete")) return "recovery";
-  //     return "active"; // e.g., "Awaiting Consent"
-  //   };
-
-  //   const mapped = Array.isArray(clients)
-  //     ? clients.map((c) => ({
-  //         id: c.id,
-  //         name: c.full_name || c.name || "-",
-  //         phone: c.phone_number || "-",
-  //         status: mapStatus(c.status),
-  //         priority: "medium",
-  //         avatar: "/api/placeholder/40/40",
-  //       }))
-  //     : [];
-  //   setDisplayClients(mapped);
-  // }, [clients]);
 
   const handleDeleteClient = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      background: "#1f2937", // dark bg
-      color: "#fff", // text color
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#4b5563",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setClients((prevClients) =>
-          prevClients.filter((client) => client.id !== id)
-        );
-        Swal.fire({
-          title: "Deleted!",
-          text: "Client has been deleted.",
-          icon: "success",
-          background: "#1f2937",
-          color: "#fff",
-          confirmButtonColor: "#6366F1",
-        });
-      }
-    });
+    setClientId(id); // Set the client ID
+    // Wait until client data is fetched and then show the confirmation modal
+    if (clientData) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You are about to delete ${clientData.full_name}. Once deleted, this client will no longer receive messages. They will remain recoverable for 35 days before being permanently removed.`,
+        icon: "warning",
+        background: "#1f2937", // dark bg
+        color: "#fff", // text color
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#4b5563",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleDeleteConfirm();
+        }
+      });
+    }
   };
-
-  const handleUpdate = (updatedData) => {
-    // Handle the update logic here, e.g., updating the client in the state or making an API call
-    console.log("Updated Client Data:", updatedData);
-
-    // For example, if you're updating the client in the list
-    setDisplayClients((prevClients) =>
-      prevClients.map((client) =>
-        client.id === updatedData.id ? { ...client, ...updatedData } : client
-      )
-    );
-
-    // Optionally, close the modal
-    setIsEditModalOpen(false);
-    setEditSelectedClient(null);
-
-    // You can add more logic here to show a success message, etc.
-    Swal.fire({
-      title: "Updated Successfully!",
-      text: "Client information has been updated.",
-      icon: "success",
-      background: "#1f2937",
-      color: "#ffffff",
-      confirmButtonColor: "#6366F1",
-    });
-  };
+  
 
   return (
     <div className="h-[80vh] bg-gray-900 text-white flex flex-col">
@@ -336,7 +253,7 @@ const CaseManagerClients = () => {
                     client.priority
                   )}`}
                 >
-                 {client?.concern_level}
+                  {client?.concern_level}
                 </span>
 
                 <Link to={`/dashboard/caseManagerClients/${client.id}`}>
@@ -347,28 +264,13 @@ const CaseManagerClients = () => {
 
                 <button
                   className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700"
-                  onClick={() => handleDeleteClient(client.id)}
+                  onClick={() => {
+                    setClientId(client.id);
+                    handleDeleteClient(client.id);
+                  }}
                 >
                   <Trash2 />
                 </button>
-                {/* Delete Button with Progress */}
-                {/* <button
-                  onClick={isDeleting ? handleDeleteCancel : handleDeleteClick}
-                  disabled={isDeleting}
-                  className="relative flex items-center w-full p-3 space-x-3 overflow-hidden text-left transition-colors bg-red-900 rounded-lg hover:bg-red-800"
-                >
-                  <div
-                    className="absolute top-0 left-0 h-full transition-all duration-100 ease-linear bg-red-600"
-                    style={{ width: `${deleteProgress}%` }}
-                  />
-
-                  <div className="relative z-10 flex items-center space-x-3">
-                    <Trash2 className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">
-                      {isDeleting ? "Deleting..." : "Delete"}
-                    </span>
-                  </div>
-                </button> */}
               </div>
             </div>
           ))}
