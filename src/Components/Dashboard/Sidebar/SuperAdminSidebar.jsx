@@ -44,7 +44,7 @@ const SuperAdminSidebar = () => {
       {/* Logo Section */}
       <div className="flex flex-col py-4">
         <NavLink
-          to="/"
+          to="/dashboard/superadmin"
           className="flex items-center justify-center w-full gap-2 mt-2 text-xl font-extrabold md:text-xl lg:text-2xl "
         >
           <a className="block text-2xl text-teal-60 " href="#">

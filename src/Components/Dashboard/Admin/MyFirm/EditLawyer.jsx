@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TbXboxXFilled } from "react-icons/tb";
 import { useUpdateLawyerMutation } from "../../../../Redux/feature/Admin/admin";
-
+import Swal from "sweetalert2";
 
 const EditLawyer = ({ lawyer, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -18,21 +18,42 @@ const EditLawyer = ({ lawyer, onClose, onSave }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const updatedLawyer = await updateLawyer({
-        id: lawyer.id,
-        body: formData,
-      }).unwrap(); // unwrap returns the actual data or throws error
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const updatedLawyer = await updateLawyer({
+      id: lawyer.id,
+      body: formData,
+    }).unwrap(); // unwrap returns actual data or throws error
 
-      if (onSave) onSave(updatedLawyer);
-      onClose();
-    } catch (error) {
-      console.error("Failed to update lawyer:", error);
-      alert("Failed to update lawyer. Please try again.");
-    }
-  };
+    // Success Swal
+    Swal.fire({
+      icon: "success",
+      title: "Lawyer Updated!",
+      text: `${updatedLawyer.name} has been updated successfully.`,
+      confirmButtonColor: "#8A2BE2",
+      background: "#1e293b", 
+      color: "#f1f5f9",    
+      showClass: { popup: "animate__animated animate__zoomIn" },
+      hideClass: { popup: "animate__animated animate__zoomOut" },
+    });
+
+    if (onSave) onSave(updatedLawyer);
+    onClose();
+  } catch (error) {
+    console.error("Failed to update lawyer:", error);
+    // Error Swal
+    Swal.fire({
+      icon: "error",
+      title: "Update Failed",
+      text: error?.data?.message || "Something went wrong. Please try again.",
+      confirmButtonColor: "#8A2BE2",
+      background: "#1e293b", 
+      color: "#f1f5f9",    
+    });
+  }
+};
+
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">

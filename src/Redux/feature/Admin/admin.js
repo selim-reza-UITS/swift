@@ -16,7 +16,7 @@ export const adminapi = api.injectEndpoints({
 
       method: "GET",
     }),
-        getDashboard: builder.query({
+    getDashboard: builder.query({
       query: () => "firms-statistics/",
 
       method: "GET",
@@ -50,7 +50,7 @@ export const adminapi = api.injectEndpoints({
       }),
       invalidatesTags: ["intake"], // optional if you want to refetch lawyer list
     }),
-       createFeedback: builder.mutation({
+    createFeedback: builder.mutation({
       query: (data) => ({
         url: "cores/feedback/",
         method: "POST",
@@ -58,7 +58,7 @@ export const adminapi = api.injectEndpoints({
       }),
       invalidatesTags: ["LawFirm"],
     }),
-     getLawyer: builder.query({
+    getLawyer: builder.query({
       query: () => "lawyers/list/",
 
       method: "GET",
@@ -70,23 +70,23 @@ export const adminapi = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Lawyer"], 
+      invalidatesTags: ["Lawyer"],
     }),
-     updateLawyer: builder.mutation({
+    updateLawyer: builder.mutation({
       query: ({ id, body }) => ({
         url: `lawyers/${id}/update/`,
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["Lawyer"], 
+      invalidatesTags: ["Lawyer"],
     }),
-     updateUser: builder.mutation({
+    updateUser: builder.mutation({
       query: ({ id, body }) => ({
         url: `users/${id}/update/`,
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["Users"], 
+      invalidatesTags: ["Users"],
     }),
     deleteUser: builder.mutation({
       query: ({ id, body }) => ({
@@ -95,6 +95,28 @@ export const adminapi = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["Users"], // optional: refetch users list
+    }),
+   deleteClient: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `users/${id}/delete/`,
+        method: "DELETE",
+        body,
+      }),
+      invalidatesTags: ["Users"], // optional: refetch users list
+    }),
+    deleteLawyer: builder.mutation({
+      query: ({ id }) => ({
+        url: `lawyers/${id}/delete/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Users"], // optional: refetch users list
+    }),
+    optOutClient: builder.mutation({
+      query: (id) => ({
+        url: `clients/${id}/opt-out/`,
+        method: "POST", 
+      }),
+      invalidatesTags: ["Client"],
     }),
   }),
 });
@@ -114,5 +136,7 @@ export const {
   useUpdateLawyerMutation,
   useDeleteUserMutation,
   useUpdateUserMutation,
-  useGetLawFirmQuery,
+  useDeleteLawyerMutation,
+  useDeleteClientMutation,
+  useOptOutClientMutation,
 } = adminapi;
