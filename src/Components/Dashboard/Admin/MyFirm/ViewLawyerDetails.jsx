@@ -30,7 +30,7 @@ const ViewLawyerDetails = ({ lawyer, onClose }) => {
         <div className="mt-4 space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-base">Role:</span>
-            <span className="text-base">{lawyer.role}</span>
+            <span className="text-base">lawyer</span>
           </div>
           <div className="flex justify-between">
             <span className="text-base">Specialization:</span>

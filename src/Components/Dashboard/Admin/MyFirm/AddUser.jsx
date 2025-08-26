@@ -13,7 +13,7 @@ const AddUser = ({ onClose }) => {
     role: "",
   });
 
-  const [createUser, { isLoading }] = useCreateUserMutation(); // ✅ RTK Query mutation
+  const [createUser, { isLoading }] = useCreateUserMutation(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;

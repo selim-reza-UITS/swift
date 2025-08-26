@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TbXboxXFilled } from "react-icons/tb";
 import { useUpdateUserMutation } from "../../../../Redux/feature/Admin/admin";
-
+import Swal from "sweetalert2";
 // Roles with label for UI and value for backend
 const roleOptions = [
   { label: "Case Manager", value: "case_manager" },
@@ -32,8 +32,6 @@ const EditUser = ({ member, onClose, onSave }) => {
       setFormData({
         name: member.name || "",
         email: member.email || "",
-
-       
       });
     }
   }, [member]);
@@ -54,11 +52,28 @@ const EditUser = ({ member, onClose, onSave }) => {
         id: member.id,
         body,
       }).unwrap();
+      // Success Swal
+      Swal.fire({
+        icon: "success",
+        title: "User Updated!",
+        text: `${response.data.name} has been updated successfully.`,
+        confirmButtonColor: "#8A2BE2",
+        background: "#1e293b", // dark background
+        color: "#f1f5f9", // light text
+        showClass: { popup: "animate__animated animate__zoomIn" },
+        hideClass: { popup: "animate__animated animate__zoomOut" },
+      });
 
       console.log("Updated:", response);
-      onSave(response.data);
-      onClose();
     } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: err?.data?.message || "Something went wrong. Please try again.",
+        confirmButtonColor: "#8A2BE2",
+        background: "#1e293b", // dark background
+        color: "#f1f5f9", // light text
+      });
       console.error("Update failed:", err);
     }
   };
