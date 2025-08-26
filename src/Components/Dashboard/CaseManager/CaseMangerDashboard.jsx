@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -19,7 +19,9 @@ import {
   useGetAllFlaggedClientsQuery,
   useGetAllHighRiskClientsQuery,
   useGetCaseStatsQuery,
+  useGetFirmScoresQuery,
 } from "../../../Redux/api/caseapi";
+import moment from "moment";
 
 const flaggedClients = [
   {
@@ -106,15 +108,48 @@ const CaseMangerDashboard = () => {
   const [showAddClientModal, setShowAddClientModal] = useState(false);
   const [showAllClients, setShowAllClients] = useState(false);
   const [showAllFlaggedClients, setShowAllFlaggedClients] = useState(false);
+  const [sentimentData, setSentimentData] = useState([]);
+
   const { data: highRiskClients } = useGetAllHighRiskClientsQuery();
   const { data: flaggedClientsData } = useGetAllFlaggedClientsQuery();
   const { data: caseStats } = useGetCaseStatsQuery();
+  const { data: firmScores } = useGetFirmScoresQuery();
+
   const statsData = [
     { title: "Active Clients", value: caseStats?.active_clients },
     { title: "Issues", value: caseStats?.issues },
     { title: "Messages Sent This Month", value: caseStats?.messages_sent },
   ];
 
+  useEffect(() => {
+    if (firmScores?.weekly_reputation_scores) {
+      // Calculate the current date and the most recent week (Week 4)
+      const currentDate = new Date();
+
+      // Initialize an empty array for 4 weeks (Week 1, Week 2, Week 3, Week 4)
+      let weeks = [
+        { week: "Week 4", value: 0 }, // most recent week starts at Week 4
+        { week: "Week 3", value: 0 },
+        { week: "Week 2", value: 0 },
+        { week: "Week 1", value: 0 },
+      ];
+
+      // Iterate over the weekly_reputation_scores and assign data to the corresponding week
+      firmScores.weekly_reputation_scores.forEach((weekData) => {
+        const weekStartDate = new Date(weekData.week_start_datetime);
+        const timeDiff = currentDate - weekStartDate;
+        const weeksDiff = Math.floor(timeDiff / (1000 * 3600 * 24 * 7)); // Convert milliseconds to weeks
+
+        // Assign the reputation score to the corresponding week (only for Week 1-4)
+        if (weeksDiff >= 0 && weeksDiff < 4) {
+          weeks[weeksDiff].value = weekData.reputation_score;
+        }
+      });
+
+      // Set the updated sentiment data
+      setSentimentData(weeks);
+    }
+  }, [firmScores]);
   return (
     <div className="h-[86vh] bg-[#0f172a] text-white p-6">
       <div className="flex justify-between mb-6">
@@ -168,7 +203,7 @@ const CaseMangerDashboard = () => {
       </div>
 
       {/* Middle Section */}
-      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {/* High Risk Clients */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
           <div className="flex items-center justify-between mb-4">

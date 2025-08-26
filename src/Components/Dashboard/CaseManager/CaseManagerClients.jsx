@@ -12,14 +12,13 @@ import Swal from "sweetalert2";
 import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
 import { useClientOptOutMutation } from "../../../Redux/api/caseapi";
 const CaseManagerClients = () => {
-  const [activeView, setActiveView] = useState(""); // default is "all"
+  const [activeView, setActiveView] = useState(""); 
   console.log(activeView);
   const { data: clients = [], isLoading } = useGetAllClientsQuery(activeView);
 
   console.log(clients);
   const managingRef = useRef(null);
   const [clientOptOut] = useClientOptOutMutation();
-  // const { data: clientData } = useGetClientByIdQuery(clientId);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
@@ -43,9 +42,7 @@ const CaseManagerClients = () => {
     console.log(result);
 
     if (result) {
-      // If the client was deleted successfully, update the UI
-
-      // Show success message
+    
       Swal.fire({
         title: "Deleted!",
         text: "Client has been Opted Out.",
@@ -55,7 +52,6 @@ const CaseManagerClients = () => {
         confirmButtonColor: "#6366F1",
       });
     } else {
-      // Handle failure (e.g., show error message)
       Swal.fire({
         title: "Error!",
         text: "There was an error deleting the client.",

@@ -260,12 +260,12 @@ function ClientDetails() {
           </button>
         </div>
         {/* Client Profile */}
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mr-4">
+        <div className="flex flex-col justify-center items-center mb-6">
+          <div className="w-16 h-16 mx-auto bg-gray-600 rounded-full flex items-center justify-center mr-4">
             <User className="w-8 h-8 text-gray-300" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold">{clientData?.full_name}</h2>
+            <h2 className="text-xl font-semibold text-center mt-2">{clientData?.full_name}</h2>
             <p className="text-gray-400 text-center">
               {clientData?.phone_number}
             </p>
