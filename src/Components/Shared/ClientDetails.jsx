@@ -236,11 +236,11 @@ function ClientDetails() {
   return (
     <div className="h-[86vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
-      <div className="w-80 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto">
+      <div className="p-6 mr-4 overflow-y-auto bg-gray-800 w-80 rounded-xl">
         {/* Back Button and Edit Client Button */}
         <div className="flex items-center justify-between space-x-2 ">
           <button
-            className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center"
+            className="flex items-center px-4 py-2 text-white bg-gray-800 rounded-lg hover:bg-gray-700"
             onClick={() => navigate(-1)}
           >
             <svg
@@ -262,32 +262,32 @@ function ClientDetails() {
         </div>
         {/* Client Profile */}
         <div className="flex flex-col items-center mb-6">
-          <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mr-4">
+          <div className="flex items-center justify-center w-16 h-16 mr-4 bg-gray-600 rounded-full">
             <User className="w-8 h-8 text-gray-300" />
           </div>
           <div>
             <h2 className="text-xl font-semibold">{clientData?.full_name}</h2>
-            <p className="text-gray-400 text-center">
+            <p className="text-center text-gray-400">
               {clientData?.phone_number}
             </p>
           </div>
         </div>
         <div
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center shadow mb-6 w-full mx-auto"
+          className="flex items-center justify-center w-full px-4 py-2 mx-auto mb-6 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700"
           onClick={() => setShowEditModal(true)}
         >
           <Edit className="w-4 h-4 mr-2" />
           <span>Edit Client</span>
         </div>
         {/* Case Details */}
-        <div className="space-y-4 mb-8">
+        <div className="mb-8 space-y-4">
           <div className="flex justify-between">
             <span className="text-gray-400">Incident Date:</span>
             <span>{clientData?.date_of_incident}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Client Status:</span>
-            <span className="bg-blue-600 px-2 py-1 rounded text-sm">
+            <span className="px-2 py-1 text-sm bg-blue-600 rounded">
               {clientData?.status}
             </span>
           </div>
@@ -313,11 +313,11 @@ function ClientDetails() {
 
         {/* Communication Status */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4">Communication Status</h3>
+          <h3 className="mb-4 text-lg font-semibold">Communication Status</h3>
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-gray-400">Scheduled Next Send:</span>
-              <span className="bg-blue-600 px-2 py-1 rounded text-sm">
+              <span className="px-2 py-1 text-sm bg-blue-600 rounded">
                 {
                   new Date(clientData?.scheduled_time)
                     .toISOString()
@@ -338,9 +338,9 @@ function ClientDetails() {
 
         {/* Case Notes */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">General Case Info</h3>
-          <div className="bg-gray-700 p-4 rounded-lg">
-            <p className="text-gray-300 text-sm">
+          <h3 className="mb-4 text-lg font-semibold">General Case Info</h3>
+          <div className="p-4 bg-gray-700 rounded-lg">
+            <p className="text-sm text-gray-300">
               {clientData?.general_case_info}
             </p>
           </div>
@@ -348,25 +348,25 @@ function ClientDetails() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col bg-gray-800 rounded-xl">
+      <div className="flex flex-col flex-1 bg-gray-800 rounded-xl">
         {/* Header */}
-        <div className=" p-4 border-b border-gray-700 flex items-center justify-between">
+        <div className="flex items-center justify-between p-4 border-b border-gray-700 ">
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+            <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
               <MessageSquare className="w-4 h-4" />
             </div>
             <div>
               <h1 className="text-xl font-semibold">Sarah Johnson</h1>
             </div>
           </div>
-          <div className="flex items-center space-x-4 relative">
+          <div className="relative flex items-center space-x-4">
             <button
-              className="border px-3 py-1 rounded text-sm inline-block hover:bg-gray-700 transition-colors"
+              className="inline-block px-3 py-1 text-sm transition-colors border rounded hover:bg-gray-700"
               onClick={() => setShowClientInsights(true)}
             >
               Client Summary
             </button>
-            <span className="bg-yellow-600 px-3 py-1 rounded text-sm inline-block">
+            <span className="inline-block px-3 py-1 text-sm bg-yellow-600 rounded">
               Medium Risk
             </span>
             <div className="flex items-center space-x-3">
@@ -396,19 +396,19 @@ function ClientDetails() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 p-6 overflow-y-auto relative">
+        <div className="relative flex-1 p-6 overflow-y-auto">
           {messages.map((msg, idx) =>
             msg.from === "user" ? (
               <div className="mb-6" key={idx}>
                 <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full">
                     <Bot className="w-4 h-4" />
                   </div>
                   <div className="flex-1">
-                    <div className="bg-gray-700 p-4 rounded-lg w-auto">
+                    <div className="w-auto p-4 bg-gray-700 rounded-lg">
                       <p className="text-gray-300">{msg.text}</p>
                     </div>
-                    <div className="flex items-center space-x-2 mt-2 text-xs text-gray-500">
+                    <div className="flex items-center mt-2 space-x-2 text-xs text-gray-500">
                       <span>AI Assistant</span>
                       <span>•</span>
                       <span>{msg.time}</span>
@@ -418,17 +418,17 @@ function ClientDetails() {
               </div>
             ) : (
               <div className="mb-6" key={idx}>
-                <div className="flex items-start space-x-3 justify-end">
-                  <div className="flex-1 flex justify-end">
-                    <div className="bg-blue-600 p-4 rounded-lg max-w-5xl">
+                <div className="flex items-start justify-end space-x-3">
+                  <div className="flex justify-end flex-1">
+                    <div className="max-w-5xl p-4 bg-blue-600 rounded-lg">
                       <p className="text-white">{msg.text}</p>
                     </div>
                   </div>
-                  <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                  <div className="flex items-center justify-center w-8 h-8 bg-gray-600 rounded-full">
                     <User className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="flex items-center justify-end space-x-2 mt-2 text-xs text-gray-500">
+                <div className="flex items-center justify-end mt-2 space-x-2 text-xs text-gray-500">
                   <span>Sarah Johnson</span>
                   <span>•</span>
                   <span>{msg.time}</span>
@@ -437,8 +437,8 @@ function ClientDetails() {
             )
           )}
           {!formData.consentToCommunicate && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-80 text-center px-6">
-              <p className="text-gray-300 max-w-xl">
+            <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
+              <p className="max-w-xl text-gray-300">
                 It looks like this client hasn’t completed the consent form. For
                 messaging to be enabled, please have them complete the quick
                 permission form.
@@ -448,7 +448,7 @@ function ClientDetails() {
         </div>
 
         {/* Message Input */}
-        <div className="bg-gray-800 p-4 border-t border-gray-700">
+        <div className="p-4 bg-gray-800 border-t border-gray-700">
           <div className="flex items-center space-x-3">
             <div className="flex-1">
               <textarea
@@ -461,13 +461,13 @@ function ClientDetails() {
                   }
                 }}
                 placeholder="Type your response..."
-                className="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full p-3 text-white placeholder-gray-400 bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 rows={3}
                 disabled={!formData.consentToCommunicate}
               />
             </div>
             <button
-              className="bg-blue-600 p-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-3 transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSendMessage}
               disabled={!formData.consentToCommunicate}
             >
@@ -484,7 +484,7 @@ function ClientDetails() {
           onClick={() => setShowClientInsights(false)}
         >
           <div
-            className="relative w-full max-w-2xl p-6 rounded-lg shadow-lg bg-slate-800 mx-4"
+            className="relative w-full max-w-2xl p-6 mx-4 rounded-lg shadow-lg bg-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
@@ -493,7 +493,7 @@ function ClientDetails() {
               </h2>
               <button
                 onClick={() => setShowClientInsights(false)}
-                className="text-gray-400 hover:text-white text-2xl font-bold"
+                className="text-2xl font-bold text-gray-400 hover:text-white"
               >
                 ×
               </button>
@@ -510,14 +510,14 @@ function ClientDetails() {
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        {/* <p className="text-gray-200 mb-2">
+                        {/* <p className="mb-2 text-gray-200">
                      {microInsights?.most_recent_micro_insight}
                     </p> */}
                         <div className="flex items-center justify-between">
-                          <span className="text-gray-400 text-sm">
+                          <span className="text-sm text-gray-400">
                             May 10, 2025 - Concern
                           </span>
-                          {/* <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
+                          {/* <button className="px-3 py-1 text-sm text-white transition-colors bg-red-500 rounded-full hover:bg-red-600">
                         Action Required
                       </button> */}
                         </div>
@@ -529,15 +529,15 @@ function ClientDetails() {
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <p className="text-gray-200 mb-2">
+                        <p className="mb-2 text-gray-200">
                           Client asked a question about medical records. Message
                           flagged for review.
                         </p>
                         <div className="flex items-center justify-between">
-                          <span className="text-gray-400 text-sm">
+                          <span className="text-sm text-gray-400">
                             May 18, 2025 - Flagged Message
                           </span>
-                          <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
+                          <button className="px-3 py-1 text-sm text-white transition-colors bg-red-500 rounded-full hover:bg-red-600">
                             Action Required
                           </button>
                         </div>
@@ -558,7 +558,7 @@ function ClientDetails() {
           onClick={() => setShowEditModal(false)}
         >
           <div
-            className="relative w-full max-w-4xl p-6 rounded-lg shadow-lg bg-slate-800 mx-4 mt-8 "
+            className="relative w-full max-w-4xl p-6 mx-4 mt-8 rounded-lg shadow-lg bg-slate-800 "
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mt-6">
@@ -567,7 +567,7 @@ function ClientDetails() {
               </h2>
               <button
                 onClick={() => setShowEditModal(false)}
-                className="text-gray-400 hover:text-white text-2xl font-bold"
+                className="text-2xl font-bold text-gray-400 hover:text-white"
               >
                 ×
               </button>
@@ -575,9 +575,9 @@ function ClientDetails() {
 
             <form onSubmit={handleEditSubmit} className="space-y-6">
               {/* Personal Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Full Name
                   </label>
                   <input
@@ -585,11 +585,11 @@ function ClientDetails() {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Phone Number
                   </label>
                   <input
@@ -597,11 +597,11 @@ function ClientDetails() {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handlePhoneChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Incident Date
                   </label>
                   <input
@@ -609,18 +609,18 @@ function ClientDetails() {
                     name="dateOfIncident"
                     value={formData.dateOfIncident}
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Gender
                   </label>
                   <select
                     value={formData.gender}
                     onChange={handleInputChange}
                     name="gender"
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
@@ -629,16 +629,16 @@ function ClientDetails() {
               </div>
 
               {/* Case Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Client Status
                   </label>
                   <select
                     value={formData.status}
                     name="status"
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Awaiting">Awaiting Consent</option>
                     <option value="Active">Active</option>
@@ -647,14 +647,14 @@ function ClientDetails() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Managing User(s)
                   </label>
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setIsManagingOpen((s) => !s)}
-                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-md p-3 text-left"
+                      className="w-full p-3 text-left text-white bg-gray-700 border border-gray-600 rounded-md"
                     >
                       {formData.managingUsers.length > 0
                         ? formData.managingUsers.join(", ") // Display pre-selected managing users as comma-separated
@@ -670,7 +670,7 @@ function ClientDetails() {
                           return (
                             <label
                               key={user.id}
-                              className="flex items-center gap-2 px-3 py-2 text-white hover:bg-slate-600 cursor-pointer"
+                              className="flex items-center gap-2 px-3 py-2 text-white cursor-pointer hover:bg-slate-600"
                             >
                               <input
                                 type="checkbox"
@@ -696,7 +696,7 @@ function ClientDetails() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Lawyer
                   </label>
                   <div className="relative">
@@ -704,7 +704,7 @@ function ClientDetails() {
                       name="lawyerName"
                       value={formData.lawyerName}
                       onChange={handleInputChange}
-                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
+                      className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-md appearance-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
                     >
                       <option value="" disabled>
                         Select a lawyer
@@ -718,7 +718,7 @@ function ClientDetails() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Scheduled Next Send
                   </label>
                   <input
@@ -737,22 +737,22 @@ function ClientDetails() {
                         scheduledTime: e.target.value,
                       }))
                     }
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
               {/* Communication Status */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Client Sentiment
                   </label>
                   <select
                     value={formData.sentiment}
                     name="sentiment"
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="positive">Positive</option>
                     <option value="neutral">Neutral</option>
@@ -760,14 +760,14 @@ function ClientDetails() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Risk Level
                   </label>
                   <select
                     value={formData.concernLevel}
                     name="concernLevel"
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -779,7 +779,7 @@ function ClientDetails() {
               {/* Case Notes */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     General Case Info
                   </label>
                   <textarea
@@ -787,11 +787,11 @@ function ClientDetails() {
                     name="generalCaseInfo"
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Injuries Sustained
                   </label>
                   <textarea
@@ -799,23 +799,23 @@ function ClientDetails() {
                     name="injuriesSustained"
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end space-x-3 pt-4 border-t border-gray-700">
+              <div className="flex justify-end pt-4 space-x-3 border-t border-gray-700">
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 text-gray-300 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
+                  className="px-4 py-2 text-gray-300 transition-colors bg-gray-700 rounded-lg hover:bg-gray-600"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleUpdate}
-                  className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="px-4 py-2 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
                 >
                   Save Changes
                 </button>

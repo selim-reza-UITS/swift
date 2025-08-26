@@ -31,6 +31,9 @@ import Client from "./Components/Dashboard/Admin/Client/Client.jsx";
 import LawFirm from "./Components/Dashboard/SuperAdmin/LawFirm/LawFirm.jsx";
 import { Toaster } from "react-hot-toast";
 import SetPassword from "./Components/Pages/SetPassword.jsx";
+import ConfirmNumber from "./Components/Pages/ConfirmNumber .jsx";
+import { Edit } from "lucide-react";
+import EditAndViewPart from "./Components/Dashboard/Admin/ChatWithDetails/EditAndViewPart.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login></Login>,
+  },
+  {
+    path: "/wa-health-data",
+    element: <ConfirmNumber></ConfirmNumber>,
   },
   {
     path: "/terms",
@@ -87,6 +94,10 @@ const router = createBrowserRouter([
       {
         path: "adminClient",
         element: <Client></Client>,
+      },
+      {
+        path: "admin/:id",
+        element: <EditAndViewPart></EditAndViewPart>,
       },
       {
         path: "my-firm",

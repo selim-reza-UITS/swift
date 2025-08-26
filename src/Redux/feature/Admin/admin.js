@@ -118,6 +118,10 @@ export const adminapi = api.injectEndpoints({
       }),
       invalidatesTags: ["Client"],
     }),
+       getClientById: builder.query({
+      query: (id) => `clients/${id}/detail/`, // Use the dynamic ID here
+      providesTags: ["intake"],
+    }),
   }),
 });
 
@@ -139,4 +143,5 @@ export const {
   useDeleteLawyerMutation,
   useDeleteClientMutation,
   useOptOutClientMutation,
+  useGetClientByIdQuery,
 } = adminapi;

@@ -186,7 +186,7 @@ const Client = ({ managers }) => {
                   : "Unknown"}
               </span>
 
-              <NavLink to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
+              <NavLink to={`/dashboard/admin/${client.id}`}>
                 <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700">
                   <FaEye />
                 </button>
