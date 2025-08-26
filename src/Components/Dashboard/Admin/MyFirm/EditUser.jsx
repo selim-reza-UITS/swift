@@ -139,7 +139,7 @@ const EditUser = ({ member, onClose, onSave }) => {
           </div>
 
           {/* Select Role (dropdown) */}
-          <div className="flex flex-col gap-1">
+          <div  className="flex flex-col gap-1">
             <label className="text-base poppins text-[#D1D5DB]">
               Select Role
             </label>

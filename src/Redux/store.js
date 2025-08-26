@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "./feature/auth/authSlice";
 import { api } from "./api/api";
+import notificationsReDucer from "./notificationsSlice";
 
 const persistConfig = {
   key: "root",
@@ -11,6 +12,7 @@ const persistConfig = {
 };
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
+  notifications: notificationsReDucer,
   auth: authReducer,
 });
 
