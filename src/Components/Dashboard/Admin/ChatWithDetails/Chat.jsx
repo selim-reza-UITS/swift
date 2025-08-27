@@ -1,71 +1,84 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { FaPaperPlane } from "react-icons/fa";
-import { User, Bot, AlertTriangle, Send, MessageSquare } from "lucide-react"; // Adjust imports according to your icons
+import { Send, MessageSquare, AlertTriangle } from "lucide-react";
+import { useSelector } from "react-redux";
 import {
-  useGetAllLawyerQuery,
-  useGetAllUserQuery,
-} from "../../../../Redux/api/intakeapi";
-import { useClientOptOutMutation } from "../../../../Redux/api/caseapi";
-import {
+  useCreateChatMutation,
+  useGetChatDetailsQuery,
   useGetClientByIdQuery,
   useGetMicroInsightsQuery,
   useUpdateClientStatusMutation,
 } from "../../../../Redux/feature/Admin/admin";
-
+import { set } from "react-hook-form";
+import dayjs from "dayjs";
+import avatar from "../../../../assets/5856.jpg";
+import avatar2 from "../../../../assets/43873.jpg";
 const Chat = () => {
   const params = useParams();
+  const clientId = params.id;
   const navigate = useNavigate();
-  const { data: client, isLoading, refetch } = useGetClientByIdQuery(params.id);
-  const { data: lawyersData } = useGetAllLawyerQuery();
-  const { data: usersData } = useGetAllUserQuery();
-  const [isPaused, setIsPaused] = useState(client?.isPaused);
-  const [isActive, setIsActive] = useState(client?.isActive);
-  const { data: microInsights } = useGetMicroInsightsQuery(params.id);
-  console.log("Micro Insights Data:", microInsights);
-
-  const [updateStatus,  { isLoading: isUpdating }] = useUpdateClientStatusMutation();
-
+  const { data: chatDetails, refetch: refetchChatDetails } =
+    useGetChatDetailsQuery(clientId);
+  console.log("Chat Details:", chatDetails);
+  const { data: client, refetch } = useGetClientByIdQuery(clientId);
+  const { data: microInsights } = useGetMicroInsightsQuery(clientId);
+  const SOCKET_URL = import.meta.env.VITE_CHAT_WS_URL; // ws://yourserver/ws/chat
+  const TOKEN = useSelector((state) => state.auth.access);
+  const [createChat] = useCreateChatMutation();
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([
-    {
-      from: "ai",
-      text: "Hi Sarah! This is your weekly check-in from Arviso. How are you feeling this week? Any new symptoms or concerns about your injury?",
-      time: "2 hours ago",
-    },
-    {
-      from: "user",
-      text: "Hi! I've been having more pain in my back lately, especially when I try to sleep. Should I be worried?",
-      time: "1 hour ago",
-    },
-    {
-      from: "admin",
-      text: "It’s best to see a doctor or healthcare professional to get it checked, especially if it’s affecting your sleep or daily activities.",
-      time: "1 hour ago",
-    },
-  ]);
+  const [socket, setSocket] = useState(null);
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phoneNumber: "",
-    managingUsers: [],
-    managingUsersIds: [],
-    gender: "Female",
-    dateOfIncident: "2024/01/15",
-    lawyerName: "",
-    injuriesSustained: "Lower back pain and stiffness.",
-    generalCaseInfo: "Client reported back pain after accident.",
-    consentToCommunicate: false,
-    sentiment: "Positive",
-    status: "",
-    scheduledTime: "",
-    concernLevel: "High",
-  });
+  const [updateStatus, { isLoading: isUpdating }] =
+    useUpdateClientStatusMutation();
 
-  const managingRef = useRef(null);
-  const [isManagingOpen, setIsManagingOpen] = useState(false);
-const handleToggle = async () => {
+  const [showClientInsights, setShowClientInsights] = useState(false);
+
+  // WebSocket connection
+  useEffect(() => {
+    if (!TOKEN) return;
+    const socket = new WebSocket(`${SOCKET_URL}${clientId}/?token=${TOKEN}`);
+    setSocket(socket);
+    socket.onopen = () => {
+      console.log("Connected to chat WebSocket server");
+    };
+    socket.onmessage = (event) => {
+      refetchChatDetails();
+      const data = JSON.parse(event.data);
+      console.log("Received message:", event);
+    };
+    socket.onclose = () => {
+      console.log("Disconnected from chat WebSocket server");
+    };
+  }, [TOKEN]);
+
+  const handleSendMessage = async () => {
+    const trimmed = message.trim();
+    if (!trimmed || !socket) return; // ✅ use socket state
+    try {
+      const res = await createChat({
+        to: client?.phone_number,
+        message: trimmed,
+      });
+      console.log("Message sent response:", res);
+    } catch (error) {
+      console.error("Error creating chat:", error);
+    }
+
+    setMessage("");
+  };
+  // 🔹 Add ref for auto-scroll
+  const messagesEndRef = useRef(null);
+
+  // 🔹 Auto scroll when chatDetails changes
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatDetails]);
+
+  const handleToggleStatus = async () => {
     if (!client) return;
 
     const newPaused = !client.is_paused;
@@ -78,7 +91,7 @@ const handleToggle = async () => {
         is_active: newActive,
       }).unwrap();
 
-      await refetch(); // ✅ server থেকে fresh data আনবে
+      await refetch();
 
       Swal.fire({
         icon: "success",
@@ -100,54 +113,6 @@ const handleToggle = async () => {
     }
   };
 
-  // Close managing dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (managingRef.current && !managingRef.current.contains(event.target)) {
-        setIsManagingOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePhoneChange = (e) => {
-    const raw = e.target.value || "";
-    const digits = raw.replace(/\D/g, "").slice(0, 10);
-    let formatted = "";
-    if (digits.length === 0) formatted = "";
-    else if (digits.length < 4) formatted = `(${digits}`;
-    else if (digits.length < 7)
-      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-    else
-      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
-        6,
-        10
-      )}`;
-    setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
-  };
-
-  const [showClientInsights, setShowClientInsights] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-
-  // Sending message
-  const handleSendMessage = () => {
-    const trimmed = message.trim();
-    if (!trimmed) return;
-    setMessages((prev) => [
-      ...prev,
-      { from: "admin", text: trimmed, time: "Just now" },
-    ]);
-    setMessage("");
-  };
-
-  // Update client info
-
   return (
     <div className="w-full lg:w-2/3 bg-[#0f172a] text-white flex flex-col rounded-md h-[700px]">
       {/* Header */}
@@ -156,12 +121,7 @@ const handleToggle = async () => {
           <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
             <MessageSquare className="w-4 h-4" />
           </div>
-          <div>
-            <h1 className="text-xl font-semibold">
-              {" "}
-              {client?.full_name || ""}
-            </h1>
-          </div>
+          <h1 className="text-xl font-semibold">{client?.full_name || ""}</h1>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -171,7 +131,7 @@ const handleToggle = async () => {
             Client Summary
           </button>
           <button
-            className={`px-3 py-1 text-sm rounded poppins ${
+            className={`px-3 py-1 text-sm rounded ${
               client?.concern_level === "High"
                 ? "bg-red-600 text-white"
                 : client?.concern_level === "Medium"
@@ -182,115 +142,94 @@ const handleToggle = async () => {
             {client?.concern_level || ""}
           </button>
 
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-3">
-      <button
-        onClick={handleToggle}
-        disabled={isUpdating}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-          client?.is_paused ? "bg-red-600" : "bg-green-600"
-        }`}
-      >
-        <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-            client?.is_paused ? "translate-x-6" : "translate-x-1"
-          }`}
-        />
-      </button>
-
-      <span
-        className={`text-sm font-medium ${
-          client?.is_paused ? "text-red-400" : "text-green-400"
-        }`}
-      >
-        {client?.is_paused ? "Paused" : "Active"}
-      </span>
-    </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div className="relative flex-1 p-6 overflow-y-auto h-[600px]">
-        {messages.map((msg, idx) => (
-          <div className="mb-6" key={idx}>
-            {msg.from === "user" ? (
-              <div className="flex items-start space-x-3">
-                <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full">
-                  <Bot className="w-4 h-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="w-auto p-4 bg-gray-700 rounded-lg">
-                    <p className="text-gray-300">{msg.text}</p>
-                  </div>
-                  <div className="flex items-center mt-2 space-x-2 text-xs text-gray-500">
-                    <span>AI Assistant</span>
-                    <span>•</span>
-                    <span>{msg.time}</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-start justify-end space-x-3">
-                <div className="flex justify-end flex-1">
-                  <div className="max-w-5xl p-4 bg-blue-600 rounded-lg">
-                    <p className="text-white">{msg.text}</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center w-8 h-8 bg-gray-600 rounded-full">
-                  <User className="w-4 h-4" />
-                </div>
-              </div>
-            )}
-            {msg.from !== "user" && (
-              <div className="flex items-center justify-end mt-2 space-x-2 text-xs text-gray-500">
-                <span>{formData.fullName || "Client"}</span>
-                <span>•</span>
-                <span>{msg.time}</span>
-              </div>
-            )}
-          </div>
-        ))}
-        {!formData.consentToCommunicate && (
-          <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
-            <p className="max-w-xl text-gray-300">
-              This client hasn’t completed the consent form. Messaging is
-              disabled.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Message Input */}
-      <div className="p-4 bg-gray-800 border-t border-gray-700">
-        <div className="flex items-center space-x-3">
-          <div className="flex-1">
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-              placeholder="Type your response..."
-              className="w-full p-3 text-white placeholder-gray-400 bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              rows={3}
-              disabled={!formData.consentToCommunicate}
-            />
-          </div>
           <button
-            className="p-3 transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={handleSendMessage}
-            disabled={!formData.consentToCommunicate}
+            onClick={handleToggleStatus}
+            disabled={isUpdating}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+              client?.is_paused ? "bg-red-600" : "bg-green-600"
+            }`}
           >
-            <Send className="w-5 h-5" />
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                client?.is_paused ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
           </button>
         </div>
       </div>
 
-      {/* Client Insights */}
+      {/* Messages */}
+      <div className="flex-1 p-6 space-y-4 overflow-y-auto">
+        {chatDetails?.map((msg) => {
+          const isClient = msg.sender === "client";
+          const isFirm = msg.sender === "firm";
+          const isAi = msg.sender === "ai";
+
+          return (
+            <div
+              key={msg.id}
+              className={`flex ${
+                isClient ? "justify-start" : "justify-end"
+              } items-end`}
+            >
+              {isClient && (
+                <img
+                  src={avatar}
+                  alt="Client"
+                  className="w-8 h-8 mr-2 rounded-full"
+                />
+              )}
+
+              <div
+                className={`p-3 rounded-lg max-w-[70%] break-words ${
+                  isClient
+                    ? "bg-gray-700 text-gray-300"
+                    : "bg-blue-600 text-white"
+                }`}
+              >
+                <p>{msg.content}</p>
+                <span className="block mt-1 text-xs text-gray-400">
+                  {dayjs(msg.received_at).format("hh:mm A")}
+                </span>
+              </div>
+
+              {!isClient && (
+                <img
+                  src={avatar2} 
+                  alt={isFirm ? "Firm" : "AI"}
+                  className="w-8 h-8 ml-2 rounded-full"
+                />
+              )}
+            </div>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="flex items-center p-4 space-x-3 bg-gray-800 border-t border-gray-700">
+        <textarea
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type your message..."
+          className="flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows={3}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSendMessage();
+            }
+          }}
+        />
+        <button
+          className="p-3 bg-blue-600 rounded-lg hover:bg-blue-700"
+          onClick={handleSendMessage}
+        >
+          <Send className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Client Insights Modal */}
       {showClientInsights && (
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60"
@@ -311,25 +250,20 @@ const handleToggle = async () => {
                 ×
               </button>
             </div>
-
             <div className="space-y-4">
               {!microInsights ? (
                 <p>No insights found for this client.</p>
               ) : (
-                <div className="space-y-4">
-                  <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <p className="mb-2 text-gray-200">
-                          {microInsights.most_recent_micro_insight}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-400">
-                            May 10, 2025 - Concern
-                          </span>
-                        </div>
-                      </div>
+                <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
+                  <div className="flex items-start space-x-3">
+                    <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="mb-2 text-gray-200">
+                        {microInsights.most_recent_micro_insight}
+                      </p>
+                      <span className="text-sm text-gray-400">
+                        May 10, 2025 - Concern
+                      </span>
                     </div>
                   </div>
                 </div>

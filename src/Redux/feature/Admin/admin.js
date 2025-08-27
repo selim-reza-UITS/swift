@@ -122,9 +122,25 @@ export const adminapi = api.injectEndpoints({
       query: (id) => `clients/${id}/detail/`, // Use the dynamic ID here
       providesTags: ["intake"],
     }),
+     getChatDetails: builder.query({
+      query: (id) => `chats/all-messages/${id}/`, // Use the dynamic ID here
+      providesTags: ["intake"],
+    }),
       getMicroInsights: builder.query({
       query: (id) => `chats/client/${id}/client-insights/`, // Use the dynamic ID here
       providesTags: ["Client", "intake"],
+    }),
+     deleteCase: builder.mutation({
+      query: ({ user_id, reassignment_option, new_managing_user_id }) => ({
+        url: `delete-user/reassign-clients/`,
+        method: "DELETE",
+        body: {
+          user_id,
+          reassignment_option,
+          new_managing_user_id,
+        },
+      }),
+      invalidatesTags: ["User"], // user list refresh
     }),
       updateClientStatus: builder.mutation({
       query: ({ id, is_paused, is_active }) => ({
@@ -133,6 +149,21 @@ export const adminapi = api.injectEndpoints({
         body: { is_paused, is_active },
       }),
       invalidatesTags: ["Client"], // cache refresh
+    }),
+      createChat: builder.mutation({
+      query: (body) => ({
+        url: "chats/send/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Lawyer"],
+    }),
+    // Managing user List
+       getManager: builder.query({
+      query: () => "managing-users/",
+
+      method: "GET",
+      providesTags: ["Case", "Users"],
     }),
 
   }),
@@ -159,5 +190,9 @@ export const {
   useOptOutClientMutation,
   useGetClientByIdQuery,
   useGetMicroInsightsQuery,
-  useUpdateClientStatusMutation
+  useUpdateClientStatusMutation,
+  useDeleteCaseMutation,
+  useGetManagerQuery,
+  useGetChatDetailsQuery,
+  useCreateChatMutation,
 } = adminapi;

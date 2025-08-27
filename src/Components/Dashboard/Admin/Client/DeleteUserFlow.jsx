@@ -1,22 +1,14 @@
 import React, { useState } from "react";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { useDeleteUserMutation } from "../../../../Redux/feature/Admin/admin";
 
-const DeleteUserFlow = ({ user, managers = [], onDelete }) => {
+const MemberCard = ({ data, managers = [], onView, onEdit }) => {
+  const [deleteUser] = useDeleteUserMutation();
   const [step, setStep] = useState(1);
   const [reassignOption, setReassignOption] = useState("");
   const [newManager, setNewManager] = useState("");
-  const fakeUser = {
-    id: "u123",
-    name: "John Doe",
-  };
 
-  const fakeManagers = [
-    { id: "m1", name: "Alice Johnson" },
-    { id: "m2", name: "Bob Smith" },
-    { id: "m3", name: "Charlie Brown" },
-  ];
-const  managers = fakeManagers;
-const user = fakeUser;
   const handleDeleteClick = () => {
     Swal.fire({
       icon: "warning",
@@ -30,14 +22,12 @@ const user = fakeUser;
       confirmButtonColor: "#6366F1",
       cancelButtonColor: "#6B7280",
     }).then((result) => {
-      if (result.isConfirmed) {
-        setStep(2);
-      }
+      if (result.isConfirmed) setStep(2);
     });
   };
 
-  const handleConfirm = () => {
-    if (!user?.id) {
+  const handleConfirm = async () => {
+    if (!data?.id) {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -49,54 +39,73 @@ const user = fakeUser;
       return;
     }
 
+    // Payload structure backend অনুযায়ী
     const payload = {
-      option: reassignOption,
-      newManager: reassignOption.includes("Move") ? newManager : null,
+      user_id: data.id,
+      reassignment_option:
+        reassignOption === "Move all clients"
+          ? "move_all_clients"
+          : reassignOption === "Move solo clients"
+          ? "move_only_solo_clients"
+          : "opt_out_clients",
+      new_managing_user_id: reassignOption.includes("Move") ? newManager : null,
     };
 
-    onDelete(user.id, payload)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Deleted!",
-          text: "User deletion flow completed.",
-          background: "#0f172a",
-          color: "#ffffff",
-          confirmButtonColor: "#6366F1",
-        });
-        setStep(1);
-        setReassignOption("");
-        setNewManager("");
-      })
-      .catch(() => {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "User could not be deleted.",
-          background: "#0f172a",
-          color: "#ffffff",
-          confirmButtonColor: "#6366F1",
-        });
+    try {
+      await deleteUser(payload).unwrap();
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "User deletion flow completed.",
+        background: "#0f172a",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1",
       });
+      // Reset state
+      setStep(1);
+      setReassignOption("");
+      setNewManager("");
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "User could not be deleted.",
+        background: "#0f172a",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
   };
 
   return (
-    <div>
-      {/* Trigger Button */}
-      <button
-        onClick={handleDeleteClick}
-        className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-500"
-      >
-        Delete User
-      </button>
+    <>
+      <div className="bg-[#1e293b] p-4 rounded flex items-center justify-between poppins text-[#FFFFFF]">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center w-12 h-12 text-lg font-bold text-white bg-purple-600 rounded-full">
+            {data.image || data.name?.[0]}
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold">{data.name}</h3>
+            <p className="mt-1 mb-1 text-sm font-normal">{data.email}</p>
+            <p className="text-sm font-normal">Role: {data.role}</p>
+          </div>
+        </div>
+
+        <div className="flex gap-4 text-xl text-gray-400">
+          <FaEye onClick={onView} className="cursor-pointer hover:text-white" />
+          <FaEdit onClick={onEdit} className="cursor-pointer hover:text-white" />
+          <FaTrash
+            onClick={handleDeleteClick}
+            className="cursor-pointer hover:text-red-500"
+          />
+        </div>
+      </div>
 
       {/* Step 2: Reassignment Form */}
       {step === 2 && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
-          <div className="bg-[#0f172a] w-full max-w-md p-6 rounded-lg shadow-lg text-white">
-            <h2 className="mb-4 text-xl font-semibold text-center">
-              Reassign Clients
-            </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-[#0f172a] p-6 rounded-lg text-white w-[400px]">
+            <h2 className="mb-4 text-lg font-semibold">Reassign Clients</h2>
 
             <div className="flex flex-col gap-3 mb-4">
               <label className="flex items-center gap-2">
@@ -141,7 +150,6 @@ const user = fakeUser;
               </label>
             </div>
 
-            {/* Show new manager dropdown only if Move option is selected */}
             {reassignOption.includes("Move") && (
               <select
                 value={newManager}
@@ -159,7 +167,11 @@ const user = fakeUser;
 
             <div className="flex justify-end gap-3 mt-4">
               <button
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  setStep(1);
+                  setReassignOption("");
+                  setNewManager("");
+                }}
                 className="px-4 py-2 bg-gray-600 rounded hover:bg-gray-500"
               >
                 Cancel
@@ -178,8 +190,8 @@ const user = fakeUser;
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
-export default DeleteUserFlow;
+export default MemberCard;
