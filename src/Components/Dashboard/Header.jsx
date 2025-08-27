@@ -3,13 +3,19 @@ import { IoNotificationsSharp } from "react-icons/io5";
 import getRole from "../../utils/role";
 import Feedback from "./../Pages/Feedback";
 import Notifications from "../Shared/Notifications";
-
+// import { toast } from "react-toastify"; // make sure react-toastify installed
+import { useDispatch, useSelector } from "react-redux";
+import { Toaster, toast } from "react-hot-toast";
 const Header = () => {
   const role = getRole();
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [socket, setSocket] = useState(null);
   const notificationRef = useRef(null); // ref for notification popup
   const allowedRoles = ["admin", "CaseManager", "IntekSpecialist"];
+  const SOCKET_URL = import.meta.env.VITE_WS_URL;
+  const token = useSelector((state) => state.auth.access);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -19,12 +25,57 @@ const Header = () => {
         setShowNotifications(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // WebSocket connection
+  useEffect(() => {
+    if (!token) return;
+
+    // ✅ Correct query param format
+    const newSocket = new WebSocket(`${SOCKET_URL}?token=${token}`);
+    setSocket(newSocket);
+
+    newSocket.onopen = () => {
+      console.log("Connected to WebSocket server");
+    };
+
+    newSocket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Received Notification:", data);
+
+        const title = data?.title || "New Notification";
+        console.log("Notification Title:", title);
+        const message = data?.message || "";
+        console.log("Notification Message:", message);
+
+        toast.success(`📢 ${title}`, {
+          style: { background: "#0f172a", color: "#fff" },
+        });
+
+        // dispatch(refetchCount());
+      } catch (err) {
+        console.error("WebSocket message parsing error:", err);
+      }
+    };
+
+    newSocket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    newSocket.onerror = (err) => {
+      console.error("WebSocket error:", err);
+    };
+
+    return () => {
+      newSocket.close(); // clean up
+    };
+  }, [token]);
+
   if (!allowedRoles.includes(role) && role !== "superadmin") return null;
 
   return (
@@ -38,7 +89,6 @@ const Header = () => {
           onClick={() => setShowNotifications(!showNotifications)}
         >
           <IoNotificationsSharp className="text-2xl text-purple-500 cursor-pointer" />
-          {/* Notification Count Badge */}
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
             4
           </span>
@@ -71,6 +121,15 @@ const Header = () => {
           }}
         />
       )}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1e293b", // slate-800
+            color: "#fff",
+          },
+        }}
+      />
     </div>
   );
 };

@@ -22,6 +22,13 @@ export const shareapi = api.injectEndpoints({
         body: { old_password, new_password },
       }),
     }),
+     updateNotificationPreferences: builder.mutation({
+      query: (preferences) => ({
+        url: "profile/update/",
+        method: "PATCH",
+        body: preferences,
+      }),
+    }),
   }),
 });
 
@@ -29,4 +36,5 @@ export const {
   useChangePasswordMutation,
   useUpdateNameMutation,
   useGetProfileQuery,
+  useUpdateNotificationPreferencesMutation
 } = shareapi;
