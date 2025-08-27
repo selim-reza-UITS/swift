@@ -4,15 +4,16 @@ import Swal from "sweetalert2";
 import { Send, MessageSquare, AlertTriangle } from "lucide-react";
 import { useSelector } from "react-redux";
 import {
-    useCreateChatMutation,
+  useCreateChatMutation,
   useGetChatDetailsQuery,
   useGetClientByIdQuery,
   useGetMicroInsightsQuery,
   useUpdateClientStatusMutation,
 } from "../../../../Redux/feature/Admin/admin";
 import { set } from "react-hook-form";
-
-
+import dayjs from "dayjs";
+import avatar from "../../../../assets/5856.jpg";
+import avatar2 from "../../../../assets/43873.jpg";
 const Chat = () => {
   const params = useParams();
   const clientId = params.id;
@@ -67,6 +68,15 @@ const Chat = () => {
 
     setMessage("");
   };
+  // 🔹 Add ref for auto-scroll
+  const messagesEndRef = useRef(null);
+
+  // 🔹 Auto scroll when chatDetails changes
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatDetails]);
 
   const handleToggleStatus = async () => {
     if (!client) return;
@@ -149,25 +159,51 @@ const Chat = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-6 overflow-y-auto">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`mb-4 flex ${
-              msg.from === "admin" ? "justify-end" : "justify-start"
-            }`}
-          >
+      <div className="flex-1 p-6 space-y-4 overflow-y-auto">
+        {chatDetails?.map((msg) => {
+          const isClient = msg.sender === "client";
+          const isFirm = msg.sender === "firm";
+          const isAi = msg.sender === "ai";
+
+          return (
             <div
-              className={`p-3 rounded-lg max-w-[70%] break-words ${
-                msg.from === "admin"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-700 text-gray-300"
-              }`}
+              key={msg.id}
+              className={`flex ${
+                isClient ? "justify-start" : "justify-end"
+              } items-end`}
             >
-              {msg.text}
+              {isClient && (
+                <img
+                  src={avatar}
+                  alt="Client"
+                  className="w-8 h-8 mr-2 rounded-full"
+                />
+              )}
+
+              <div
+                className={`p-3 rounded-lg max-w-[70%] break-words ${
+                  isClient
+                    ? "bg-gray-700 text-gray-300"
+                    : "bg-blue-600 text-white"
+                }`}
+              >
+                <p>{msg.content}</p>
+                <span className="block mt-1 text-xs text-gray-400">
+                  {dayjs(msg.received_at).format("hh:mm A")}
+                </span>
+              </div>
+
+              {!isClient && (
+                <img
+                  src={avatar2} 
+                  alt={isFirm ? "Firm" : "AI"}
+                  className="w-8 h-8 ml-2 rounded-full"
+                />
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
