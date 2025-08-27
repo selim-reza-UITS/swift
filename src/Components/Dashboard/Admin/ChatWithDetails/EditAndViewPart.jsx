@@ -6,13 +6,13 @@ import { useGetClientByIdQuery } from "../../../../Redux/feature/Admin/admin";
 
 const EditAndViewPart = () => {
   const params = useParams();
-  // ধরো client fetch
+
   const { data: client, isLoading: clientLoading } = useGetClientByIdQuery(
     params.id
   );
 
-  // ধরো chat এও data লাগছে (dummy loading দেখানোর জন্য)
-  const chatLoading = false; // পরে এখানে chat এর জন্যও loading ধরতে পারবে
+
+  const chatLoading = false;
 
   if (clientLoading || chatLoading) {
     return (
