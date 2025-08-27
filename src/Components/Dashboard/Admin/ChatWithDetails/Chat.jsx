@@ -188,7 +188,7 @@ const handleToggle = async () => {
         onClick={handleToggle}
         disabled={isUpdating}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-          client?.is_paused ? "bg-red-600" : "bg-green-600"
+          client?.is_paused ? "bg-red-600" : "bg-green-600 "
         }`}
       >
         <span
