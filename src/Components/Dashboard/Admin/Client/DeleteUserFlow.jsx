@@ -5,7 +5,18 @@ const DeleteUserFlow = ({ user, managers = [], onDelete }) => {
   const [step, setStep] = useState(1);
   const [reassignOption, setReassignOption] = useState("");
   const [newManager, setNewManager] = useState("");
+  const fakeUser = {
+    id: "u123",
+    name: "John Doe",
+  };
 
+  const fakeManagers = [
+    { id: "m1", name: "Alice Johnson" },
+    { id: "m2", name: "Bob Smith" },
+    { id: "m3", name: "Charlie Brown" },
+  ];
+const  managers = fakeManagers;
+const user = fakeUser;
   const handleDeleteClick = () => {
     Swal.fire({
       icon: "warning",
@@ -14,16 +25,27 @@ const DeleteUserFlow = ({ user, managers = [], onDelete }) => {
       showCancelButton: true,
       confirmButtonText: "Continue to reassignment",
       cancelButtonText: "Cancel",
+      background: "#0f172a",
+      color: "#ffffff",
+      confirmButtonColor: "#6366F1",
+      cancelButtonColor: "#6B7280",
     }).then((result) => {
       if (result.isConfirmed) {
-        setStep(2); // move to reassignment step
+        setStep(2);
       }
     });
   };
 
   const handleConfirm = () => {
     if (!user?.id) {
-      Swal.fire("Error", "User ID not found", "error");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "User ID not found",
+        background: "#0f172a",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1",
+      });
       return;
     }
 
@@ -32,70 +54,89 @@ const DeleteUserFlow = ({ user, managers = [], onDelete }) => {
       newManager: reassignOption.includes("Move") ? newManager : null,
     };
 
-    // Call the onDelete function passed as prop
     onDelete(user.id, payload)
       .then(() => {
-        Swal.fire("Deleted!", "User deletion flow completed.", "success");
+        Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "User deletion flow completed.",
+          background: "#0f172a",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1",
+        });
         setStep(1);
         setReassignOption("");
         setNewManager("");
       })
       .catch(() => {
-        Swal.fire("Error", "User could not be deleted.", "error");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "User could not be deleted.",
+          background: "#0f172a",
+          color: "#ffffff",
+          confirmButtonColor: "#6366F1",
+        });
       });
   };
 
   return (
     <div>
-      {/* Trigger button */}
+      {/* Trigger Button */}
       <button
         onClick={handleDeleteClick}
-        className="text-red-500 hover:text-red-700"
+        className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-500"
       >
         Delete User
       </button>
 
       {/* Step 2: Reassignment Form */}
       {step === 2 && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-          <div className="bg-[#0f172a] p-6 rounded-lg text-white w-[400px]">
-            <h2 className="mb-4 text-lg font-semibold">Reassign Clients</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
+          <div className="bg-[#0f172a] w-full max-w-md p-6 rounded-lg shadow-lg text-white">
+            <h2 className="mb-4 text-xl font-semibold text-center">
+              Reassign Clients
+            </h2>
 
             <div className="flex flex-col gap-3 mb-4">
-              <label>
+              <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="reassignOption"
                   value="Move all clients"
                   onChange={(e) => setReassignOption(e.target.value)}
-                />{" "}
+                  className="accent-blue-500"
+                />
                 Move ALL clients to another manager
               </label>
-              <label>
+              <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="reassignOption"
                   value="Move solo clients"
                   onChange={(e) => setReassignOption(e.target.value)}
-                />{" "}
+                  className="accent-blue-500"
+                />
                 Move only the clients this user managed alone
               </label>
-              <label>
+              <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="reassignOption"
                   value="Keep co-managed"
                   onChange={(e) => setReassignOption(e.target.value)}
-                />{" "}
+                  className="accent-blue-500"
+                />
                 Co-managed clients keep other manager; remove this user
               </label>
-              <label>
+              <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="reassignOption"
                   value="Opt-out solo clients"
                   onChange={(e) => setReassignOption(e.target.value)}
-                />{" "}
+                  className="accent-blue-500"
+                />
                 Opt-out the clients this user managed alone
               </label>
             </div>
@@ -105,7 +146,7 @@ const DeleteUserFlow = ({ user, managers = [], onDelete }) => {
               <select
                 value={newManager}
                 onChange={(e) => setNewManager(e.target.value)}
-                className="w-full p-2 rounded-lg bg-[#1e293b]"
+                className="w-full p-2 rounded bg-[#1e293b] text-white border border-gray-600"
               >
                 <option value="">Select new manager</option>
                 {managers.map((m) => (
