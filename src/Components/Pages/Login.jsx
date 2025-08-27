@@ -9,8 +9,6 @@ import { setCredentials } from "../../Redux/feature/auth/authSlice";
 import toast from "react-hot-toast";
 import { useLoginMutation } from "../../Redux/api/authapi";
 
-
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -68,7 +66,9 @@ export default function Login() {
       );
 
       setMessage(`Logged in as ${role}`);
+      
       navigate("/dashboard");
+      window.location.reload();
     } catch (error) {
       toast.error(error?.data?.detail[0] || "Login failed.");
       setMessage("Login failed. Please try again.");

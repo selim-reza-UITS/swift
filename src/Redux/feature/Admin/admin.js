@@ -122,7 +122,21 @@ export const adminapi = api.injectEndpoints({
       query: (id) => `clients/${id}/detail/`, // Use the dynamic ID here
       providesTags: ["intake"],
     }),
+      getMicroInsights: builder.query({
+      query: (id) => `chats/client/${id}/client-insights/`, // Use the dynamic ID here
+      providesTags: ["Client", "intake"],
+    }),
+      updateClientStatus: builder.mutation({
+      query: ({ id, is_paused, is_active }) => ({
+        url: `clients/${id}/update/`,
+        method: "PATCH",
+        body: { is_paused, is_active },
+      }),
+      invalidatesTags: ["Client"], // cache refresh
+    }),
+
   }),
+  
 });
 
 export const {
@@ -144,4 +158,6 @@ export const {
   useDeleteClientMutation,
   useOptOutClientMutation,
   useGetClientByIdQuery,
+  useGetMicroInsightsQuery,
+  useUpdateClientStatusMutation
 } = adminapi;

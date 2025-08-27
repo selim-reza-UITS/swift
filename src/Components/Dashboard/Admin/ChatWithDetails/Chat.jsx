@@ -2,26 +2,30 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaPaperPlane } from "react-icons/fa";
-import { User, Bot, AlertTriangle, Send } from "lucide-react"; // Adjust imports according to your icons
+import { User, Bot, AlertTriangle, Send, MessageSquare } from "lucide-react"; // Adjust imports according to your icons
 import {
   useGetAllLawyerQuery,
   useGetAllUserQuery,
 } from "../../../../Redux/api/intakeapi";
+import { useClientOptOutMutation } from "../../../../Redux/api/caseapi";
 import {
-  useClientOptOutMutation,
+  useGetClientByIdQuery,
   useGetMicroInsightsQuery,
-} from "../../../../Redux/api/caseapi";
+  useUpdateClientStatusMutation,
+} from "../../../../Redux/feature/Admin/admin";
 
 const Chat = () => {
   const params = useParams();
   const navigate = useNavigate();
-
+  const { data: client, isLoading, refetch } = useGetClientByIdQuery(params.id);
   const { data: lawyersData } = useGetAllLawyerQuery();
   const { data: usersData } = useGetAllUserQuery();
-
+  const [isPaused, setIsPaused] = useState(client?.isPaused);
+  const [isActive, setIsActive] = useState(client?.isActive);
   const { data: microInsights } = useGetMicroInsightsQuery(params.id);
+  console.log("Micro Insights Data:", microInsights);
 
-  const [clientOptOut] = useClientOptOutMutation();
+  const [updateStatus,  { isLoading: isUpdating }] = useUpdateClientStatusMutation();
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
@@ -61,6 +65,40 @@ const Chat = () => {
 
   const managingRef = useRef(null);
   const [isManagingOpen, setIsManagingOpen] = useState(false);
+const handleToggle = async () => {
+    if (!client) return;
+
+    const newPaused = !client.is_paused;
+    const newActive = !newPaused;
+
+    try {
+      await updateStatus({
+        id: client.id,
+        is_paused: newPaused,
+        is_active: newActive,
+      }).unwrap();
+
+      await refetch(); // ✅ server থেকে fresh data আনবে
+
+      Swal.fire({
+        icon: "success",
+        title: "Status Updated",
+        text: newPaused ? "Client Paused" : "Client Active",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: error?.data?.message || "Something went wrong",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    }
+  };
 
   // Close managing dropdown when clicking outside
   useEffect(() => {
@@ -111,22 +149,63 @@ const Chat = () => {
   // Update client info
 
   return (
-    <div className="w-full lg:w-2/3 bg-[#0f172a] text-white flex flex-col rounded-md h-[600px]">
+    <div className="w-full lg:w-2/3 bg-[#0f172a] text-white flex flex-col rounded-md h-[700px]">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <h2 className="text-lg font-semibold">
-          {formData.fullName || "Client"}
-        </h2>
+        <div className="flex items-center">
+          <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
+            <MessageSquare className="w-4 h-4" />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold">
+              {" "}
+              {client?.full_name || ""}
+            </h1>
+          </div>
+        </div>
         <div className="flex items-center gap-2">
-          <button className="px-3 py-1 text-xs bg-gray-700 rounded">
+          <button
+            onClick={() => setShowClientInsights(true)}
+            className="px-3 py-1 text-xs bg-gray-700 rounded"
+          >
             Client Summary
           </button>
-          <button className="px-3 py-1 text-xs bg-yellow-600 rounded">
-            Medium Risk
+          <button
+            className={`px-3 py-1 text-sm rounded poppins ${
+              client?.concern_level === "High"
+                ? "bg-red-600 text-white"
+                : client?.concern_level === "Medium"
+                ? "bg-yellow-600 text-black"
+                : "bg-green-600 text-white"
+            }`}
+          >
+            {client?.concern_level || ""}
           </button>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-xs">Active</span>
+
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3">
+      <button
+        onClick={handleToggle}
+        disabled={isUpdating}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+          client?.is_paused ? "bg-red-600" : "bg-green-600"
+        }`}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+            client?.is_paused ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </button>
+
+      <span
+        className={`text-sm font-medium ${
+          client?.is_paused ? "text-red-400" : "text-green-400"
+        }`}
+      >
+        {client?.is_paused ? "Paused" : "Active"}
+      </span>
+    </div>
           </div>
         </div>
       </div>

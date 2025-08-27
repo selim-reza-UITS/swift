@@ -6,6 +6,7 @@ import Notifications from "../Shared/Notifications";
 // import { toast } from "react-toastify"; // make sure react-toastify installed
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster, toast } from "react-hot-toast";
+import { useGetNotificationsQuery } from "../../Redux/feature/Shared/Share";
 const Header = () => {
   const role = getRole();
   const dispatch = useDispatch();
@@ -14,8 +15,11 @@ const Header = () => {
   const [socket, setSocket] = useState(null);
   const notificationRef = useRef(null); // ref for notification popup
   const allowedRoles = ["admin", "CaseManager", "IntekSpecialist"];
+  const { data: notifications, refetch } = useGetNotificationsQuery();
+  console.log("Notifications:", notifications);
   const SOCKET_URL = import.meta.env.VITE_WS_URL;
   const token = useSelector((state) => state.auth.access);
+  const count = notifications?.all_notifications?.length || 0;
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -56,7 +60,7 @@ const Header = () => {
         toast.success(`📢 ${title}`, {
           style: { background: "#0f172a", color: "#fff" },
         });
-
+        refetch();
         // dispatch(refetchCount());
       } catch (err) {
         console.error("WebSocket message parsing error:", err);
@@ -89,13 +93,18 @@ const Header = () => {
           onClick={() => setShowNotifications(!showNotifications)}
         >
           <IoNotificationsSharp className="text-2xl text-purple-500 cursor-pointer" />
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-            4
-          </span>
+          {count > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+              {count}
+            </span>
+          )}
 
           {showNotifications && (
             <div ref={notificationRef}>
-              <Notifications onClose={() => setShowNotifications(false)} />
+              <Notifications
+                notifications={notifications?.all_notifications || []}
+                onClose={() => setShowNotifications(false)}
+              />
             </div>
           )}
         </div>
@@ -121,15 +130,7 @@ const Header = () => {
           }}
         />
       )}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: "#1e293b", // slate-800
-            color: "#fff",
-          },
-        }}
-      />
+      <Toaster />
     </div>
   );
 };

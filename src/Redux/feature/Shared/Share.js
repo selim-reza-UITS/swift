@@ -1,4 +1,5 @@
 import { api } from "../../api/api";
+import { use } from 'react';
 
 export const shareapi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,6 +29,12 @@ export const shareapi = api.injectEndpoints({
         method: "PATCH",
         body: preferences,
       }),
+         
+    }),
+     getNotifications: builder.query({
+      query: () => "notifications-list/",
+
+      method: "GET",
     }),
   }),
 });
@@ -36,5 +43,6 @@ export const {
   useChangePasswordMutation,
   useUpdateNameMutation,
   useGetProfileQuery,
-  useUpdateNotificationPreferencesMutation
+  useUpdateNotificationPreferencesMutation,
+  useGetNotificationsQuery,
 } = shareapi;
