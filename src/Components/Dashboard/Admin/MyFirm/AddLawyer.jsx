@@ -20,7 +20,21 @@ const AddLawyer = ({ onClose }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+ const handlePhoneChange = (e) => {
+    const raw = e.target.value || "";
+    const digits = raw.replace(/\D/g, "").slice(0, 10);
+    let formatted = "";
+    if (digits.length === 0) formatted = "";
+    else if (digits.length < 4) formatted = `(${digits}`;
+    else if (digits.length < 7)
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    else
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
+        6,
+        10
+      )}`;
+    setFormData((prev) => ({ ...prev, phone: formatted }));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -96,7 +110,7 @@ const AddLawyer = ({ onClose }) => {
             name="phone"
             placeholder="Phone*"
             value={formData.phone}
-            onChange={handleChange}
+            onChange={handlePhoneChange}
             required
             className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
           />

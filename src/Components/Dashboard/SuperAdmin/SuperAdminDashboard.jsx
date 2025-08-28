@@ -9,11 +9,12 @@ import { FaPlus, FaSync, FaUpload } from "react-icons/fa";
 import { BsQuestionCircle } from "react-icons/bs";
 import { MdSettingsSuggest } from "react-icons/md";
 import AddLawFirm from "./LawFirm/AddLawFirm";
-import { useGetDashboardQuery } from "../../../Redux/feature/SuperAdmin/superAdmin";
+import { useGetFirmDashboardQuery } from "../../../Redux/feature/SuperAdmin/superAdmin";
+
 
 const SuperAdminDashboard = () => {
   const [activeIndex, setActiveIndex] = React.useState(null);
-  const { data: dashboard, refetch } = useGetDashboardQuery();
+  const { data: dashboard, refetch } = useGetFirmDashboardQuery();
   console.log(dashboard, "dashboard");
   const statsData = [
     { title: "Active Users", value: dashboard?.active_users || 0 },

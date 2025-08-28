@@ -17,6 +17,7 @@ import {
   useGetDashboardQuery,
   useGetFirmChartQuery,
   useGetLawyerQuery,
+  useGetManagerQuery,
 } from "../../../../Redux/feature/Admin/admin";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
@@ -35,6 +36,7 @@ const MyFirm = () => {
 
   const { data: firmScores } = useGetFirmChartQuery();
   const { data: firm, isLoading: isMembersLoading, refetch } = useGetDashboardQuery();
+    const {data:managers , isLoading: managersLoading, isError: managersError} =  useGetManagerQuery();
   const { data: lawyerApiData = [], isLoading, isError } = useGetLawyerQuery();
 
   const firmStats = {
@@ -46,35 +48,24 @@ const MyFirm = () => {
 
   // API gives direct array of lawyers
   const lawyerList = Array.isArray(lawyerApiData) ? lawyerApiData : [];
-  const memberList = React.useMemo(() => {
-    if (!firm) return [];
+const memberList = React.useMemo(() => {
+  if (!managers) return [];
 
-    const caseManagers = firm.case_managers.map((member) => ({
-      id: member.id,
-      name: member.name,
-      email: member.email,
-      role: member.role,
-      image: member.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("") // initials like "JD" for "John Doe"
-        .toUpperCase(), // default placeholder image
-    }));
+  const formattedManagers = managers.map((member) => ({
+    id: member.id,
+    name: member.name,
+    email: member.email,
+    role: member.role,
+    image: member.name
+      .split(" ")
+      .map((n) => n[0])
+      .join("") // initials like "JD"
+      .toUpperCase(),
+  }));
 
-    const intakeSpecialists = firm.intake_specialists.map((member) => ({
-      id: member.id,
-      name: member.name,
-      email: member.email,
-      role: member.role,
-      image: member.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("") // initials like "NP" for "Nina Patel"
-        .toUpperCase(), // default placeholder image
-    }));
+  return formattedManagers;
+}, [managers]);
 
-    return [...caseManagers, ...intakeSpecialists];
-  }, [firm]);
 
   const filteredLawyers = lawyerList.filter((lawyer) =>
     lawyer.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -98,6 +89,7 @@ const MyFirm = () => {
     indexOfFirstMember,
     indexOfLastMember
   );
+  console.log("Members in MyFirm:", currentMembers);
 
   const handleAddClick = () => {
     if (activeTab === "lawyers") {

@@ -10,7 +10,7 @@ export const superAdminApi = api.injectEndpoints({
       }),
       invalidatesTags: ["LawFirm"],
     }),
-    getDashboard: builder.query({
+    getFirmDashboard: builder.query({
       query: () => "firms/statistics/",
 
       method: "GET",
@@ -63,7 +63,7 @@ export const superAdminApi = api.injectEndpoints({
 
 export const {
   useCreateLawFirmMutation,
-  useGetDashboardQuery,
+  useGetFirmDashboardQuery,
   useGetLawFirmQuery,
   useUpdateLawFirmStatusMutation,
   useUpdateLawFirmMutation,

@@ -150,6 +150,16 @@ export const adminapi = api.injectEndpoints({
       }),
       invalidatesTags: ["Client"], // cache refresh
     }),
+     updateOpt: builder.mutation({
+      query: ({ id, 
+        opt_out
+      }) => ({
+        url: `clients/${id}/update/`,
+        method: "PATCH",
+        body: {opt_out },
+      }),
+      invalidatesTags: ["Client"], // cache refresh
+    }),
       createChat: builder.mutation({
       query: (body) => ({
         url: "chats/send/",
@@ -195,4 +205,5 @@ export const {
   useGetManagerQuery,
   useGetChatDetailsQuery,
   useCreateChatMutation,
+  useUpdateOptMutation,
 } = adminapi;

@@ -12,8 +12,8 @@ const MemberCard = ({ data,  onView, onEdit }) => {
   const [step, setStep] = useState(1);
   const [reassignOption, setReassignOption] = useState("");
   const [newManager, setNewManager] = useState("");
-  const {data:managers , isLoading: managersLoading, isError: managersError} =  useGetManagerQuery();
-  console.log("Managers in MemberCard:", managers);
+
+
   const handleDeleteClick = () => {
     // Step 1 popup
     Swal.fire({
