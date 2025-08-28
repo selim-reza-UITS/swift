@@ -7,7 +7,7 @@ import { HiMiniUserGroup } from "react-icons/hi2";
 import { IoMdSettings } from "react-icons/io";
 import { Plus } from "lucide-react";
 import AddClientForm from "../../Shared/AddClientForm";
-
+import "./sidebar.css";
 const CaseMangerSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSettingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
@@ -49,12 +49,12 @@ const CaseMangerSidebar = () => {
               className="block text-teal-600"
               href="#"
             >
-              <img src={logo} alt="" className="" />
+            <img src={logo} alt="" className="w-[50px] h-[50px]" />
             </Link>
           </div>
         </Link>
         {/* Menu Items */}
-        <nav className="flex flex-col  text-[#364636] mt-9">
+        <nav className="flex flex-col  text-[#9CA3AF] mt-9">
           <NavLink
             to="/dashboard/caseManager"
             className="flex items-center justify-between w-[280px]"
@@ -65,11 +65,7 @@ const CaseMangerSidebar = () => {
               {/* Main Button Area */}
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-centter
-                  ${
-                    isActiveDashboard
-                      ? "bg-[#FFFFFF] text-black rounded-xl"
-                      : "text-[#9CA3AF]"
-                  }`}
+                 }`}
               >
                 <VscGraphLine className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">Dashboard</h1>
@@ -83,11 +79,7 @@ const CaseMangerSidebar = () => {
             <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveClient
-                      ? "bg-[#FFFFFF] text-black rounded-xl"
-                      : "text-[#9CA3AF]"
-                  }`}
+                  `}
               >
                 <HiMiniUserGroup className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">Clients</h1>
@@ -101,35 +93,21 @@ const CaseMangerSidebar = () => {
             <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveClient
-                      ? "bg-[#FFFFFF] text-black rounded-xl"
-                      : "text-[#9CA3AF]"
-                  }`}
+                  `}
               >
                 <IoMdSettings className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">Settings</h1>
               </div>
             </div>
           </NavLink>
-          <NavLink
-            onClick={() => setShowAddClientModal(true)}
-            className="flex items-center justify-between w-[280px]"
-          >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
-              <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveClient
-                      ? "bg-[#FFFFFF] text-black rounded-xl"
-                      : "text-[#9CA3AF]"
-                  }`}
-              >
+          <Link onClick={() => setShowAddClientModal(true)}>
+            <div className="flex items-center justify-between  mt-10 font-semibold p-2 w-full">
+              <button className="px-4 flex items-center justify-center gap-2 py-2 text-sm font-medium mx-4 text-white rounded-md bg-gradient-to-r w-full from-purple-500 to-blue-600">
                 <Plus className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">New Client</h1>
-              </div>
+              </button>
             </div>
-          </NavLink>
+          </Link>
           {showAddClientModal && (
             <div
               className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-60"

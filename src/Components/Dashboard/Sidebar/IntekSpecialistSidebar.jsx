@@ -1,5 +1,6 @@
 import { FaSignOutAlt } from "react-icons/fa";
 import { Plus } from "lucide-react";
+import "./sidebar.css";
 
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { VscGraphLine } from "react-icons/vsc";
@@ -51,7 +52,7 @@ const IntekSpecialistSidebar = () => {
         <Link to={"/dashboard/intakeSpecialist"}>
           <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
             <a className="block" href="#">
-              <img src={logo} alt="" className="" />
+            <img src={logo} alt="" className="w-[50px] h-[50px]" />
             </a>
           </div>
         </Link>
@@ -67,35 +68,14 @@ const IntekSpecialistSidebar = () => {
               {/* Main Button Area */}
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveDashboard
-                      ? " rounded-xl"
-                      : ""
-                  }`}
+                  `}
               >
                 <VscGraphLine className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">Dashboard</h1>
               </div>
             </div>
           </NavLink>
-          {/* <NavLink
-            to="/dashboard/intakeSpecialistClients"
-            className="flex items-center justify-between w-[280px]"
-          >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
-              <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveClient
-                      ? " rounded-xl"
-                      : ""
-                  }`}
-              >
-                <HiMiniUserGroup className="w-[22px] h-[22px] font-bold" />
-                <h1 className="text-xl font-medium poppins">Clients</h1>
-              </div>
-            </div>
-          </NavLink> */}
+
           <NavLink
             to="/dashboard/intakeSpecialistSettings"
             className="flex items-center justify-between w-[280px]"
@@ -106,35 +86,21 @@ const IntekSpecialistSidebar = () => {
               {/* Main Button Area */}
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveClient
-                      ? " rounded-xl"
-                      : ""
-                  }`}
+                  `}
               >
                 <IoMdSettings className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">Settings</h1>
               </div>
             </div>
           </NavLink>
-          <div
-            onClick={() => setShowAddClientModal(true)}
-            className="flex items-center justify-between w-[280px] cursor-pointer"
-          >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
-              <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
-                  ${
-                    isActiveClient
-                      ? " rounded-xl"
-                      : ""
-                  }`}
-              >
+          <Link onClick={() => setShowAddClientModal(true)}>
+            <div className="flex items-center justify-between  mt-10 font-semibold p-2 w-full">
+              <button className="px-4 flex items-center justify-center gap-2 py-2 text-sm font-medium mx-4 text-white rounded-md bg-gradient-to-r w-full from-purple-500 to-blue-600">
                 <Plus className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">New Client</h1>
-              </div>
+              </button>
             </div>
-          </div>
+          </Link>
           {showAddClientModal && (
             <div
               className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-60"

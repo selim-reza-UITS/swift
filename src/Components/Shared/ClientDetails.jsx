@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MessageSquare, AlertTriangle } from "lucide-react";
 import ClientSidebar from "./ClientSidebar";
 import ChatSection from "./ChatSection";
 import { useGetClientByIdQuery } from "../../Redux/api/intakeapi";
 import {
-  useClientOptOutMutation,
   useGetAllLawyerQuery,
   useGetAllUserQuery,
   useGetMicroInsightsQuery,
   useUpdateClientMutation,
 } from "../../Redux/api/caseapi";
 import Swal from "sweetalert2";
+import { i } from "framer-motion/client";
 
 function ClientDetails() {
   const params = useParams(); // Get the clientId from URL parameters
@@ -241,8 +241,6 @@ function ClientDetails() {
       <div className="flex-1 flex flex-col bg-gray-800 rounded-xl">
         {/* Header */}
         <div className="p-4 border-b border-gray-700 flex items-center justify-between">
-
-   
           <div className="flex items-center">
             <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
               <MessageSquare className="w-4 h-4" />
@@ -287,7 +285,6 @@ function ClientDetails() {
           </div>
         </div>
 
-
         {/* Chat Section */}
         <ChatSection
           messages={messages}
@@ -296,8 +293,6 @@ function ClientDetails() {
           handleSendMessage={handleSendMessage}
           consentToCommunicate={formData.consentToCommunicate}
         />
-
-      
       </div>
 
       {/* Client Insights Popup */}
@@ -328,40 +323,20 @@ function ClientDetails() {
               ) : (
                 <>
                   {/* First Alert */}
-                  <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
+                 {
+                  microInsights?.insights?.map((insight, index) => (
+                     <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-400">
-                            May 10, 2025 - Concern
-                          </span>
-
+                          {insight?.micro_insight}
                         </div>
                       </div>
                     </div>
                   </div>
-                  {/* Second Alert */}
-                  <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <p className="mb-2 text-gray-200">
-                          Client asked a question about medical records. Message
-                          flagged for review.
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-400">
-                            May 18, 2025 - Flagged Message
-                          </span>
-                          <button className="px-3 py-1 text-sm text-white transition-colors bg-red-500 rounded-full hover:bg-red-600">
-                            Action Required
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  ))
+                 }
                 </>
               )}
             </div>
