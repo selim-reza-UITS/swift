@@ -30,6 +30,7 @@ const Feedback = ({ onClose }) => {
         icon: "success",
         title: "Feedback Submitted!",
         text: "Thank you for sharing your thoughts.",
+        background: "#000",
         confirmButtonColor: "#3085d6",
         showClass: {
           popup: "animate__animated animate__zoomIn",
@@ -44,6 +45,7 @@ const Feedback = ({ onClose }) => {
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
+        background: "#000",
         text: error?.data?.message || "Something went wrong. Please try again.",
         confirmButtonColor: "#d33",
       });

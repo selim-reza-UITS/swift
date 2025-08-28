@@ -34,7 +34,7 @@ const MyFirm = () => {
   const itemsPerPage = 4;
 
   const { data: firmScores } = useGetFirmChartQuery();
-  const { data: firm, isLoading: isMembersLoading } = useGetDashboardQuery();
+  const { data: firm, isLoading: isMembersLoading, refetch } = useGetDashboardQuery();
   const { data: lawyerApiData = [], isLoading, isError } = useGetLawyerQuery();
 
   const firmStats = {
@@ -434,7 +434,7 @@ const handleDelete = async (type, id) => {
       )}
 
       {/* Modals */}
-      {showUserModal && <AddUser onClose={() => setShowUserModal(false)} />}
+      {showUserModal && <AddUser refetch={refetch} onClose={() => setShowUserModal(false)} />}
       {showLawyerModal && (
         <AddLawyer onClose={() => setShowLawyerModal(false)} />
       )}
