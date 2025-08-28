@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "animate.css"; // Import animation
 import { useCreateUserMutation } from "../../../../Redux/feature/Admin/admin";
 
-const AddUser = ({ onClose }) => {
+const AddUser = ({ onClose, refetch }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -13,68 +13,86 @@ const AddUser = ({ onClose }) => {
     role: "",
   });
 
-  const [createUser, { isLoading }] = useCreateUserMutation(); 
+  const [createUser, { isLoading }] = useCreateUserMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  const handlePhoneChange = (e) => {
+    const raw = e.target.value || "";
+    const digits = raw.replace(/\D/g, "").slice(0, 10);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+    let formatted = "";
+    if (digits.length === 0) {
+      formatted = "";
+    } else if (digits.length < 4) {
+      formatted = `(${digits}`;
+    } else if (digits.length < 7) {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
+        6,
+        10
+      )}`;
+    }
 
-  try {
-    // ✅ Send POST request to create user
-    const response = await createUser({
-      name: formData.fullName,
-      email: formData.email,
-      phone_number: formData.phone_number,
-      role: formData.role,
-    }).unwrap(); // unwrap() to get resolved data or throw error
-    console.log("Create user response:", response);
+    setFormData((prev) => ({ ...prev, phone_number: formatted }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // Success SweetAlert
-    Swal.fire({
-      icon: "success",
-      title: "User Added!",
-      text: "The new user has been created successfully.",
-      confirmButtonColor: "#3085d6",
-      background: "#000", // Set background color to black
-      customClass: {
-        popup: "animate__animated animate__zoomIn",
-        title: "text-white", // White title text color
-        content: "text-white", // White content text color
-        confirmButton: "text-white", // White confirm button text
-      },
-      showClass: {
-        popup: "animate__animated animate__zoomIn",
-      },
-      hideClass: {
-        popup: "animate__animated animate__zoomOut",
-      },
-    });
+    try {
+      // ✅ Send POST request to create user
+      const response = await createUser({
+        name: formData.fullName,
+        email: formData.email,
+        phone_number: formData.phone_number,
+        role: formData.role,
+      }).unwrap(); // unwrap() to get resolved data or throw error
+      console.log("Create user response:", response);
+      refetch();
+      // Success SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "User Added!",
+        text: "The new user has been created successfully.",
+        confirmButtonColor: "#3085d6",
+        background: "#000", // Set background color to black
+        customClass: {
+          popup: "animate__animated animate__zoomIn",
+          title: "text-white", // White title text color
+          content: "text-white", // White content text color
+          confirmButton: "text-white", // White confirm button text
+        },
+        showClass: {
+          popup: "animate__animated animate__zoomIn",
+        },
+        hideClass: {
+          popup: "animate__animated animate__zoomOut",
+        },
+      });
 
-    onClose(); // close modal
-  } catch (error) {
-    console.error(error);
-    
-    // Error SweetAlert
-    Swal.fire({
-      icon: "error",
-      title: "Failed to add user",
-      text: error?.data?.message || "Something went wrong",
-      confirmButtonColor: "#d33",
-      background: "#000", // Set background color to black
-      customClass: {
-        popup: "animate__animated animate__shakeX",
-        title: "text-white", // White title text color
-        content: "text-white", // White content text color
-        confirmButton: "text-white", // White confirm button text
-      },
-    });
-  }
-};
+      onClose(); // close modal
+    } catch (error) {
+      console.error(error);
 
+      // Error SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Failed to add user",
+        text: error?.data?.message || "Something went wrong",
+        confirmButtonColor: "#d33",
+        background: "#000", // Set background color to black
+        customClass: {
+          popup: "animate__animated animate__shakeX",
+          title: "text-white", // White title text color
+          content: "text-white", // White content text color
+          confirmButton: "text-white", // White confirm button text
+        },
+      });
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">
@@ -124,7 +142,8 @@ const handleSubmit = async (e) => {
               type="text"
               name="phone_number"
               value={formData.phone_number}
-              onChange={handleChange}
+              onChange={handlePhoneChange}
+              placeholder=""
               className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
             />
           </div>
