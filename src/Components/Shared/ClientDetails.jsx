@@ -1,13 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Send,
-  Bot,
-  User,
-  MessageSquare,
-  AlertTriangle,
-  Edit,
-} from "lucide-react";
+import { MessageSquare, AlertTriangle } from "lucide-react";
+import ClientSidebar from "./ClientSidebar";
+import ChatSection from "./ChatSection";
 import { useGetClientByIdQuery } from "../../Redux/api/intakeapi";
 import {
   useClientOptOutMutation,
@@ -229,133 +224,28 @@ function ClientDetails() {
   };
 
   // Loading and error states
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="text-white">Loading...</div>;
   if (error) return <div>Error loading client details.</div>;
 
   return (
     <div className="h-[86vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
-      <div className="w-80 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto">
-        {/* Back Button and Edit Client Button */}
-        <div className="flex items-center justify-between space-x-2 ">
-          <button
-            className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center"
-            onClick={() => navigate(-1)}
-          >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 19l-7-7 7-7"
-              ></path>
-            </svg>
-            Back
-          </button>
-        </div>
-        {/* Client Profile */}
-        <div className="flex flex-col justify-center items-center mb-6">
-          <div className="w-16 h-16 mx-auto bg-gray-600 rounded-full flex items-center justify-center mr-4">
-            <User className="w-8 h-8 text-gray-300" />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold text-center mt-2">{clientData?.full_name}</h2>
-            <p className="text-gray-400 text-center">
-              {clientData?.phone_number}
-            </p>
-          </div>
-        </div>
-        <div
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center shadow mb-6 w-full mx-auto"
-          onClick={() => setShowEditModal(true)}
-        >
-          <Edit className="w-4 h-4 mr-2" />
-          <span>Edit Client</span>
-        </div>
-        {/* Case Details */}
-        <div className="space-y-4 mb-8">
-          <div className="flex justify-between">
-            <span className="text-gray-400">Incident Date:</span>
-            <span>{clientData?.date_of_incident}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Client Status:</span>
-            <span className="bg-blue-600 px-2 py-1 rounded text-sm">
-              {clientData?.status}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Gender:</span>
-            <span>{clientData?.gender}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Managing User(s):</span>
-            <span>
-              {clientData?.managing_users.map((user) => user.name).join(", ")}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Lawyer:</span>
-            <span>{clientData?.lawyer?.name}n</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Injury's Sustained:</span>
-            <span> {clientData?.injuries_sustained}</span>
-          </div>
-        </div>
+      <ClientSidebar
+        clientData={clientData}
+        onBack={() => navigate(-1)}
+        onEdit={() => setShowEditModal(true)}
+      />
 
-        {/* Communication Status */}
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4">Communication Status</h3>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Scheduled Next Send:</span>
-              <span className="bg-blue-600 px-2 py-1 rounded text-sm">
-                {
-                  new Date(clientData?.scheduled_time)
-                    .toISOString()
-                    .split("T")[0]
-                }
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Client Sentiment:</span>
-              <span className="text-green-400">{clientData?.sentiment}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Risk Level:</span>
-              <span className="text-red-400">{clientData?.concern_level}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Case Notes */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">General Case Info</h3>
-          <div className="bg-gray-700 p-4 rounded-lg">
-            <p className="text-gray-300 text-sm">
-              {clientData?.general_case_info}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
+      {/* Main Content Area - Chat Section */}
       <div className="flex-1 flex flex-col bg-gray-800 rounded-xl">
         {/* Header */}
-        <div className=" p-4 border-b border-gray-700 flex items-center justify-between">
+        <div className="p-4 border-b border-gray-700 flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
               <MessageSquare className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold">Sarah Johnson</h1>
+              <h1 className="text-xl font-semibold">{clientData?.full_name}</h1>
             </div>
           </div>
           <div className="flex items-center space-x-4 relative">
@@ -394,86 +284,14 @@ function ClientDetails() {
           </div>
         </div>
 
-        {/* Messages */}
-        <div className="flex-1 p-6 overflow-y-auto relative">
-          {messages.map((msg, idx) =>
-            msg.from === "user" ? (
-              <div className="mb-6" key={idx}>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <Bot className="w-4 h-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="bg-gray-700 p-4 rounded-lg w-auto">
-                      <p className="text-gray-300">{msg.text}</p>
-                    </div>
-                    <div className="flex items-center space-x-2 mt-2 text-xs text-gray-500">
-                      <span>AI Assistant</span>
-                      <span>•</span>
-                      <span>{msg.time}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="mb-6" key={idx}>
-                <div className="flex items-start space-x-3 justify-end">
-                  <div className="flex-1 flex justify-end">
-                    <div className="bg-blue-600 p-4 rounded-lg max-w-5xl">
-                      <p className="text-white">{msg.text}</p>
-                    </div>
-                  </div>
-                  <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4" />
-                  </div>
-                </div>
-                <div className="flex items-center justify-end space-x-2 mt-2 text-xs text-gray-500">
-                  <span>Sarah Johnson</span>
-                  <span>•</span>
-                  <span>{msg.time}</span>
-                </div>
-              </div>
-            )
-          )}
-          {!formData.consentToCommunicate && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-80 text-center px-6">
-              <p className="text-gray-300 max-w-xl">
-                It looks like this client hasn’t completed the consent form. For
-                messaging to be enabled, please have them complete the quick
-                permission form.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Message Input */}
-        <div className="bg-gray-800 p-4 border-t border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="flex-1">
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-                placeholder="Type your response..."
-                className="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                rows={3}
-                disabled={!formData.consentToCommunicate}
-              />
-            </div>
-            <button
-              className="bg-blue-600 p-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={handleSendMessage}
-              disabled={!formData.consentToCommunicate}
-            >
-              <Send className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+        {/* Chat Section */}
+        <ChatSection
+          messages={messages}
+          message={message}
+          setMessage={setMessage}
+          handleSendMessage={handleSendMessage}
+          consentToCommunicate={formData.consentToCommunicate}
+        />
       </div>
 
       {/* Client Insights Popup */}
@@ -497,28 +315,21 @@ function ClientDetails() {
                 ×
               </button>
             </div>
-
+            {/* ...existing code... (insights content) */}
             <div className="space-y-4">
               {!microInsights ? (
                 <p>No insights found for this client.</p>
               ) : (
                 <>
-                  {" "}
                   {/* First Alert */}
                   <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        {/* <p className="text-gray-200 mb-2">
-                     {microInsights?.most_recent_micro_insight}
-                    </p> */}
                         <div className="flex items-center justify-between">
                           <span className="text-gray-400 text-sm">
                             May 10, 2025 - Concern
                           </span>
-                          {/* <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
-                        Action Required
-                      </button> */}
                         </div>
                       </div>
                     </div>

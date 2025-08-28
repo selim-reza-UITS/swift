@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Search,
-  Trash2,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -10,10 +9,12 @@ import {
 } from "lucide-react";
 import Swal from "sweetalert2";
 import ViewClientDetails from "../Admin/Client/ViewClientDetails";
-import { FaEye } from "react-icons/fa6";
 import EditClientDetails from "./EditClientDetails";
-const IntakeSpecialistClients = ({ clients = [] }) => {
-  console.log(clients);
+import { useClientOptOutMutation } from "../../../Redux/api/caseapi";
+import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
+const IntakeSpecialistClients = () => {
+  const [clientOptOut] = useClientOptOutMutation();
+
   const [formData, setFormData] = useState({
     fullName: "",
     lawyerName: "",
@@ -67,28 +68,6 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
   };
   const [displayClients, setDisplayClients] = useState([]);
 
-  useEffect(() => {
-    const mapStatus = (s) => {
-      if (!s) return "active";
-      const lower = String(s).toLowerCase();
-      if (lower.includes("pause")) return "paused";
-      if (lower.includes("delete")) return "recovery";
-      return "active"; // e.g., "Awaiting Consent"
-    };
-
-    const mapped = Array.isArray(clients)
-      ? clients.map((c) => ({
-          id: c.id,
-          name: c.full_name || c.name || "-",
-          phone: c.phone_number || "-",
-          status: mapStatus(c.status),
-          priority: "medium",
-          avatar: "/api/placeholder/40/40",
-        }))
-      : [];
-    setDisplayClients(mapped);
-  }, [clients]);
-
   const handleUpdate = (updatedData) => {
     // Handle the update logic here, e.g., updating the client in the state or making an API call
     console.log("Updated Client Data:", updatedData);
@@ -116,30 +95,23 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
   };
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeView, setActiveView] = useState("all");
+  const [activeView, setActiveView] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedEditClient, setEditSelectedClient] = useState(null);
   const itemsPerPage = 7;
+  const { data: clients = [], isLoading } = useGetAllClientsQuery(activeView);
+  const filteredClients = clients.filter((client) => {
+    const matchesSearch = client.full_name
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
 
-  const filteredClients = displayClients.filter((client) => {
-    const matchesSearch =
-      client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.phone.includes(searchTerm);
-
-    if (activeView === "active")
-      return matchesSearch && client.status === "active";
-    if (activeView === "paused")
-      return matchesSearch && client.status === "paused";
-    if (activeView === "recovery")
-      return matchesSearch && client.status === "recovery";
-    if (activeView === "all") return matchesSearch;
     return matchesSearch;
   });
 
-  const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+  const totalPages = Math.ceil(clients.length / itemsPerPage);
   const currentClients = filteredClients.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -158,19 +130,6 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
     }
   };
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "active":
-        return "Active";
-      case "paused":
-        return "Paused";
-      case "recovery":
-        return "Recently Deleted";
-      default:
-        return "Unknown";
-    }
-  };
-
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "high":
@@ -181,19 +140,6 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
         return "bg-[#FEE2E2] text-[#991B1B]";
       default:
         return "bg-gray-500 text-white";
-    }
-  };
-
-  const getPriorityLabel = (priority) => {
-    switch (priority) {
-      case "high":
-        return "High Risk";
-      case "medium":
-        return "Medium Risk";
-      case "low":
-        return "Low Risk";
-      default:
-        return "Unknown";
     }
   };
 
@@ -208,29 +154,53 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
     }
   };
   const handleDeleteClient = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      background: "#1f2937", // dark bg
-      color: "#fff", // text color
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#4b5563",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setDisplayClients((prev) => prev.filter((client) => client.id !== id));
-        Swal.fire({
-          title: "Deleted!",
-          text: "Client has been deleted.",
-          icon: "success",
-          background: "#1f2937",
-          color: "#fff",
-          confirmButtonColor: "#6366F1",
-        });
-      }
-    });
+    const client = clients.find((user) => user.id === id);
+
+    if (client) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: `You are about to delete ${client.full_name}. Once deleted, this client will no longer receive messages. They will remain recoverable for 35 days before being permanently removed.`,
+        icon: "warning",
+        background: "#1f2937", // dark bg
+        color: "#fff", // text color
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#4b5563",
+        confirmButtonText: `Delete ${client.full_name}`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleDeleteConfirm(id);
+        }
+      });
+    }
+  };
+
+  const handleDeleteConfirm = async (id) => {
+    setShowDeleteModal(false);
+
+    // Call your API to delete the client
+    const result = await clientOptOut(id);
+    console.log(result);
+
+    if (result) {
+      Swal.fire({
+        title: "Deleted!",
+        text: "Client has been Opted Out.",
+        icon: "success",
+        background: "#1f2937",
+        color: "#fff",
+        confirmButtonColor: "#6366F1",
+      });
+    } else {
+      Swal.fire({
+        title: "Error!",
+        text: "There was an error deleting the client.",
+        icon: "error",
+        background: "#1f2937",
+        color: "#fff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
   };
 
   return (
@@ -252,9 +222,9 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
 
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => handleViewChange("all")}
+            onClick={() => handleViewChange("")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeView === "all"
+              activeView === ""
                 ? "bg-purple-600 text-white"
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
@@ -282,9 +252,9 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
             Paused
           </button>
           <button
-            onClick={() => handleViewChange("recovery")}
+            onClick={() => handleViewChange("recently-deleted")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeView === "recovery"
+              activeView === "recently-deleted"
                 ? "bg-[#F59E0B] text-[#161E2F]"
                 : "bg-gray-700 text-gray-300"
             }`}
@@ -306,7 +276,7 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
                 <div className="relative">
                   <img
                     src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
-                    alt={client.name}
+                    alt={client.full_name}
                     className="w-12 h-12 bg-gray-600 rounded-full"
                   />
                   <div
@@ -318,9 +288,9 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-white">
-                    {client.name}
+                    {client.full_name}
                   </h3>
-                  <p className="text-sm text-gray-400">{client.phone}</p>
+                  <p className="text-sm text-gray-400">{client.phone_number}</p>
                 </div>
               </div>
 
@@ -330,7 +300,7 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
                     client.status
                   )} text-white`}
                 >
-                  {getStatusLabel(client.status)}
+                  {client?.status}
                 </span>
 
                 <span
@@ -338,7 +308,7 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
                     client.priority
                   )}`}
                 >
-                  {getPriorityLabel(client.priority)}
+                  {client?.concern_level}{" "}
                 </span>
                 <Edit
                   onClick={() => {
@@ -373,16 +343,13 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
       </div>
 
       {/* Pagination */}
-      {filteredClients.length > itemsPerPage && (
+      {clients.length > itemsPerPage && (
         <div className="flex items-center justify-between flex-shrink-0 px-6 pt-4 border-t border-gray-800">
           <div className="text-sm text-gray-400">
             Showing{" "}
-            {Math.min(
-              (currentPage - 1) * itemsPerPage + 1,
-              filteredClients.length
-            )}{" "}
-            to {Math.min(currentPage * itemsPerPage, filteredClients.length)} of{" "}
-            {filteredClients.length} clients
+            {Math.min((currentPage - 1) * itemsPerPage + 1, clients.length)} to{" "}
+            {Math.min(currentPage * itemsPerPage, clients.length)} of{" "}
+            {clients.length} clients
           </div>
 
           <div className="flex items-center space-x-2">
@@ -433,7 +400,7 @@ const IntakeSpecialistClients = ({ clients = [] }) => {
 
       {isModalOpen && selectedClient && (
         <ViewClientDetails
-         clientId={selectedClient?.id}
+          clientId={selectedClient?.id}
           onClose={() => {
             setIsModalOpen(false);
             setSelectedClient(null);

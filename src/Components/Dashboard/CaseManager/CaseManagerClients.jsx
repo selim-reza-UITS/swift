@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
 import { useClientOptOutMutation } from "../../../Redux/api/caseapi";
 const CaseManagerClients = () => {
-  const [activeView, setActiveView] = useState(""); 
+  const [activeView, setActiveView] = useState("");
   console.log(activeView);
   const { data: clients = [], isLoading } = useGetAllClientsQuery(activeView);
 
@@ -39,10 +39,8 @@ const CaseManagerClients = () => {
 
     // Call your API to delete the client
     const result = await clientOptOut(id);
-    console.log(result);
 
     if (result) {
-    
       Swal.fire({
         title: "Deleted!",
         text: "Client has been Opted Out.",
@@ -66,9 +64,16 @@ const CaseManagerClients = () => {
   const handleDeleteModalClose = () => {
     setShowDeleteModal(false);
   };
+  const filteredClients = clients.filter((client) => {
+    const matchesSearch = client.full_name
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    return matchesSearch;
+  });
 
   const totalPages = Math.ceil(clients.length / itemsPerPage);
-  const currentClients = clients.slice(
+  const currentClients = filteredClients.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );

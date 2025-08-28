@@ -51,7 +51,7 @@ export const caseapi = api.injectEndpoints({
       query: () => `clients/stats/`, // Use the dynamic ID here
       providesTags: ["case"],
     }),
-    
+
     getFirmScores: builder.query({
       query: () => `chats/firm-scores/`, // Use the dynamic ID here
       providesTags: ["case"],
@@ -59,6 +59,10 @@ export const caseapi = api.injectEndpoints({
 
     getMicroInsights: builder.query({
       query: (id) => `chats/client/${id}/client-insights/`, // Use the dynamic ID here
+      providesTags: ["case"],
+    }),
+    getAllMessages: builder.query({
+      query: (id) => `chats/all-messages/${id}/`,
       providesTags: ["case"],
     }),
   }),
@@ -79,4 +83,5 @@ export const {
   useGetFirmScoresQuery,
   useGetMicroInsightsQuery,
   useClientOptOutMutation,
+  useGetAllMessagesQuery,
 } = caseapi;
