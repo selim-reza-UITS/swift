@@ -131,7 +131,7 @@ const Client = ({ managers }) => {
                   : "text-white bg-[#6366F1] hover:bg-[#2f31af]"
               }`}
             >
-              {f} Clients
+              {f}
             </button>
           ))}
         </div>
