@@ -13,52 +13,68 @@ const AddUser = ({ onClose }) => {
     role: "",
   });
 
-  const [createUser, { isLoading }] = useCreateUserMutation(); // ✅ RTK Query mutation
+  const [createUser, { isLoading }] = useCreateUserMutation(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      // ✅ Send POST request to create user
-      const response = await createUser({
-        name: formData.fullName,
-        email: formData.email,
-        phone_number: formData.phone_number,
-        role: formData.role,
-      }).unwrap(); // unwrap() to get resolved data or throw error
-      console.log("Create user response:", response);
-      Swal.fire({
-        icon: "success",
-        title: "User Added!",
-        text: "The new user has been created successfully.",
-        confirmButtonColor: "#3085d6",
-        showClass: {
-          popup: "animate__animated animate__zoomIn",
-        },
-        hideClass: {
-          popup: "animate__animated animate__zoomOut",
-        },
-      });
+  try {
+    // ✅ Send POST request to create user
+    const response = await createUser({
+      name: formData.fullName,
+      email: formData.email,
+      phone_number: formData.phone_number,
+      role: formData.role,
+    }).unwrap(); // unwrap() to get resolved data or throw error
+    console.log("Create user response:", response);
 
-      onClose(); // close modal
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: "error",
-        title: "Failed to add user",
-        text: error?.data?.message || "Something went wrong",
-        confirmButtonColor: "#d33",
-        showClass: {
-          popup: "animate__animated animate__shakeX",
-        },
-      });
-    }
-  };
+    // Success SweetAlert
+    Swal.fire({
+      icon: "success",
+      title: "User Added!",
+      text: "The new user has been created successfully.",
+      confirmButtonColor: "#3085d6",
+      background: "#000", // Set background color to black
+      customClass: {
+        popup: "animate__animated animate__zoomIn",
+        title: "text-white", // White title text color
+        content: "text-white", // White content text color
+        confirmButton: "text-white", // White confirm button text
+      },
+      showClass: {
+        popup: "animate__animated animate__zoomIn",
+      },
+      hideClass: {
+        popup: "animate__animated animate__zoomOut",
+      },
+    });
+
+    onClose(); // close modal
+  } catch (error) {
+    console.error(error);
+    
+    // Error SweetAlert
+    Swal.fire({
+      icon: "error",
+      title: "Failed to add user",
+      text: error?.data?.message || "Something went wrong",
+      confirmButtonColor: "#d33",
+      background: "#000", // Set background color to black
+      customClass: {
+        popup: "animate__animated animate__shakeX",
+        title: "text-white", // White title text color
+        content: "text-white", // White content text color
+        confirmButton: "text-white", // White confirm button text
+      },
+    });
+  }
+};
+
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">

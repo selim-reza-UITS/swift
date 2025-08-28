@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaEye } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import { useGetClientQuery } from "../../../../Redux/feature/Admin/admin";
+import {
+  useGetClientQuery,
+  useOptOutClientMutation,
+} from "../../../../Redux/feature/Admin/admin";
 import AddClientForm from "../../../Shared/AddClientForm";
 import { Plus } from "lucide-react";
-import DeleteUserFlow from "./DeleteUserFlow";
+import Swal from "sweetalert2";
 
 const statusColors = {
   Active: "bg-[#A855F7] text-[#FFFFFF]",
@@ -33,7 +36,7 @@ const Client = ({ managers }) => {
   const [deleteUserId, setDeleteUserId] = useState(null);
 
   const { data: clients = [], isLoading, isError } = useGetClientQuery();
-
+  const [optOutClient] = useOptOutClientMutation();
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading clients!</p>;
 
@@ -48,9 +51,46 @@ const Client = ({ managers }) => {
     return matchesSearch && matchesFilter;
   });
 
-  const handleDelete = (id) => {
-    console.log("Delete user id:", id);
-    setDeleteUserId(id);
+  const handleDeleteUser = async (client) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `Do you really want to opt-out ${client.full_name}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#8A2BE2",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Opt-out",
+      background: "#1e293b", // Dark background
+      color: "#f8fafc", // Light text color
+      customClass: {
+        popup: "rounded-2xl shadow-lg", // rounded and shadow
+        title: "text-xl font-semibold",
+        confirmButton: "px-4 py-2 rounded-lg",
+        cancelButton: "px-4 py-2 rounded-lg",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await optOutClient(client.id).unwrap();
+          Swal.fire({
+            icon: "success",
+            title: "Opt-out Successful",
+            text: `${client.full_name} has been opted out successfully!`,
+            confirmButtonColor: "#8A2BE2",
+            background: "#1e293b",
+            color: "#f8fafc",
+          });
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Failed",
+            text: "Something went wrong while opting out!",
+            background: "#1e293b",
+            color: "#f8fafc",
+          });
+        }
+      }
+    });
   };
 
   const closeDeleteModal = () => {
@@ -146,7 +186,7 @@ const Client = ({ managers }) => {
                   : "Unknown"}
               </span>
 
-              <NavLink to={`/dashboard/IntakeSpecialistClients/${client.id}`}>
+              <NavLink to={`/dashboard/admin/${client.id}`}>
                 <button className="p-2 text-gray-400 transition-colors rounded-lg hover:text-white hover:bg-gray-700">
                   <FaEye />
                 </button>
@@ -154,7 +194,7 @@ const Client = ({ managers }) => {
 
               <FaTrashAlt
                 className="text-gray-300 cursor-pointer hover:text-red-500"
-               onClick={() => handleDeleteUser(client)}
+                onClick={() => handleDeleteUser(client)}
               />
             </div>
           </div>
@@ -174,16 +214,6 @@ const Client = ({ managers }) => {
             <AddClientForm setShowAddClientModal={setShowAddClientModal} />
           </div>
         </div>
-      )}
-
-      {/* Delete Modal */}
-      {deleteUserId && (
-        <DeleteUserFlow
-          user={clients.find((c) => c.id === deleteUserId)}
-          managers={managers}
-          onDelete={handleDelete}
-          onClose={closeDeleteModal}
-        />
       )}
     </div>
   );

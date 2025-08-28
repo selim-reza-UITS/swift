@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { useDeleteUserMutation } from "../../../../Redux/feature/Admin/admin";
+import {
+  useDeleteCaseMutation,
+  useGetManagerQuery,
 
-const MemberCard = ({ data, managers, onView, onEdit }) => {
-  const [deleteUser] = useDeleteUserMutation();
+} from "../../../../Redux/feature/Admin/admin";
+
+const MemberCard = ({ data,  onView, onEdit }) => {
+  const [deleteCase] = useDeleteCaseMutation();
   const [step, setStep] = useState(1);
   const [reassignOption, setReassignOption] = useState("");
   const [newManager, setNewManager] = useState("");
-
+  const {data:managers , isLoading: managersLoading, isError: managersError} =  useGetManagerQuery();
+  console.log("Managers in MemberCard:", managers);
   const handleDeleteClick = () => {
     // Step 1 popup
     Swal.fire({
@@ -16,6 +21,8 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
       title: "You are about to delete a user",
       text: "This action cannot be undone.",
       showCancelButton: true,
+      background: "#0f172a",
+        color: "#ffffff",
       confirmButtonText: "Continue to reassignment",
       cancelButtonText: "Cancel",
     }).then((result) => {
@@ -23,24 +30,43 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
     });
   };
 
-  const handleConfirm = () => {
-    const body = {
-      option: reassignOption,
-      newManager: reassignOption.includes("Move") ? newManager : null,
+  const handleConfirm = async () => {
+    if (!data?.id) return Swal.fire("Error", "User ID not found", "error");
+
+    const payload = {
+      user_id: data.id,
+      reassignment_option:
+        reassignOption === "Move all clients"
+          ? "move_all_clients"
+          : reassignOption === "Move solo clients"
+          ? "move_only_solo_clients"
+          : "opt_out_clients",
+      new_managing_user_id: reassignOption.includes("Move") ? newManager : null,
     };
 
-    deleteUser({ id: data.id, body })
-      .unwrap()
-      .then(() => {
-        Swal.fire("Deleted!", "User deletion flow completed.", "success");
-        // Reset all states
-        setStep(1);
-        setReassignOption("");
-        setNewManager("");
-      })
-      .catch(() => {
-        Swal.fire("Error", "User could not be deleted.", "error");
+    try {
+      await deleteCase(payload).unwrap(); // DELETE method call
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "User deletion flow completed.",
+        background: "#0f172a",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1",
       });
+      setStep(1);
+      setReassignOption("");
+      setNewManager("");
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "User could not be deleted.",
+        background: "#0f172a",
+        color: "#ffffff",
+        confirmButtonColor: "#6366F1",
+      });
+    }
   };
 
   return (
@@ -95,7 +121,7 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
                 />{" "}
                 Move only the clients this user managed alone
               </label>
-              <label>
+              {/* <label>
                 <input
                   type="radio"
                   name="reassignOption"
@@ -103,7 +129,7 @@ const MemberCard = ({ data, managers, onView, onEdit }) => {
                   onChange={(e) => setReassignOption(e.target.value)}
                 />{" "}
                 Co-managed clients keep other manager; remove this user
-              </label>
+              </label> */}
               <label>
                 <input
                   type="radio"

@@ -230,6 +230,7 @@ function ClientDetails() {
   return (
     <div className="h-[86vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
+
       <ClientSidebar
         clientData={clientData}
         onBack={() => navigate(-1)}
@@ -240,22 +241,24 @@ function ClientDetails() {
       <div className="flex-1 flex flex-col bg-gray-800 rounded-xl">
         {/* Header */}
         <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+
+   
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+            <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
               <MessageSquare className="w-4 h-4" />
             </div>
             <div>
               <h1 className="text-xl font-semibold">{clientData?.full_name}</h1>
             </div>
           </div>
-          <div className="flex items-center space-x-4 relative">
+          <div className="relative flex items-center space-x-4">
             <button
-              className="border px-3 py-1 rounded text-sm inline-block hover:bg-gray-700 transition-colors"
+              className="inline-block px-3 py-1 text-sm transition-colors border rounded hover:bg-gray-700"
               onClick={() => setShowClientInsights(true)}
             >
               Client Summary
             </button>
-            <span className="bg-yellow-600 px-3 py-1 rounded text-sm inline-block">
+            <span className="inline-block px-3 py-1 text-sm bg-yellow-600 rounded">
               Medium Risk
             </span>
             <div className="flex items-center space-x-3">
@@ -284,6 +287,7 @@ function ClientDetails() {
           </div>
         </div>
 
+
         {/* Chat Section */}
         <ChatSection
           messages={messages}
@@ -292,6 +296,8 @@ function ClientDetails() {
           handleSendMessage={handleSendMessage}
           consentToCommunicate={formData.consentToCommunicate}
         />
+
+      
       </div>
 
       {/* Client Insights Popup */}
@@ -301,7 +307,7 @@ function ClientDetails() {
           onClick={() => setShowClientInsights(false)}
         >
           <div
-            className="relative w-full max-w-2xl p-6 rounded-lg shadow-lg bg-slate-800 mx-4"
+            className="relative w-full max-w-2xl p-6 mx-4 rounded-lg shadow-lg bg-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
@@ -310,7 +316,7 @@ function ClientDetails() {
               </h2>
               <button
                 onClick={() => setShowClientInsights(false)}
-                className="text-gray-400 hover:text-white text-2xl font-bold"
+                className="text-2xl font-bold text-gray-400 hover:text-white"
               >
                 ×
               </button>
@@ -326,10 +332,12 @@ function ClientDetails() {
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
+
                         <div className="flex items-center justify-between">
-                          <span className="text-gray-400 text-sm">
+                          <span className="text-sm text-gray-400">
                             May 10, 2025 - Concern
                           </span>
+
                         </div>
                       </div>
                     </div>
@@ -339,15 +347,15 @@ function ClientDetails() {
                     <div className="flex items-start space-x-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <p className="text-gray-200 mb-2">
+                        <p className="mb-2 text-gray-200">
                           Client asked a question about medical records. Message
                           flagged for review.
                         </p>
                         <div className="flex items-center justify-between">
-                          <span className="text-gray-400 text-sm">
+                          <span className="text-sm text-gray-400">
                             May 18, 2025 - Flagged Message
                           </span>
-                          <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
+                          <button className="px-3 py-1 text-sm text-white transition-colors bg-red-500 rounded-full hover:bg-red-600">
                             Action Required
                           </button>
                         </div>
@@ -368,7 +376,7 @@ function ClientDetails() {
           onClick={() => setShowEditModal(false)}
         >
           <div
-            className="relative w-full max-w-4xl p-6 rounded-lg shadow-lg bg-slate-800 mx-4 mt-8 "
+            className="relative w-full max-w-4xl p-6 mx-4 mt-8 rounded-lg shadow-lg bg-slate-800 "
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mt-6">
@@ -377,7 +385,7 @@ function ClientDetails() {
               </h2>
               <button
                 onClick={() => setShowEditModal(false)}
-                className="text-gray-400 hover:text-white text-2xl font-bold"
+                className="text-2xl font-bold text-gray-400 hover:text-white"
               >
                 ×
               </button>
@@ -385,9 +393,9 @@ function ClientDetails() {
 
             <form onSubmit={handleEditSubmit} className="space-y-6">
               {/* Personal Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Full Name
                   </label>
                   <input
@@ -395,11 +403,11 @@ function ClientDetails() {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Phone Number
                   </label>
                   <input
@@ -407,11 +415,11 @@ function ClientDetails() {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handlePhoneChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Incident Date
                   </label>
                   <input
@@ -419,18 +427,18 @@ function ClientDetails() {
                     name="dateOfIncident"
                     value={formData.dateOfIncident}
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Gender
                   </label>
                   <select
                     value={formData.gender}
                     onChange={handleInputChange}
                     name="gender"
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
@@ -439,16 +447,16 @@ function ClientDetails() {
               </div>
 
               {/* Case Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Client Status
                   </label>
                   <select
                     value={formData.status}
                     name="status"
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Awaiting">Awaiting Consent</option>
                     <option value="Active">Active</option>
@@ -457,14 +465,14 @@ function ClientDetails() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Managing User(s)
                   </label>
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setIsManagingOpen((s) => !s)}
-                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-md p-3 text-left"
+                      className="w-full p-3 text-left text-white bg-gray-700 border border-gray-600 rounded-md"
                     >
                       {formData.managingUsers.length > 0
                         ? formData.managingUsers.join(", ") // Display pre-selected managing users as comma-separated
@@ -480,7 +488,7 @@ function ClientDetails() {
                           return (
                             <label
                               key={user.id}
-                              className="flex items-center gap-2 px-3 py-2 text-white hover:bg-slate-600 cursor-pointer"
+                              className="flex items-center gap-2 px-3 py-2 text-white cursor-pointer hover:bg-slate-600"
                             >
                               <input
                                 type="checkbox"
@@ -506,7 +514,7 @@ function ClientDetails() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Lawyer
                   </label>
                   <div className="relative">
@@ -514,7 +522,7 @@ function ClientDetails() {
                       name="lawyerName"
                       value={formData.lawyerName}
                       onChange={handleInputChange}
-                      className="w-full bg-gray-700 text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
+                      className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-md appearance-none focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
                     >
                       <option value="" disabled>
                         Select a lawyer
@@ -528,7 +536,7 @@ function ClientDetails() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Scheduled Next Send
                   </label>
                   <input
@@ -547,22 +555,22 @@ function ClientDetails() {
                         scheduledTime: e.target.value,
                       }))
                     }
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
               {/* Communication Status */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Client Sentiment
                   </label>
                   <select
                     value={formData.sentiment}
                     name="sentiment"
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="positive">Positive</option>
                     <option value="neutral">Neutral</option>
@@ -570,14 +578,14 @@ function ClientDetails() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Risk Level
                   </label>
                   <select
                     value={formData.concernLevel}
                     name="concernLevel"
                     onChange={handleInputChange}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
@@ -589,7 +597,7 @@ function ClientDetails() {
               {/* Case Notes */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     General Case Info
                   </label>
                   <textarea
@@ -597,11 +605,11 @@ function ClientDetails() {
                     name="generalCaseInfo"
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block mb-2 text-sm font-medium text-gray-300">
                     Injuries Sustained
                   </label>
                   <textarea
@@ -609,23 +617,23 @@ function ClientDetails() {
                     name="injuriesSustained"
                     onChange={handleInputChange}
                     rows={3}
-                    className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    className="w-full p-3 text-white bg-gray-700 border border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end space-x-3 pt-4 border-t border-gray-700">
+              <div className="flex justify-end pt-4 space-x-3 border-t border-gray-700">
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 text-gray-300 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
+                  className="px-4 py-2 text-gray-300 transition-colors bg-gray-700 rounded-lg hover:bg-gray-600"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleUpdate}
-                  className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="px-4 py-2 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
                 >
                   Save Changes
                 </button>
