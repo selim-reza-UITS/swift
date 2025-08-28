@@ -83,16 +83,16 @@ const ViewClientDetails = ({ onClose, clientId }) => {
               Scheduled Next Send:
             </span>
             <span className="px-2 py-1 text-xs text-white bg-blue-600 rounded-full">
-              {new Date(clientData.scheduled_time)
-                    .toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                    .replace(",", " at")}
+              {new Date(clientData?.scheduled_time)
+                .toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+                .replace(",", " at")}
             </span>
           </div>
           <div className="flex justify-between mb-3">
