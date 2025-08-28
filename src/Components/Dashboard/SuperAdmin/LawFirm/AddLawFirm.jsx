@@ -28,11 +28,40 @@ const AddLawFirm = ({ onClose }) => {
     businessType: "",
   });
 
+  const [errors, setErrors] = useState({
+    areaCode: "",
+    email: "",
+    taxId: "",
+  });
+
   const [createLawFirm, { isLoading }] = useCreateLawFirmMutation();
 
+  // EIN Auto Format (XX-XXXXXXX)
+  const handleTaxIdChange = (e) => {
+    const raw = e.target.value.replace(/\D/g, "").slice(0, 9);
+    let formatted = raw;
+    if (raw.length > 2) {
+      formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
+    }
+    setFormData((prev) => ({ ...prev, taxId: formatted }));
+  };
+
+  // Generic input change
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Reset errors on change
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    // Validate Area Code
+    if (name === "areaCode" && value.length > 10) {
+      setErrors((prev) => ({
+        ...prev,
+        areaCode: "Area Code cannot be more than 10 characters",
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -81,14 +110,31 @@ const AddLawFirm = ({ onClose }) => {
       });
       onClose();
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Failed to register!",
-        text: error?.data?.message || "Something went wrong.",
-        background: "#0f172a",
-        color: "#fff",
-        confirmButtonColor: "#EF4444",
-      });
+      console.error(error);
+
+      // ✅ Validation Error (400) handle
+      if (error?.status === 400 && error?.data) {
+        const messages = Object.values(error.data).flat().join("\n");
+
+        Swal.fire({
+          icon: "error",
+          title: "Oops! Invalid Input",
+          text: messages,
+          background: "#0f172a",
+          color: "#fff",
+          confirmButtonColor: "#EF4444",
+        });
+      } else {
+        // Generic Error
+        Swal.fire({
+          icon: "error",
+          title: "Failed to register!",
+          text: error?.data?.message || "Something went wrong.",
+          background: "#0f172a",
+          color: "#fff",
+          confirmButtonColor: "#EF4444",
+        });
+      }
     }
   };
 
@@ -131,8 +177,15 @@ const AddLawFirm = ({ onClose }) => {
               name="areaCode"
               value={formData.areaCode}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg bg-[#1e293b] text-white text-sm outline-none"
+              className={`w-full px-3 py-2 rounded-lg text-sm outline-none ${
+                errors.areaCode
+                  ? "border border-red-500 bg-[#1e293b]"
+                  : "bg-[#1e293b]"
+              }`}
             />
+            {errors.areaCode && (
+              <p className="mt-1 text-xs text-red-500">{errors.areaCode}</p>
+            )}
           </div>
 
           {/* Tax ID */}
@@ -143,7 +196,7 @@ const AddLawFirm = ({ onClose }) => {
               name="taxId"
               placeholder="XX-XXXXXXX"
               value={formData.taxId}
-              onChange={handleChange}
+              onChange={handleTaxIdChange}
               className="w-full px-3 py-2 rounded-lg bg-[#1e293b] text-white text-sm outline-none"
             />
           </div>
@@ -174,8 +227,15 @@ const AddLawFirm = ({ onClose }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg bg-[#1e293b] text-white text-sm outline-none"
+              className={`w-full px-3 py-2 rounded-lg text-sm outline-none ${
+                errors.email
+                  ? "border border-red-500 bg-[#1e293b]"
+                  : "bg-[#1e293b]"
+              }`}
             />
+            {errors.email && (
+              <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+            )}
           </div>
 
           {/* Managing User */}

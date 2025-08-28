@@ -20,6 +20,7 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
     if (firmToEdit) {
       setFormData({
         firmname: firmToEdit.name || "",
+        email: firmToEdit.contact_email || "",
         area_code: firmToEdit.area_code || "",
         location: firmToEdit.address || "",
         website: firmToEdit.website || "",
@@ -114,8 +115,8 @@ const EditLawfirm = ({ onClose, firmToEdit }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
-              className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none"
+              disabled
+              className="w-full p-2 rounded-lg poppins bg-[#1e293b] focus:outline-none cursor-not-allowed"
             />
           </div>
 

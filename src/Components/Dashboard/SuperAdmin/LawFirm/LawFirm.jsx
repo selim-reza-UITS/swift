@@ -47,8 +47,13 @@ const LawFirmCard = ({ item, onEdit, onDelete, onEditBilling }) => {
       }`}
     >
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-semibold">{item.name}</h2>
+        <h2 className="text-base font-semibold">{item.name}</h2>
         <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-[10px]">
+              {item.is_active ? "Active" : "Deactive"}
+            </h1>
+          </div>
           <ToggleSwitch
             isOn={item.is_active}
             handleToggle={() => onEdit.toggleStatus(item)}

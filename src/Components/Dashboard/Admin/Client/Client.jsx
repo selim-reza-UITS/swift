@@ -99,7 +99,7 @@ const Client = ({ managers }) => {
 
   return (
     <div className="p-4 mx-auto mt-6 rounded-md bg-[#0f172a] text-white">
-      <div className="flex items-center justify-end gap-5 rounded-md poppins">
+      <div className="flex items-center justify-end gap-5 mb-5 -mt-4 rounded-md poppins">
         <button
           onClick={() => setShowAddClientModal(true)}
           className="flex items-center gap-2 w-[250px] h-[50px] p-5 text-white bg-gradient-to-r from-[#5d35bb] to-[#8A2BE2] rounded-xl"

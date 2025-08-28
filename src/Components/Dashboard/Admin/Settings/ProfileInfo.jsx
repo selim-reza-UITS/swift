@@ -7,7 +7,7 @@ import {
 } from "../../../../Redux/feature/Shared/Share";
 
 const ProfileInfo = () => {
-  const { data, isLoading, isError } = useGetProfileQuery();
+  const { data, isLoading, isError ,refetch} = useGetProfileQuery();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,6 +47,7 @@ const ProfileInfo = () => {
         color: "#f9fafb",
         confirmButtonColor: "#8B5CF6",
       });
+      refetch()
     } catch (error) {
       Swal.fire({
         icon: "error",

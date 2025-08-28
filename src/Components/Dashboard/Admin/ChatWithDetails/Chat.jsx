@@ -155,6 +155,9 @@ const Chat = () => {
               }`}
             />
           </button>
+          <span className="ml-2 text-sm font-medium">
+            {client?.is_paused ? "Paused" : "Active"}
+          </span>
         </div>
       </div>
 
@@ -195,7 +198,7 @@ const Chat = () => {
 
               {!isClient && (
                 <img
-                  src={avatar2} 
+                  src={avatar2}
                   alt={isFirm ? "Firm" : "AI"}
                   className="w-8 h-8 ml-2 rounded-full"
                 />
