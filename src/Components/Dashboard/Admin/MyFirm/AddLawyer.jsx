@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "animate.css";
 import { useCreateLawyerMutation } from "../../../../Redux/feature/Admin/admin";
 
-const AddLawyer = ({ onClose }) => {
+const AddLawyer = ({ onClose, refetchManagers }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -20,7 +20,7 @@ const AddLawyer = ({ onClose }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
- const handlePhoneChange = (e) => {
+  const handlePhoneChange = (e) => {
     const raw = e.target.value || "";
     const digits = raw.replace(/\D/g, "").slice(0, 10);
     let formatted = "";
@@ -39,7 +39,7 @@ const AddLawyer = ({ onClose }) => {
     e.preventDefault();
 
     try {
-      await createLawyer({
+      const response = await createLawyer({
         name: formData.fullName,
         email: formData.email,
         phone_number: formData.phone,
@@ -52,22 +52,16 @@ const AddLawyer = ({ onClose }) => {
         title: "Lawyer Added!",
         text: "The lawyer has been added successfully.",
         confirmButtonColor: "#3085d6",
-        background: "#1e293b", // dark background
-        color: "#f1f5f9", // light text
+        background: "#1e293b",
+        color: "#f1f5f9",
         showClass: { popup: "animate__animated animate__zoomIn" },
         hideClass: { popup: "animate__animated animate__zoomOut" },
       });
 
+      refetchManagers();
       onClose();
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: error?.data?.message || "Something went wrong",
-        confirmButtonColor: "#3085d6",
-        background: "#1e293b", // dark background
-        color: "#f1f5f9", // light text
-      });
+    } catch (err) {
+      console.log("Error adding lawyer:", err);
     }
   };
 

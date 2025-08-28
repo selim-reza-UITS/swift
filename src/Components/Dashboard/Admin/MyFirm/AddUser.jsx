@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "animate.css"; // Import animation
 import { useCreateUserMutation } from "../../../../Redux/feature/Admin/admin";
 
-const AddUser = ({ onClose, refetch }) => {
+const AddUser = ({ onClose, refetch, refetchManagers }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -72,7 +72,7 @@ const AddUser = ({ onClose, refetch }) => {
           popup: "animate__animated animate__zoomOut",
         },
       });
-
+      refetchManagers();
       onClose(); // close modal
     } catch (error) {
       console.error(error);

@@ -3,18 +3,22 @@ import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import {
   useDeleteCaseMutation,
+  useDeleteManagingUserQuery,
   useGetManagerQuery,
-
 } from "../../../../Redux/feature/Admin/admin";
 
-const MemberCard = ({ data,  onView, onEdit }) => {
+const MemberCard = ({ data, onView, onEdit, refetchManagers }) => {
   const [deleteCase] = useDeleteCaseMutation();
   const [step, setStep] = useState(1);
   const [reassignOption, setReassignOption] = useState("");
   const [newManager, setNewManager] = useState("");
-
+  const [managerId, setmanager] = useState("");
+  const [deleteUserId, setDeleteUserId] = useState(null);
+  const { data: response, refetch } = useDeleteManagingUserQuery(managerId);
+  console.log(data, "data");
 
   const handleDeleteClick = () => {
+    setmanager(data.id);
     // Step 1 popup
     Swal.fire({
       icon: "warning",
@@ -22,52 +26,60 @@ const MemberCard = ({ data,  onView, onEdit }) => {
       text: "This action cannot be undone.",
       showCancelButton: true,
       background: "#0f172a",
-        color: "#ffffff",
+      color: "#ffffff",
       confirmButtonText: "Continue to reassignment",
       cancelButtonText: "Cancel",
     }).then((result) => {
-      if (result.isConfirmed) setStep(2);
+      if (result.isConfirmed) {
+        setStep(2);
+      }
     });
   };
+  console.log(response, "response");
 
-  const handleConfirm = async () => {
-    if (!data?.id) return Swal.fire("Error", "User ID not found", "error");
+ const handleConfirm = async () => {
+  if (!managerId) 
+    return Swal.fire("Error", "User ID not found", "error");
 
-    const payload = {
-      user_id: data.id,
-      reassignment_option:
-        reassignOption === "Move all clients"
-          ? "move_all_clients"
-          : reassignOption === "Move solo clients"
-          ? "move_only_solo_clients"
-          : "opt_out_clients",
-      new_managing_user_id: reassignOption.includes("Move") ? newManager : null,
-    };
-
-    try {
-      await deleteCase(payload).unwrap(); // DELETE method call
-      Swal.fire({
-        icon: "success",
-        title: "Deleted!",
-        text: "User deletion flow completed.",
-        background: "#0f172a",
-        color: "#ffffff",
-        confirmButtonColor: "#6366F1",
-      });
-      setStep(1);
-      setReassignOption("");
-      setNewManager("");
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "User could not be deleted.",
-        background: "#0f172a",
-        color: "#ffffff",
-        confirmButtonColor: "#6366F1",
-      });
-    }
+  const payload = {
+    user_id: managerId, // dynamic id for URL
+    reassignment_option:
+      reassignOption === "Move all clients"
+        ? "move_all_clients"
+        : reassignOption === "Move solo clients"
+        ? "move_only_solo_clients"
+        : "opt_out_clients",
+    new_managing_user_id: reassignOption.includes("Move")
+      ? Number(newManager) // Convert to number if backend expects an integer
+      : null,
   };
+
+  try {
+    await deleteCase(payload).unwrap(); // DELETE request call
+    Swal.fire({
+      icon: "success",
+      title: "Deleted!",
+      text: "User deletion flow completed.",
+      background: "#0f172a",
+      color: "#ffffff",
+      confirmButtonColor: "#6366F1",
+    });
+    setStep(1);
+    refetch();
+    refetchManagers();
+    setReassignOption("");
+    setNewManager("");
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: err?.data?.message || "User could not be deleted.",
+      background: "#0f172a",
+      color: "#ffffff",
+      confirmButtonColor: "#6366F1",
+    });
+  }
+};
 
   return (
     <>
@@ -149,7 +161,7 @@ const MemberCard = ({ data,  onView, onEdit }) => {
                 className="w-full p-2 rounded-lg bg-[#1e293b]"
               >
                 <option value="">Select new manager</option>
-                {managers.map((m) => (
+                {response.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.name}
                   </option>
@@ -163,6 +175,7 @@ const MemberCard = ({ data,  onView, onEdit }) => {
                   setStep(1);
                   setReassignOption("");
                   setNewManager("");
+                  setmanager("");
                 }}
                 className="px-4 py-2 bg-gray-600 rounded hover:bg-gray-500"
               >
