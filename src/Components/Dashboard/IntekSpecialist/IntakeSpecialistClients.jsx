@@ -387,9 +387,10 @@ const IntakeSpecialistClients = () => {
           </div>
         </div>
       )}
-      {isEditModalOpen && selectedEditClient && (
+      {isEditModalOpen && (
         <EditClientDetails
-          clientId={selectedEditClient.id} // Pass the client ID dynamically
+          clientId={selectedEditClient?.id} // Pass the client ID dynamically
+          client={selectedEditClient}
           onClose={() => {
             setIsEditModalOpen(false);
             setEditSelectedClient(null);

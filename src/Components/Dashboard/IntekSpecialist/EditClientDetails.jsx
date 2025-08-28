@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { TbXboxXFilled } from "react-icons/tb";
 import Swal from "sweetalert2";
+import avatar from "../../../assets/avatar.png";
+
 import {
   useGetAllLawyerQuery,
   useGetAllUserQuery,
@@ -194,7 +196,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
 
         <div className="mt-2 text-center">
           <img
-            src={clientData?.avatar}
+            src={avatar}
             alt={formData.fullName || clientData.full_name}
             className="object-cover w-20 h-20 mx-auto border-2 border-blue-500 rounded-full"
           />
