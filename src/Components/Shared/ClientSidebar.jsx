@@ -3,7 +3,7 @@ import { User, Edit } from "lucide-react";
 
 function ClientSidebar({ clientData, onBack, onEdit }) {
   return (
-    <div className="w-80 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto">
+    <div className="w-80 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto h-[90vh]">
       {/* Back Button and Edit Client Button */}
       <div className="flex items-center justify-between space-x-2 ">
         <button
@@ -29,11 +29,11 @@ function ClientSidebar({ clientData, onBack, onEdit }) {
       </div>
       {/* Client Profile */}
       <div className="flex flex-col items-center mb-6">
-        <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mr-4">
+        <div className="w-16 h-16 mx-auto bg-gray-600 rounded-full flex items-center justify-center mb-2">
           <User className="w-8 h-8 text-gray-300" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold">{clientData?.full_name}</h2>
+          <h2 className="text-xl font-semibold text-center">{clientData?.full_name}</h2>
           <p className="text-gray-400 text-center">
             {clientData?.phone_number}
           </p>

@@ -179,7 +179,6 @@ const handleSubmit = async (e) => {
 
   return (
     <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full z-50">
-      <Toaster />
       <div className=" rounded-lg p-8 w-full max-h-[80vh] overflow-y-auto ">
         {/* Header */}
         <div className="mb-6 text-center">

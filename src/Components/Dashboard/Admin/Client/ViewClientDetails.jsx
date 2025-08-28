@@ -6,13 +6,11 @@ import Loader from "../../../../Redux/feature/Shared/Loader";
 import { div } from "framer-motion/client";
 
 const ViewClientDetails = ({ onClose, clientId }) => {
-  console.log(clientId);
   const {
     data: clientData,
     isLoading,
     error,
   } = useGetClientByIdQuery(clientId);
-  console.log(clientData);
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm roboto">
       <div className="relative max-w-2xl w-1/4 mx-auto bg-[#0f172a] text-white rounded-xl p-4">

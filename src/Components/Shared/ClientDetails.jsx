@@ -11,7 +11,8 @@ import {
   useUpdateClientMutation,
 } from "../../Redux/api/caseapi";
 import Swal from "sweetalert2";
-import { i } from "framer-motion/client";
+import Loader from "../../Redux/feature/Shared/Loader";
+import { useUpdateClientStatusMutation } from "../../Redux/feature/Admin/admin";
 
 function ClientDetails() {
   const params = useParams(); // Get the clientId from URL parameters
@@ -24,28 +25,13 @@ function ClientDetails() {
     error,
   } = useGetClientByIdQuery(params.id);
 
+  console.log(clientData);
+
   const { data: microInsights } = useGetMicroInsightsQuery(params.id);
   console.log("microInsights", microInsights);
-  const [updateClient, { isLoading: isUpdating, error: updateError }] =
-    useUpdateClientMutation();
+  const [updateClient] = useUpdateClientMutation();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([
-    {
-      from: "ai",
-      text: "Hi Sarah! This is your weekly check-in from Arviso. How are you feeling this week? Any new symptoms or concerns about your injury?",
-      time: "2 hours ago",
-    },
-    {
-      from: "user",
-      text: "Hi! I've been having more pain in my back lately, especially when I try to sleep. Should I be worried?",
-      time: "1 hour ago",
-    },
-    {
-      from: "admin",
-      text: "It’s best to see a doctor or healthcare professional to get it checked, especially if it’s affecting your sleep or daily activities.",
-      time: "1 hour ago",
-    },
-  ]);
+  const [messages, setMessages] = useState();
   // console.log(clientData);
 
   // Lawyer options mapping
@@ -104,7 +90,8 @@ function ClientDetails() {
   }, [clientData]);
   const managingRef = useRef(null);
   const [isManagingOpen, setIsManagingOpen] = useState(false);
-
+  const [updateStatus, { isLoading: isUpdating }] =
+    useUpdateClientStatusMutation();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (managingRef.current && !managingRef.current.contains(event.target)) {
@@ -222,9 +209,47 @@ function ClientDetails() {
       });
     }
   };
+  const handleToggleStatus = async () => {
+    if (!clientData) return;
 
+    const newPaused = !clientData.is_paused;
+    const newActive = !newPaused;
+
+    try {
+      await updateStatus({
+        id: clientData.id,
+        is_paused: newPaused,
+        is_active: newActive,
+      }).unwrap();
+
+      await refetch();
+
+      Swal.fire({
+        icon: "success",
+        title: "Status Updated",
+        text: newPaused ? "Client Paused" : "Client Active",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: error?.data?.message || "Something went wrong",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    }
+  };
   // Loading and error states
-  if (isLoading) return <div className="text-white">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <Loader />
+      </div>
+    );
   if (error) return <div>Error loading client details.</div>;
 
   return (
@@ -262,23 +287,24 @@ function ClientDetails() {
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => setIsPaused(!isPaused)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    isPaused ? "bg-red-600" : "bg-green-600"
+                  onClick={handleToggleStatus}
+                  disabled={isUpdating}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                    clientData?.is_paused ? "bg-red-600" : "bg-green-600"
                   }`}
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      isPaused ? "translate-x-6" : "translate-x-1"
+                      clientData?.is_paused ? "translate-x-6" : "translate-x-1"
                     }`}
                   />
                 </button>
                 <span
                   className={`text-sm font-medium ${
-                    isPaused ? "text-red-400" : "text-green-400"
+                    clientData?.is_paused ? "text-red-400" : "text-green-400"
                   }`}
                 >
-                  {isPaused ? "Paused" : "Active"}
+                  {clientData?.is_paused ? "Paused" : "Active"}
                 </span>
               </div>
             </div>
@@ -323,20 +349,19 @@ function ClientDetails() {
               ) : (
                 <>
                   {/* First Alert */}
-                 {
-                  microInsights?.insights?.map((insight, index) => (
-                     <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          {insight?.micro_insight}
+                  {microInsights?.insights?.map((insight, index) => (
+
+                    <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
+                      <div className="flex items-start space-x-3">
+                        <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            {insight?.micro_insight? insight?.micro_insight: "No insights found for this client."}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  ))
-                 }
+                  ))}
                 </>
               )}
             </div>

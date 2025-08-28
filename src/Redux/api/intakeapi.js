@@ -3,7 +3,7 @@ import { api } from "./api";
 export const intakeapi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllUser: builder.query({
-      query: () => "users/",
+      query: () => "managing-users/",
       invalidatesTags: ["intake"],
     }),
 
