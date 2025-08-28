@@ -195,7 +195,7 @@ const Chat = () => {
 
               {!isClient && (
                 <img
-                  src={avatar2} 
+                  src={avatar2}
                   alt={isFirm ? "Firm" : "AI"}
                   className="w-8 h-8 ml-2 rounded-full"
                 />
