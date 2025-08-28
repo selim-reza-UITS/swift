@@ -46,13 +46,13 @@ const IntekSpecialistSidebar = () => {
   };
   const toggleDropdownSettings = () => setSeetingsDropdownOpen((prev) => !prev);
   return (
-    <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen text-white flex flex-col justify-between  open-sns">
+    <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen text-[#9CA3AF] flex flex-col justify-between  open-sns">
       {/* Logo Section */}
       <div className="flex flex-col py-4">
         <Link to={"/dashboard/intakeSpecialist"}>
           <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
             <a className="block" href="#">
-            <img src={logo} alt="" className="w-[50px] h-[50px]" />
+              <img src={logo} alt="" className="w-[50px] h-[50px]" />
             </a>
           </div>
         </Link>

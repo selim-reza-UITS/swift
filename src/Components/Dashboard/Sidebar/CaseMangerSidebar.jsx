@@ -46,7 +46,6 @@ const CaseMangerSidebar = () => {
           <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
             <Link
               to={"/dashboard/caseManager"}
-              className="block text-teal-600"
               href="#"
             >
             <img src={logo} alt="" className="w-[50px] h-[50px]" />
