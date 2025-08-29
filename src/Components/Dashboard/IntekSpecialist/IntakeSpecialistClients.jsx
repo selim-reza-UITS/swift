@@ -11,9 +11,20 @@ import Swal from "sweetalert2";
 import ViewClientDetails from "../Admin/Client/ViewClientDetails";
 import EditClientDetails from "./EditClientDetails";
 import { useClientOptOutMutation } from "../../../Redux/api/caseapi";
-import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
+import {
+  useGetAllClientsQuery,
+  useGetClientByIdQuery,
+} from "../../../Redux/api/intakeapi";
+import Loader from "../../../Redux/feature/Shared/Loader";
 const IntakeSpecialistClients = () => {
   const [clientOptOut] = useClientOptOutMutation();
+  const [clientId, setClientId] = useState(null);
+  const {
+    data: clientData,
+    isLoading: clientLoading,
+    error,
+  } = useGetClientByIdQuery(clientId);
+  console.log(clientId);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -66,6 +77,7 @@ const IntakeSpecialistClients = () => {
     }
     setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
   };
+
   const [displayClients, setDisplayClients] = useState([]);
 
   const handleUpdate = (updatedData) => {
@@ -103,6 +115,7 @@ const IntakeSpecialistClients = () => {
   const [selectedEditClient, setEditSelectedClient] = useState(null);
   const itemsPerPage = 7;
   const { data: clients = [], isLoading } = useGetAllClientsQuery(activeView);
+  console.log(clients)
   const filteredClients = clients.filter((client) => {
     const matchesSearch = client.full_name
       ?.toLowerCase()
@@ -110,7 +123,7 @@ const IntakeSpecialistClients = () => {
 
     return matchesSearch;
   });
-
+  console.log(isEditModalOpen);
   const totalPages = Math.ceil(clients.length / itemsPerPage);
   const currentClients = filteredClients.slice(
     (currentPage - 1) * itemsPerPage,
@@ -153,9 +166,10 @@ const IntakeSpecialistClients = () => {
       setCurrentPage(page);
     }
   };
+
   const handleDeleteClient = (id) => {
     const client = clients.find((user) => user.id === id);
-
+console.log(client)
     if (client) {
       Swal.fire({
         title: "Are you sure?",
@@ -176,7 +190,7 @@ const IntakeSpecialistClients = () => {
   };
 
   const handleDeleteConfirm = async (id) => {
-    setShowDeleteModal(false);
+    // setShowDeleteModal(false);
 
     // Call your API to delete the client
     const result = await clientOptOut(id);
@@ -263,85 +277,91 @@ const IntakeSpecialistClients = () => {
           </button>
         </div>
       </div>
-
-      {/* Client List */}
-      <div className="flex-1 p-6 overflow-auto">
-        <div className="space-y-4">
-          {currentClients?.map((client) => (
-            <div
-              key={client.id}
-              className="flex items-center justify-between p-4 transition-colors bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <img
-                    src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
-                    alt={client.full_name}
-                    className="w-12 h-12 bg-gray-600 rounded-full"
-                  />
-                  <div
-                    className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-800 ${getStatusColor(
-                      client.status
-                    )}`}
-                  ></div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-white">
-                    {client.full_name}
-                  </h3>
-                  <p className="text-sm text-gray-400">{client.phone_number}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                    client.status
-                  )} text-white`}
-                >
-                  {client?.status}
-                </span>
-
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(
-                    client.priority
-                  )}`}
-                >
-                  {client?.concern_level}{" "}
-                </span>
-                <Edit
-                  onClick={() => {
-                    setEditSelectedClient(client);
-                    setIsEditModalOpen(true);
-                  }}
-                  className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
-                />
-                <View
-                  onClick={() => {
-                    setSelectedClient(client);
-                    setIsModalOpen(true);
-                  }}
-                  className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
-                />
-                <Trash
-                  onClick={() => handleDeleteClient(client.id)}
-                  className="ml-3 mb-0.5 text-gray-300 cursor-pointer  hover:text-red-400"
-                />
-              </div>
-            </div>
-          ))}
-
-          {currentClients.length === 0 && (
-            <div className="py-12 text-center">
-              <p className="text-lg text-gray-400">
-                No clients found matching your criteria.
-              </p>
-            </div>
-          )}
+      {isLoading ? (
+        <div className="h-[50vh] flex items-center justify-center">
+          <Loader />
         </div>
-      </div>
+      ) : (
+        <div className="flex-1 p-6 overflow-auto">
+          <div className="space-y-4">
+            {currentClients?.map((client) => (
+              <div
+                key={client.id}
+                className="flex items-center justify-between p-4 transition-colors bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <img
+                      src="https://res.cloudinary.com/dwycwft99/image/upload/v1752214794/5856_lb1zob.jpg"
+                      alt={client.full_name}
+                      className="w-12 h-12 bg-gray-600 rounded-full"
+                    />
+                    <div
+                      className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-800 ${getStatusColor(
+                        client.status
+                      )}`}
+                    ></div>
+                  </div>
 
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">
+                      {client.full_name}
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      {client.phone_number}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                      client.status
+                    )} text-white`}
+                  >
+                    {client?.status}
+                  </span>
+
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(
+                      client.priority
+                    )}`}
+                  >
+                    {client?.concern_level}{" "}
+                  </span>
+                  <Edit
+                    onClick={() => {
+                      setClientId(client.id);
+                      setEditSelectedClient(client);
+                      setIsEditModalOpen(true);
+                    }}
+                    className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
+                  />
+                  <View
+                    onClick={() => {
+                      setSelectedClient(client);
+                      setIsModalOpen(true);
+                    }}
+                    className="ml-3 text-gray-300 cursor-pointer hover:text-[#8B5CF6]"
+                  />
+                  <Trash
+                    onClick={() => handleDeleteClient(client.id)}
+                    className="ml-3 mb-0.5 text-gray-300 cursor-pointer  hover:text-red-400"
+                  />
+                </div>
+              </div>
+            ))}
+
+            {currentClients.length === 0 && (
+              <div className="py-12 text-center">
+                <p className="text-lg text-gray-400">
+                  No clients found matching your criteria.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       {/* Pagination */}
       {clients.length > itemsPerPage && (
         <div className="flex items-center justify-between flex-shrink-0 px-6 pt-4 border-t border-gray-800">
@@ -387,18 +407,32 @@ const IntakeSpecialistClients = () => {
           </div>
         </div>
       )}
-      {isEditModalOpen && (
-        <EditClientDetails
-          clientId={selectedEditClient?.id} // Pass the client ID dynamically
-          client={selectedEditClient}
-          onClose={() => {
-            setIsEditModalOpen(false);
-            setEditSelectedClient(null);
-          }}
-          onUpdate={handleUpdate}
-        />
-      )}
 
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60 py-10 overflow-y-auto">
+          <div
+            className="relative w-full max-w-xl p-6 mx-4 mt-8 rounded-lg shadow-lg bg-[#0f172a] h-[90vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Loader if clientData is loading */}
+            {clientLoading ? (
+              <div className="flex items-center justify-center max-w-2xl w-1/4 mx-auto ">
+                <Loader />
+              </div>
+            ) : (
+              <EditClientDetails
+                clientId={selectedEditClient?.id}
+                client={clientData}
+                onClose={() => {
+                  setIsEditModalOpen(false);
+                  setEditSelectedClient(null);
+                }}
+                onUpdate={handleUpdate}
+              />
+            )}
+          </div>
+        </div>
+      )}
       {isModalOpen && selectedClient && (
         <ViewClientDetails
           clientId={selectedClient?.id}

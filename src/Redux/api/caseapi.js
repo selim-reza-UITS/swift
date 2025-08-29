@@ -25,6 +25,7 @@ export const caseapi = api.injectEndpoints({
       }),
       invalidatesTags: ["case"],
     }),
+    
     clientOptOut: builder.mutation({
       query: (id) => ({
         url: `/clients/${id}/opt-out/`,
