@@ -139,7 +139,7 @@ const Chat = () => {
                 : "bg-green-600 text-white"
             }`}
           >
-            {client?.concern_level || ""}
+            {client?.concern_level || ""} Risk
           </button>
 
           <button
@@ -155,11 +155,21 @@ const Chat = () => {
               }`}
             />
           </button>
+          <span className="ml-2 text-sm font-medium">
+            {client?.is_paused ? "Paused" : "Active"}
+          </span>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-6 space-y-4 overflow-y-auto">
+      <div className={`relative flex-1 p-6 space-y-4 overflow-y-auto`}>
+        {/* <div
+        className={`relative flex-1 p-6 space-y-4 ${
+          !client?.consent_to_communicate
+            ? "overflow-hidden"
+            : "overflow-y-auto"
+        }`}
+      > */}
         {chatDetails?.map((msg) => {
           const isClient = msg.sender === "client";
           const isFirm = msg.sender === "firm";
@@ -203,16 +213,44 @@ const Chat = () => {
             </div>
           );
         })}
-        <div ref={messagesEndRef} />
-      </div>
 
+        <div ref={messagesEndRef} />
+        {/* {!client.consent_to_communicate && (
+          <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
+            <p className="max-w-xl text-gray-300">
+              It looks like this client hasn’t completed the consent form. For
+              messaging to be enabled, please have them complete the quick
+              permission form.
+            </p>
+          </div>
+        )} */}
+      </div>
+      {/* Overlay if client is inactive */}
+      {client.is_paused && !client.opt_out && (
+        <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm ">
+          <p className="text-sm text-gray-300 ">
+            This client is paused. Activate the client first to send messages.
+          </p>
+        </div>
+      )}
+      {client.opt_out && !client.is_paused && (
+        <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm">
+          <p className="text-sm text-gray-300">
+            This client, <span className="font-medium">{client.full_name}</span>
+            , has already opted out. You cannot send messages or make changes
+            for this client.
+          </p>
+        </div>
+      )}
       {/* Input */}
-      <div className="flex items-center p-4 space-x-3 bg-gray-800 border-t border-gray-700">
+      <div className="flex items-center p-4 mt-2 space-x-3 bg-gray-800 border-t border-gray-700">
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
-          className="flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          //   disabled={!client?.is_active || client?.opt_out || !client?.consentToCommunicate} // disable if inactive
+          disabled={!client?.is_active || client?.opt_out}
+          className="flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           rows={3}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -222,8 +260,9 @@ const Chat = () => {
           }}
         />
         <button
-          className="p-3 bg-blue-600 rounded-lg hover:bg-blue-700"
+          className="p-3 bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleSendMessage}
+          disabled={!client?.is_active}
         >
           <Send className="w-5 h-5" />
         </button>

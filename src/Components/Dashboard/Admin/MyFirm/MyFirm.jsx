@@ -17,6 +17,7 @@ import {
   useGetDashboardQuery,
   useGetFirmChartQuery,
   useGetLawyerQuery,
+  useGetManagerQuery,
 } from "../../../../Redux/feature/Admin/admin";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
@@ -34,8 +35,18 @@ const MyFirm = () => {
   const itemsPerPage = 4;
 
   const { data: firmScores } = useGetFirmChartQuery();
-  const { data: firm, isLoading: isMembersLoading, refetch } = useGetDashboardQuery();
-  const { data: lawyerApiData = [], isLoading, isError } = useGetLawyerQuery();
+  const {
+    data: firm,
+    isLoading: isMembersLoading,
+    refetch,
+  } = useGetDashboardQuery();
+  const {
+    data: managers,
+    isLoading: managersLoading,
+    isError: managersError,
+    refetch: refetchManagers,
+  } = useGetManagerQuery();
+  const { data: lawyerApiData = [], isLoading, isError, refetch: lawyerRefetch } = useGetLawyerQuery();
 
   const firmStats = {
     performanceScore: firmScores?.firm_health_score,
@@ -47,9 +58,9 @@ const MyFirm = () => {
   // API gives direct array of lawyers
   const lawyerList = Array.isArray(lawyerApiData) ? lawyerApiData : [];
   const memberList = React.useMemo(() => {
-    if (!firm) return [];
+    if (!managers) return [];
 
-    const caseManagers = firm.case_managers.map((member) => ({
+    const formattedManagers = managers.map((member) => ({
       id: member.id,
       name: member.name,
       email: member.email,
@@ -57,24 +68,12 @@ const MyFirm = () => {
       image: member.name
         .split(" ")
         .map((n) => n[0])
-        .join("") // initials like "JD" for "John Doe"
-        .toUpperCase(), // default placeholder image
+        .join("") // initials like "JD"
+        .toUpperCase(),
     }));
 
-    const intakeSpecialists = firm.intake_specialists.map((member) => ({
-      id: member.id,
-      name: member.name,
-      email: member.email,
-      role: member.role,
-      image: member.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("") // initials like "NP" for "Nina Patel"
-        .toUpperCase(), // default placeholder image
-    }));
-
-    return [...caseManagers, ...intakeSpecialists];
-  }, [firm]);
+    return formattedManagers;
+  }, [managers]);
 
   const filteredLawyers = lawyerList.filter((lawyer) =>
     lawyer.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -98,6 +97,7 @@ const MyFirm = () => {
     indexOfFirstMember,
     indexOfLastMember
   );
+  console.log("Members in MyFirm:", currentMembers);
 
   const handleAddClick = () => {
     if (activeTab === "lawyers") {
@@ -107,54 +107,7 @@ const MyFirm = () => {
     }
   };
 
- const [deleteLawyer] = useDeleteLawyerMutation(); // import this from your RTK slice
-
-const handleDelete = async (type, id) => {
-  Swal.fire({
-    title: "Are you sure?",
-    text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#4b5563",
-    confirmButtonText: "Yes, delete it!",
-    background: "#1f2937",
-    color: "#ffffff",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        if (type === "lawyer") {
-          // Call RTK Query mutation
-          await deleteLawyer({ id }).unwrap();
-        } else {
-          // Local deletion for users
-          const updated = memberList.filter((member) => member.id !== id);
-          setMemberList(updated);
-        }
-
-        Swal.fire({
-          title: "Deleted!",
-          text: "The entry has been deleted.",
-          icon: "success",
-          background: "#1f2937",
-          color: "#ffffff",
-          confirmButtonColor: "#6366F1",
-        });
-      } catch (error) {
-        console.error("Delete failed:", error);
-        Swal.fire({
-          title: "Error!",
-          text: "Something went wrong.",
-          icon: "error",
-          background: "#1f2937",
-          color: "#ffffff",
-          confirmButtonColor: "#6366F1",
-        });
-      }
-    }
-  });
-};
-
+  const [deleteLawyer] = useDeleteLawyerMutation(); // import this from your RTK slice
 
   const handleViewDetails = (type, data) => {
     if (type === "lawyer") {
@@ -170,6 +123,51 @@ const handleDelete = async (type, id) => {
     } else {
       setSelectedEditUser(data);
     }
+  };
+ const handleDelete = async (type, id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You want to delete this ${type === "lawyer" ? "lawyer" : "user"}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#4b5563",
+      confirmButtonText: "Yes, delete it!",
+      background: "#1f2937",
+      color: "#ffffff",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          if (type === "lawyer") {
+            await deleteLawyer({ id }).unwrap();
+            // Remove from local state
+          lawyerRefetch ()
+          } else {
+            setMembersState((prev) => prev.filter((m) => m.id !== id));
+            if (selectedUser?.id === id) setSelectedUser(null);
+          }
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "The entry has been deleted.",
+            icon: "success",
+            background: "#1f2937",
+            color: "#ffffff",
+            confirmButtonColor: "#6366F1",
+          });
+        } catch (error) {
+          console.error("Delete failed:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "Something went wrong.",
+            icon: "error",
+            background: "#1f2937",
+            color: "#ffffff",
+            confirmButtonColor: "#6366F1",
+          });
+        }
+      }
+    });
   };
 
   return (
@@ -296,6 +294,7 @@ const handleDelete = async (type, id) => {
                 phone: lawyer.phone_number,
                 manager: lawyer.law_firm?.name || "N/A",
               }}
+              refetch={refetch}
               onDelete={() => handleDelete("lawyer", lawyer.id)}
               onView={() => handleViewDetails("lawyer", lawyer)}
               onEdit={() => handleEditDetails("lawyer", lawyer)}
@@ -308,6 +307,7 @@ const handleDelete = async (type, id) => {
             <MemberCard
               key={member.id}
               data={member}
+              refetchManagers={refetchManagers}
               onDelete={() => handleDelete("user", member.id)}
               onView={() => handleViewDetails("user", member)}
               onEdit={() => handleEditDetails("user", member)}
@@ -434,7 +434,13 @@ const handleDelete = async (type, id) => {
       )}
 
       {/* Modals */}
-      {showUserModal && <AddUser refetch={refetch} onClose={() => setShowUserModal(false)} />}
+      {showUserModal && (
+        <AddUser
+          refetchManagers={refetchManagers}
+          refetch={refetch}
+          onClose={() => setShowUserModal(false)}
+        />
+      )}
       {showLawyerModal && (
         <AddLawyer onClose={() => setShowLawyerModal(false)} />
       )}

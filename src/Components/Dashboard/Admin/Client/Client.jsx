@@ -5,6 +5,8 @@ import { NavLink } from "react-router-dom";
 import {
   useGetClientQuery,
   useOptOutClientMutation,
+  useUpdateClientStatusMutation,
+  useUpdateOptMutation,
 } from "../../../../Redux/feature/Admin/admin";
 import AddClientForm from "../../../Shared/AddClientForm";
 import { Plus } from "lucide-react";
@@ -34,8 +36,13 @@ const Client = ({ managers }) => {
   const [filter, setFilter] = useState("All");
   const [showAddClientModal, setShowAddClientModal] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState(null);
-
-  const { data: clients = [], isLoading, isError } = useGetClientQuery();
+  const [updateOpt, { isLoading: isUpdating }] = useUpdateOptMutation();
+  const {
+    data: clients = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useGetClientQuery();
   const [optOutClient] = useOptOutClientMutation();
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading clients!</p>;
@@ -60,10 +67,10 @@ const Client = ({ managers }) => {
       confirmButtonColor: "#8A2BE2",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Opt-out",
-      background: "#1e293b", // Dark background
-      color: "#f8fafc", // Light text color
+      background: "#1e293b",
+      color: "#f8fafc",
       customClass: {
-        popup: "rounded-2xl shadow-lg", // rounded and shadow
+        popup: "rounded-2xl shadow-lg",
         title: "text-xl font-semibold",
         confirmButton: "px-4 py-2 rounded-lg",
         cancelButton: "px-4 py-2 rounded-lg",
@@ -71,7 +78,9 @@ const Client = ({ managers }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await optOutClient(client.id).unwrap();
+          // API call to update opt_out to true
+          await updateOpt({ id: client.id, opt_out: true }).unwrap();
+
           Swal.fire({
             icon: "success",
             title: "Opt-out Successful",
@@ -80,6 +89,8 @@ const Client = ({ managers }) => {
             background: "#1e293b",
             color: "#f8fafc",
           });
+
+          refetch(); // refresh the data
         } catch (error) {
           Swal.fire({
             icon: "error",
@@ -99,7 +110,7 @@ const Client = ({ managers }) => {
 
   return (
     <div className="p-4 mx-auto mt-6 rounded-md bg-[#0f172a] text-white">
-      <div className="flex items-center justify-end gap-5 rounded-md poppins">
+      <div className="flex items-center justify-end gap-5 mb-5 -mt-4 rounded-md poppins">
         <button
           onClick={() => setShowAddClientModal(true)}
           className="flex items-center gap-2 w-[250px] h-[50px] p-5 text-white bg-gradient-to-r from-[#5d35bb] to-[#8A2BE2] rounded-xl"

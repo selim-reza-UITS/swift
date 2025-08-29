@@ -269,7 +269,7 @@ const EditClientModal = ({
 
           {/* Communication & Case Info */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
+            {/* <div>
               <label className="block mb-2 text-sm font-medium text-gray-300">
                 Sentiment
               </label>
@@ -283,8 +283,8 @@ const EditClientModal = ({
                 <option value="Neutral">Neutral</option>
                 <option value="Negative">Negative</option>
               </select>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <label className="block mb-2 text-sm font-medium text-gray-300">
                 Risk Level
               </label>
@@ -298,7 +298,7 @@ const EditClientModal = ({
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
               </select>
-            </div>
+            </div> */}
             <div className="col-span-1 md:col-span-2">
               <label className="block mb-2 text-sm font-medium text-gray-300">
                 Injury's Sustained

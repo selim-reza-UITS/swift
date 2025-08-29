@@ -11,7 +11,6 @@ const EditAndViewPart = () => {
     params.id
   );
 
-
   const chatLoading = false;
 
   if (clientLoading || chatLoading) {
@@ -27,6 +26,7 @@ const EditAndViewPart = () => {
       <ClientDetails />
       {/* Right side - Chat */}
       <Chat />
+     
     </div>
   );
 };

@@ -86,31 +86,31 @@ const Header = () => {
     <div className="relative flex items-center justify-between px-6 py-4 bg-[#161E2F] text-white poppins">
       <div></div>
 
-      <div className="flex items-center gap-6">
-        {/* Notification Bell */}
-        <div
-          className="relative"
-          onClick={() => setShowNotifications(!showNotifications)}
-        >
-          <IoNotificationsSharp className="text-2xl text-purple-500 cursor-pointer" />
-          {count > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-              {count}
-            </span>
-          )}
+      {/* Notification Bell */}
 
-          {showNotifications && (
-            <div ref={notificationRef}>
-              <Notifications
-                notifications={notifications?.all_notifications || []}
-                onClose={() => setShowNotifications(false)}
-              />
-            </div>
-          )}
-        </div>
+      {/* Feedback Button */}
+      {allowedRoles.includes(role) && (
+        <div className="flex items-center gap-6">
+          <div
+            className="relative"
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            <IoNotificationsSharp className="text-2xl text-purple-500 cursor-pointer" />
+            {count > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                {count}
+              </span>
+            )}
 
-        {/* Feedback Button */}
-        {allowedRoles.includes(role) && (
+            {showNotifications && (
+              <div ref={notificationRef}>
+                <Notifications
+                  notifications={notifications?.all_notifications || []}
+                  onClose={() => setShowNotifications(false)}
+                />
+              </div>
+            )}
+          </div>
           <div
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-4"
@@ -119,8 +119,8 @@ const Header = () => {
               Feedback
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Feedback Modal */}
       {isModalOpen && (
