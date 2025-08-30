@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import logo from "../../assets/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,8 +37,7 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
- 
-  // const user = useSelector((state) => state.auth?.user);
+  const user = useSelector((state) => state.auth?.user);
 
   // useEffect(() => {
   //   const storedUser = localStorage.getItem("user");
@@ -84,17 +84,10 @@ const Navbar = () => {
 
           {/*  Right: Log In & Sign Up (Large Screen) */}
           <div className="items-center hidden gap-6 lg:flex">
-            <NavLink
-              to="/login"
-              className=" md:text-base rounded-xl  bg-[#6366F1] hover:bg-transparent hover:text-black  border hover:border-[#5c5edf] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 hover:scale-105"
-            >
-            Login 
-            </NavLink>
-
-            {/* {user ? (
+            {user ? (
               <Link
                 to="/dashboard"
-                className="montserrat md:text-base rounded-3xl bg-gradient-to-b from-[#00B2F7] via-[#1E3A8A]  to-[#080F24] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white"
+                className="montserrat md:text-base rounded-3xl bg-gradient-to-b from-[#6366F1] via-[#4245df]  to-[#4a0653] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white"
               >
                 Dashboard
               </Link>
@@ -102,18 +95,12 @@ const Navbar = () => {
               <>
                 <NavLink
                   to="/login"
-                  className=" montserrat   md:text-base px-5 py-2.5 text-sm font-medium text-[#000000] "
+                  className=" md:text-base rounded-xl  bg-[#6366F1] hover:bg-transparent hover:text-black  border hover:border-[#5c5edf] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white transform transition duration-300 hover:scale-105"
                 >
-                  Log in
-                </NavLink>
-                <NavLink
-                  to="/signUp"
-                  className="montserrat md:text-base rounded-3xl bg-gradient-to-b from-[#00B2F7] via-[#1E3A8A]  to-[#080F24] px-3 py-2  sm:px-5 sm:py-2.5 text-sm font-medium text-white"
-                >
-                  Sign up
+                  Login
                 </NavLink>
               </>
-            )} */}
+            )}
           </div>
 
           {/*  Mobile Menu Button */}

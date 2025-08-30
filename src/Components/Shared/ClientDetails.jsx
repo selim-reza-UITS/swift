@@ -263,9 +263,9 @@ function ClientDetails() {
       />
 
       {/* Main Content Area - Chat Section */}
-      <div className="flex-1 flex flex-col bg-gray-800 rounded-xl">
+      <div className="flex flex-col flex-1 bg-gray-800 rounded-xl">
         {/* Header */}
-        <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+        <div className="flex items-center justify-between p-4 border-b border-gray-700">
           <div className="flex items-center">
             <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
               <MessageSquare className="w-4 h-4" />
@@ -350,13 +350,17 @@ function ClientDetails() {
                 <>
                   {/* First Alert */}
                   {microInsights?.insights?.map((insight, index) => (
-
-                    <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
+                    <div
+                      key={index}
+                      className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg"
+                    >
                       <div className="flex items-start space-x-3">
                         <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            {insight?.micro_insight? insight?.micro_insight: "No insights found for this client."}
+                            {insight?.micro_insight
+                              ? insight?.micro_insight
+                              : "No insights found for this client."}
                           </div>
                         </div>
                       </div>

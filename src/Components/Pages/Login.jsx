@@ -3,7 +3,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi"; // 👈 Import eye icons
 import loginImage from "../../assets/loginpage.png";
 import loginPage from "../../assets/login-banner.png";
 import logo from "../../assets/loginlogo.png";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../Redux/feature/auth/authSlice";
 import toast from "react-hot-toast";
@@ -88,9 +88,9 @@ export default function Login() {
           <div className="flex flex-col justify-center w-full h-full">
             <div className="flex flex-col items-center mb-8">
               <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
-                <a className="block text-teal-600" href="#">
+              <Link to="/">
                   <img src={logo} alt="" />
-                </a>
+                </Link>
                 {/* <h1 className="text-white poppins">Arviso</h1> */}
               </div>
               <p className="text-4xl font-bold poppins bg-gradient-to-r from-[#6366F1] to-[#06B6D4] bg-clip-text text-transparent">
