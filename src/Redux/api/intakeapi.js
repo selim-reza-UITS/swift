@@ -3,7 +3,7 @@ import { api } from "./api";
 export const intakeapi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllUser: builder.query({
-      query: () => "users/",
+      query: () => "managing-users/",
       invalidatesTags: ["intake"],
     }),
 
@@ -13,7 +13,7 @@ export const intakeapi = api.injectEndpoints({
     }),
 
     getAllClients: builder.query({
-      query: () => "clients/",
+      query: (view) => `clients/?view=${view}`, // Pass status as a query parameter
       providesTags: ["intake"],
     }),
 
@@ -55,5 +55,5 @@ export const {
   useGetAllClientsQuery,
   useCreateClientMutation,
   useUpdateClientMutation,
-  useGetStatsQuery
+  useGetStatsQuery,
 } = intakeapi;

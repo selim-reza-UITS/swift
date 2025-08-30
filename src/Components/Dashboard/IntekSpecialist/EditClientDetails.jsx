@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { TbXboxXFilled } from "react-icons/tb";
 import Swal from "sweetalert2";
+import avatar from "../../../assets/avatar.png";
+
 import {
   useGetAllLawyerQuery,
   useGetAllUserQuery,
@@ -16,6 +18,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
     isLoading,
     error,
   } = useGetClientByIdQuery(clientId);
+  console.log(clientData);
   const [updateClient, { isLoading: isUpdating, error: updateError }] =
     useUpdateClientMutation();
 
@@ -51,16 +54,36 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
   console.log(formData.managingUsers);
 
   // Populate formData with the fetched client data when available
+  // Helper to format phone number as (XXX) XXX-XXXX
+  function formatPhoneNumber(raw) {
+    const digits = String(raw || "")
+      .replace(/\D/g, "")
+      .slice(0, 10);
+    if (digits.length === 0) return "";
+    if (digits.length < 4) return `(${digits}`;
+    if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
+      6,
+      10
+    )}`;
+  }
+
   useEffect(() => {
     if (clientData) {
+      // Normalize gender to capitalized for UI
+      let gender = clientData?.gender || "Female";
+      if (typeof gender === "string") {
+        gender = gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
+        if (gender !== "Male" && gender !== "Female") gender = "Female";
+      }
       setFormData({
         fullName: clientData?.full_name || "",
-        phoneNumber: clientData?.phone_number || "",
+        phoneNumber: formatPhoneNumber(clientData?.phone_number),
         managingUsers:
-          clientData?.managing_users?.map((user) => user.name) || [], // Pre-select managing users here
+          clientData?.managing_users?.map((user) => user.name) || [],
         managingUsersIds:
-          clientData?.managing_users?.map((user) => user.id) || [], // Pre-select managing users here
-        gender: clientData?.gender || "Female", // Set gender from clientData or default to Female
+          clientData?.managing_users?.map((user) => user.id) || [],
+        gender,
         dateOfIncident: clientData?.date_of_incident || "2024/01/15",
         lawyerName: clientData?.lawyer?.id || "",
         injurySustained:
@@ -101,22 +124,10 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
 
   // Handle phone number formatting
   const handlePhoneChange = (e) => {
-    const raw = e.target.value || "";
-    const digits = raw.replace(/\D/g, "").slice(0, 10);
-    let formatted = "";
-    if (digits.length === 0) {
-      formatted = "";
-    } else if (digits.length < 4) {
-      formatted = `(${digits}`;
-    } else if (digits.length < 7) {
-      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-    } else {
-      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
-        6,
-        10
-      )}`;
-    }
-    setFormData((prev) => ({ ...prev, phoneNumber: formatted }));
+    setFormData((prev) => ({
+      ...prev,
+      phoneNumber: formatPhoneNumber(e.target.value),
+    }));
   };
 
   // Update client data (send back to parent)
@@ -179,6 +190,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
   };
 
   // Loading and error states
+
   if (isLoading) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
         <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
       </div>;
@@ -196,7 +208,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
 
         <div className="mt-2 text-center">
           <img
-            src={clientData?.avatar}
+            src={avatar}
             alt={formData.fullName || clientData.full_name}
             className="object-cover w-20 h-20 mx-auto border-2 border-blue-500 rounded-full"
           />
@@ -295,7 +307,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
                 type="radio"
                 name="gender"
                 value="Female"
-                checked={formData?.gender === "Female"} // Dynamically check based on formData.gender
+                checked={String(formData?.gender).toLowerCase() === "female"}
                 onChange={handleInputChange}
                 className="mr-2 text-purple-400 focus:ring-purple-400"
               />
@@ -306,7 +318,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
                 type="radio"
                 name="gender"
                 value="Male"
-                checked={formData?.gender === "Male"} // Dynamically check based on formData.gender
+                checked={String(formData?.gender).toLowerCase() === "male"}
                 onChange={handleInputChange}
                 className="mr-2 text-purple-400 focus:ring-purple-400"
               />

@@ -10,18 +10,20 @@ import {
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
-import { useGetClientByIdQuery } from "../../../Redux/api/caseapi";
-
+import { useClientOptOutMutation } from "../../../Redux/api/caseapi";
 const CaseManagerClients = () => {
-  const [clientId, setClientId] = useState(null);
-  const { data: clients = [], isLoading } = useGetAllClientsQuery();
+  const [activeView, setActiveView] = useState("");
+  console.log(activeView);
+  const { data: clients = [], isLoading } = useGetAllClientsQuery(activeView);
+
+  console.log(clients);
   const managingRef = useRef(null);
-  const { data: clientData } = useGetClientByIdQuery(clientId);
+  const [clientOptOut] = useClientOptOutMutation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeView, setActiveView] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (managingRef.current && !managingRef.current.contains(event.target)) {
@@ -32,26 +34,22 @@ const CaseManagerClients = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = async (id) => {
     setShowDeleteModal(false);
 
     // Call your API to delete the client
-    const result = await clientOptOut(clientId);
+    const result = await clientOptOut(id);
 
     if (result) {
-      // If the client was deleted successfully, update the UI
-
-      // Show success message
       Swal.fire({
         title: "Deleted!",
-        text: "Client has been deleted.",
+        text: "Client has been Opted Out.",
         icon: "success",
         background: "#1f2937",
         color: "#fff",
         confirmButtonColor: "#6366F1",
       });
     } else {
-      // Handle failure (e.g., show error message)
       Swal.fire({
         title: "Error!",
         text: "There was an error deleting the client.",
@@ -66,23 +64,15 @@ const CaseManagerClients = () => {
   const handleDeleteModalClose = () => {
     setShowDeleteModal(false);
   };
-
   const filteredClients = clients.filter((client) => {
-    const matchesSearch =
-      client.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.phone_number.includes(searchTerm);
+    const matchesSearch = client.full_name
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
 
-    if (activeView === "active")
-      return matchesSearch && client.status === "active";
-    if (activeView === "paused")
-      return matchesSearch && client.status === "paused";
-    if (activeView === "recovery")
-      return matchesSearch && client.status === "recovery";
-    if (activeView === "all") return matchesSearch;
     return matchesSearch;
   });
 
-  const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+  const totalPages = Math.ceil(clients.length / itemsPerPage);
   const currentClients = filteredClients.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -124,29 +114,28 @@ const CaseManagerClients = () => {
       setCurrentPage(page);
     }
   };
-
   const handleDeleteClient = (id) => {
-    setClientId(id); // Set the client ID
-    // Wait until client data is fetched and then show the confirmation modal
-    if (clientData) {
+    // Find the client by id
+    const client = clients.find((user) => user.id === id);
+
+    if (client) {
       Swal.fire({
         title: "Are you sure?",
-        text: `You are about to delete ${clientData.full_name}. Once deleted, this client will no longer receive messages. They will remain recoverable for 35 days before being permanently removed.`,
+        text: `You are about to delete ${client.full_name}. Once deleted, this client will no longer receive messages. They will remain recoverable for 35 days before being permanently removed.`,
         icon: "warning",
         background: "#1f2937", // dark bg
         color: "#fff", // text color
         showCancelButton: true,
         confirmButtonColor: "#d33",
         cancelButtonColor: "#4b5563",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: `Delete ${client.full_name}`,
       }).then((result) => {
         if (result.isConfirmed) {
-          handleDeleteConfirm();
+          handleDeleteConfirm(id);
         }
       });
     }
   };
-  
 
   return (
     <div className="h-[80vh] bg-gray-900 text-white flex flex-col">
@@ -167,9 +156,9 @@ const CaseManagerClients = () => {
 
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => handleViewChange("all")}
+            onClick={() => handleViewChange("")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeView === "all"
+              activeView === ""
                 ? "bg-purple-600 text-white"
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
@@ -197,9 +186,9 @@ const CaseManagerClients = () => {
             Paused
           </button>
           <button
-            onClick={() => handleViewChange("recovery")}
+            onClick={() => handleViewChange("recently-deleted")}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              activeView === "recovery"
+              activeView === "recently-deleted"
                 ? "bg-[#F59E0B] text-[#161E2F]"
                 : "bg-gray-700 text-gray-300"
             }`}
@@ -265,7 +254,6 @@ const CaseManagerClients = () => {
                 <button
                   className="p-2 text-gray-400 transition-colors rounded-lg hover:text-red-400 hover:bg-gray-700"
                   onClick={() => {
-                    setClientId(client.id);
                     handleDeleteClient(client.id);
                   }}
                 >
@@ -330,16 +318,13 @@ const CaseManagerClients = () => {
       </div>
 
       {/* Pagination */}
-      {filteredClients.length > itemsPerPage && (
+      {clients.length > itemsPerPage && (
         <div className="flex items-center justify-between flex-shrink-0 px-6 pt-4 border-t border-gray-800">
           <div className="text-sm text-gray-400">
             Showing{" "}
-            {Math.min(
-              (currentPage - 1) * itemsPerPage + 1,
-              filteredClients.length
-            )}{" "}
-            to {Math.min(currentPage * itemsPerPage, filteredClients.length)} of{" "}
-            {filteredClients.length} clients
+            {Math.min((currentPage - 1) * itemsPerPage + 1, clients.length)} to{" "}
+            {Math.min(currentPage * itemsPerPage, clients.length)} of{" "}
+            {clients.length} clients
           </div>
 
           <div className="flex items-center space-x-2">

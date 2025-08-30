@@ -1,22 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Send,
-  Bot,
-  User,
-  MessageSquare,
-  AlertTriangle,
-  Edit,
-} from "lucide-react";
+import { MessageSquare, AlertTriangle } from "lucide-react";
+import ClientSidebar from "./ClientSidebar";
+import ChatSection from "./ChatSection";
 import { useGetClientByIdQuery } from "../../Redux/api/intakeapi";
 import {
-  useClientOptOutMutation,
   useGetAllLawyerQuery,
   useGetAllUserQuery,
   useGetMicroInsightsQuery,
   useUpdateClientMutation,
 } from "../../Redux/api/caseapi";
 import Swal from "sweetalert2";
+import Loader from "../../Redux/feature/Shared/Loader";
+import { useUpdateClientStatusMutation } from "../../Redux/feature/Admin/admin";
 
 function ClientDetails() {
   const params = useParams(); // Get the clientId from URL parameters
@@ -28,30 +24,14 @@ function ClientDetails() {
     isLoading,
     error,
   } = useGetClientByIdQuery(params.id);
-  const [clientOptOut] = useClientOptOutMutation();
+
+  console.log(clientData);
 
   const { data: microInsights } = useGetMicroInsightsQuery(params.id);
   console.log("microInsights", microInsights);
-  const [updateClient, { isLoading: isUpdating, error: updateError }] =
-    useUpdateClientMutation();
+  const [updateClient] = useUpdateClientMutation();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([
-    {
-      from: "ai",
-      text: "Hi Sarah! This is your weekly check-in from Arviso. How are you feeling this week? Any new symptoms or concerns about your injury?",
-      time: "2 hours ago",
-    },
-    {
-      from: "user",
-      text: "Hi! I've been having more pain in my back lately, especially when I try to sleep. Should I be worried?",
-      time: "1 hour ago",
-    },
-    {
-      from: "admin",
-      text: "It’s best to see a doctor or healthcare professional to get it checked, especially if it’s affecting your sleep or daily activities.",
-      time: "1 hour ago",
-    },
-  ]);
+  const [messages, setMessages] = useState();
   // console.log(clientData);
 
   // Lawyer options mapping
@@ -110,7 +90,8 @@ function ClientDetails() {
   }, [clientData]);
   const managingRef = useRef(null);
   const [isManagingOpen, setIsManagingOpen] = useState(false);
-
+  const [updateStatus, { isLoading: isUpdating }] =
+    useUpdateClientStatusMutation();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (managingRef.current && !managingRef.current.contains(event.target)) {
@@ -228,135 +209,69 @@ function ClientDetails() {
       });
     }
   };
+  const handleToggleStatus = async () => {
+    if (!clientData) return;
 
+    const newPaused = !clientData.is_paused;
+    const newActive = !newPaused;
+
+    try {
+      await updateStatus({
+        id: clientData.id,
+        is_paused: newPaused,
+        is_active: newActive,
+      }).unwrap();
+
+      await refetch();
+
+      Swal.fire({
+        icon: "success",
+        title: "Status Updated",
+        text: newPaused ? "Client Paused" : "Client Active",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: error?.data?.message || "Something went wrong",
+        background: "#1f2937",
+        color: "#f9fafb",
+        confirmButtonColor: "#8B5CF6",
+      });
+    }
+  };
   // Loading and error states
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <Loader />
+      </div>
+    );
   if (error) return <div>Error loading client details.</div>;
 
   return (
     <div className="h-[86vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
-      <div className="p-6 mr-4 overflow-y-auto bg-gray-800 w-80 rounded-xl">
-        {/* Back Button and Edit Client Button */}
-        <div className="flex items-center justify-between space-x-2 ">
-          <button
-            className="flex items-center px-4 py-2 text-white bg-gray-800 rounded-lg hover:bg-gray-700"
-            onClick={() => navigate(-1)}
-          >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 19l-7-7 7-7"
-              ></path>
-            </svg>
-            Back
-          </button>
-        </div>
-        {/* Client Profile */}
-        <div className="flex flex-col items-center mb-6">
-          <div className="flex items-center justify-center w-16 h-16 mr-4 bg-gray-600 rounded-full">
-            <User className="w-8 h-8 text-gray-300" />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold">{clientData?.full_name}</h2>
-            <p className="text-center text-gray-400">
-              {clientData?.phone_number}
-            </p>
-          </div>
-        </div>
-        <div
-          className="flex items-center justify-center w-full px-4 py-2 mx-auto mb-6 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700"
-          onClick={() => setShowEditModal(true)}
-        >
-          <Edit className="w-4 h-4 mr-2" />
-          <span>Edit Client</span>
-        </div>
-        {/* Case Details */}
-        <div className="mb-8 space-y-4">
-          <div className="flex justify-between">
-            <span className="text-gray-400">Incident Date:</span>
-            <span>{clientData?.date_of_incident}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Client Status:</span>
-            <span className="px-2 py-1 text-sm bg-blue-600 rounded">
-              {clientData?.status}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Gender:</span>
-            <span>{clientData?.gender}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Managing User(s):</span>
-            <span>
-              {clientData?.managing_users.map((user) => user.name).join(", ")}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Lawyer:</span>
-            <span>{clientData?.lawyer?.name}n</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-400">Injury's Sustained:</span>
-            <span> {clientData?.injuries_sustained}</span>
-          </div>
-        </div>
 
-        {/* Communication Status */}
-        <div className="mb-8">
-          <h3 className="mb-4 text-lg font-semibold">Communication Status</h3>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Scheduled Next Send:</span>
-              <span className="px-2 py-1 text-sm bg-blue-600 rounded">
-                {
-                  new Date(clientData?.scheduled_time)
-                    .toISOString()
-                    .split("T")[0]
-                }
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Client Sentiment:</span>
-              <span className="text-green-400">{clientData?.sentiment}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Risk Level:</span>
-              <span className="text-red-400">{clientData?.concern_level}</span>
-            </div>
-          </div>
-        </div>
+      <ClientSidebar
+        clientData={clientData}
+        onBack={() => navigate(-1)}
+        onEdit={() => setShowEditModal(true)}
+      />
 
-        {/* Case Notes */}
-        <div>
-          <h3 className="mb-4 text-lg font-semibold">General Case Info</h3>
-          <div className="p-4 bg-gray-700 rounded-lg">
-            <p className="text-sm text-gray-300">
-              {clientData?.general_case_info}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex flex-col flex-1 bg-gray-800 rounded-xl">
+      {/* Main Content Area - Chat Section */}
+      <div className="flex-1 flex flex-col bg-gray-800 rounded-xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-700 ">
+        <div className="p-4 border-b border-gray-700 flex items-center justify-between">
           <div className="flex items-center">
             <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
               <MessageSquare className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold">Sarah Johnson</h1>
+              <h1 className="text-xl font-semibold">{clientData?.full_name}</h1>
             </div>
           </div>
           <div className="relative flex items-center space-x-4">
@@ -372,109 +287,38 @@ function ClientDetails() {
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => setIsPaused(!isPaused)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    isPaused ? "bg-red-600" : "bg-green-600"
+                  onClick={handleToggleStatus}
+                  disabled={isUpdating}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                    clientData?.is_paused ? "bg-red-600" : "bg-green-600"
                   }`}
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      isPaused ? "translate-x-6" : "translate-x-1"
+                      clientData?.is_paused ? "translate-x-6" : "translate-x-1"
                     }`}
                   />
                 </button>
                 <span
                   className={`text-sm font-medium ${
-                    isPaused ? "text-red-400" : "text-green-400"
+                    clientData?.is_paused ? "text-red-400" : "text-green-400"
                   }`}
                 >
-                  {isPaused ? "Paused" : "Active"}
+                  {clientData?.is_paused ? "Paused" : "Active"}
                 </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Messages */}
-        <div className="relative flex-1 p-6 overflow-y-auto">
-          {messages.map((msg, idx) =>
-            msg.from === "user" ? (
-              <div className="mb-6" key={idx}>
-                <div className="flex items-start space-x-3">
-                  <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full">
-                    <Bot className="w-4 h-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="w-auto p-4 bg-gray-700 rounded-lg">
-                      <p className="text-gray-300">{msg.text}</p>
-                    </div>
-                    <div className="flex items-center mt-2 space-x-2 text-xs text-gray-500">
-                      <span>AI Assistant</span>
-                      <span>•</span>
-                      <span>{msg.time}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="mb-6" key={idx}>
-                <div className="flex items-start justify-end space-x-3">
-                  <div className="flex justify-end flex-1">
-                    <div className="max-w-5xl p-4 bg-blue-600 rounded-lg">
-                      <p className="text-white">{msg.text}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-center w-8 h-8 bg-gray-600 rounded-full">
-                    <User className="w-4 h-4" />
-                  </div>
-                </div>
-                <div className="flex items-center justify-end mt-2 space-x-2 text-xs text-gray-500">
-                  <span>Sarah Johnson</span>
-                  <span>•</span>
-                  <span>{msg.time}</span>
-                </div>
-              </div>
-            )
-          )}
-          {!formData.consentToCommunicate && (
-            <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
-              <p className="max-w-xl text-gray-300">
-                It looks like this client hasn’t completed the consent form. For
-                messaging to be enabled, please have them complete the quick
-                permission form.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Message Input */}
-        <div className="p-4 bg-gray-800 border-t border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="flex-1">
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-                placeholder="Type your response..."
-                className="w-full p-3 text-white placeholder-gray-400 bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                rows={3}
-                disabled={!formData.consentToCommunicate}
-              />
-            </div>
-            <button
-              className="p-3 transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={handleSendMessage}
-              disabled={!formData.consentToCommunicate}
-            >
-              <Send className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+        {/* Chat Section */}
+        <ChatSection
+          messages={messages}
+          message={message}
+          setMessage={setMessage}
+          handleSendMessage={handleSendMessage}
+          consentToCommunicate={formData.consentToCommunicate}
+        />
       </div>
 
       {/* Client Insights Popup */}
@@ -498,52 +342,26 @@ function ClientDetails() {
                 ×
               </button>
             </div>
-
+            {/* ...existing code... (insights content) */}
             <div className="space-y-4">
               {!microInsights ? (
                 <p>No insights found for this client.</p>
               ) : (
                 <>
-                  {" "}
                   {/* First Alert */}
-                  <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        {/* <p className="mb-2 text-gray-200">
-                     {microInsights?.most_recent_micro_insight}
-                    </p> */}
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-400">
-                            May 10, 2025 - Concern
-                          </span>
-                          {/* <button className="px-3 py-1 text-sm text-white transition-colors bg-red-500 rounded-full hover:bg-red-600">
-                        Action Required
-                      </button> */}
+                  {microInsights?.insights?.map((insight, index) => (
+
+                    <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
+                      <div className="flex items-start space-x-3">
+                        <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            {insight?.micro_insight? insight?.micro_insight: "No insights found for this client."}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  {/* Second Alert */}
-                  <div className="bg-[#342C38] border-l-4 border-[#EF4444] p-4 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <p className="mb-2 text-gray-200">
-                          Client asked a question about medical records. Message
-                          flagged for review.
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-400">
-                            May 18, 2025 - Flagged Message
-                          </span>
-                          <button className="px-3 py-1 text-sm text-white transition-colors bg-red-500 rounded-full hover:bg-red-600">
-                            Action Required
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </>
               )}
             </div>

@@ -121,6 +121,7 @@ const router = createBrowserRouter([
       {
         path: "caseManagerClients/:id",
         element: <ClientDetails />,
+        
       },
       {
         path: "caseManagerSettings",

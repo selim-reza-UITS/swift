@@ -25,6 +25,7 @@ export const caseapi = api.injectEndpoints({
       }),
       invalidatesTags: ["case"],
     }),
+    
     clientOptOut: builder.mutation({
       query: (id) => ({
         url: `/clients/${id}/opt-out/`,
@@ -52,8 +53,17 @@ export const caseapi = api.injectEndpoints({
       providesTags: ["case"],
     }),
 
+    getFirmScores: builder.query({
+      query: () => `chats/firm-scores/`, // Use the dynamic ID here
+      providesTags: ["case"],
+    }),
+
     getMicroInsights: builder.query({
       query: (id) => `chats/client/${id}/client-insights/`, // Use the dynamic ID here
+      providesTags: ["case"],
+    }),
+    getAllMessages: builder.query({
+      query: (id) => `chats/all-messages/${id}/`,
       providesTags: ["case"],
     }),
   }),
@@ -71,6 +81,8 @@ export const {
   useCreateClientMutation,
   useUpdateClientMutation,
   useGetStatsQuery,
+  useGetFirmScoresQuery,
   useGetMicroInsightsQuery,
-  useClientOptOutMutation
+  useClientOptOutMutation,
+  useGetAllMessagesQuery,
 } = caseapi;
