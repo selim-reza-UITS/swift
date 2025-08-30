@@ -8,6 +8,7 @@ import {
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../Redux/feature/auth/authSlice";
 import { useCreateClientMutation } from "../../Redux/api/intakeapi";
+import { useGetClientQuery } from "../../Redux/feature/Admin/admin";
 
 export default function AddClientForm({ setShowAddClientModal }) {
   const [formData, setFormData] = useState({
@@ -21,7 +22,12 @@ export default function AddClientForm({ setShowAddClientModal }) {
     generalCaseInfo: "",
     consentToCommunicate: true,
   });
-
+ const {
+    data: clients = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useGetClientQuery();
   // Fetch dynamic dropdown data (skip until token is available)
   const accessToken = useSelector(selectAccessToken);
   let persistedToken = null;
@@ -131,6 +137,7 @@ const handleSubmit = async (e) => {
     
     if (res?.data) {
       toast.success(res.data?.message || "Client created successfully");
+      refetch();
       // Ensure client list refreshes
       try {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -179,7 +186,7 @@ const handleSubmit = async (e) => {
 
   return (
     <div className=" bg-[#0f172a] flex items-center justify-center rounded-xl w-full z-50">
-      <Toaster />
+   
       <div className=" rounded-lg p-8 w-full max-h-[80vh] overflow-y-auto ">
         {/* Header */}
         <div className="mb-6 text-center">

@@ -44,7 +44,9 @@ const Client = ({ managers }) => {
     refetch,
   } = useGetClientQuery();
   const [optOutClient] = useOptOutClientMutation();
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+      </div>;
   if (isError) return <p>Error loading clients!</p>;
 
   const filteredClients = clients.filter((client) => {

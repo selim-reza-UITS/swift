@@ -233,6 +233,15 @@ const Chat = () => {
           </p>
         </div>
       )}
+      {client.opt_out && client.is_paused && (
+        <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm">
+          <p className="text-sm text-gray-300">
+            This client, <span className="font-medium">{client.full_name}</span>
+            , has already opted out. You cannot send messages or make changes
+            for this client.
+          </p>
+        </div>
+      )}
       {client.opt_out && !client.is_paused && (
         <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm">
           <p className="text-sm text-gray-300">

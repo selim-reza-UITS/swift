@@ -9,7 +9,9 @@ import IntekSpecialistDashboard from "../Components/Dashboard/IntekSpecialist/In
 export default function DashboardContent() {
   const role = getRole();
 
-  if (!role) return <p>Loading...</p>;
+  if (!role) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+      </div>;
 
   switch (role?.toLowerCase()) {
     case "superadmin":

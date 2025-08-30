@@ -60,7 +60,9 @@ const ProfileInfo = () => {
     }
   };
 
-  if (isLoading) return <p className="text-white">Loading profile...</p>;
+  if (isLoading) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+      </div>;
   if (isError) return <p className="text-red-400">Failed to load profile.</p>;
 
   return (
