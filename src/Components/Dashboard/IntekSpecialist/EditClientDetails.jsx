@@ -9,7 +9,6 @@ import {
   useGetClientByIdQuery,
   useUpdateClientMutation,
 } from "../../../Redux/api/intakeapi";
-import Loader from "../../../Redux/feature/Shared/Loader";
 
 const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
   const { data: lawyersData } = useGetAllLawyerQuery();
@@ -191,7 +190,10 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
   };
 
   // Loading and error states
-  if (isLoading) return <Loader />;
+
+  if (isLoading) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+        <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+      </div>;
   if (error) return <div>Error loading client details.</div>;
 
   return (
@@ -265,7 +267,7 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
                   return (
                     <label
                       key={user.id}
-                      className="flex items-center gap-2 px-3 py-2 text-white hover:bg-slate-600 cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-2 text-white cursor-pointer hover:bg-slate-600"
                     >
                       <input
                         type="checkbox"
