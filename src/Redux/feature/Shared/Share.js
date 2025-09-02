@@ -29,7 +29,16 @@ export const shareapi = api.injectEndpoints({
         method: "PATCH",
         body: preferences,
       }),
+      // consent form
+      
          
+    }),
+     submitConsent: builder.mutation({
+      query: (body) => ({
+        url: "clients/submit-consent/",
+        method: "POST",
+        body,
+      }),
     }),
      getNotifications: builder.query({
       query: () => "notifications-list/",
@@ -37,6 +46,7 @@ export const shareapi = api.injectEndpoints({
       method: "GET",
     }),
   }),
+  
 });
 
 export const {
@@ -45,4 +55,5 @@ export const {
   useGetProfileQuery,
   useUpdateNotificationPreferencesMutation,
   useGetNotificationsQuery,
+  useSubmitConsentMutation,
 } = shareapi;

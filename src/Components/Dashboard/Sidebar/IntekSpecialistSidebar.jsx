@@ -11,6 +11,8 @@ import { FaUser } from "react-icons/fa";
 import { PiClockCountdownLight } from "react-icons/pi";
 import { IoMdSettings } from "react-icons/io";
 import AddClientForm from "../../Shared/AddClientForm";
+import { useDispatch } from 'react-redux';
+import { logout } from "../../../Redux/feature/auth/authSlice";
 const IntekSpecialistSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSeetingsDropdownOpen, setSeetingsDropdownOpen] = useState(false);
@@ -19,7 +21,7 @@ const IntekSpecialistSidebar = () => {
   const location = useLocation();
   // console.log(user);
   const dropdownRef = useRef(null);
-
+const dispatch = useDispatch();
   const isActiveDashboard = location.pathname === "/dashboard/intakeSpecialist";
 
   const isActiveClient = location.pathname.startsWith(
@@ -41,6 +43,7 @@ const IntekSpecialistSidebar = () => {
     };
   }, []);
   const handleLogout = () => {
+      dispatch(logout())
     localStorage.removeItem("accessToken"); // Remove token from localStorage
     navigate("/login", { replace: true }); // Redirect to login page
   };
@@ -94,8 +97,8 @@ const IntekSpecialistSidebar = () => {
             </div>
           </NavLink>
           <Link onClick={() => setShowAddClientModal(true)}>
-            <div className="flex items-center justify-between  mt-10 font-semibold p-2 w-full">
-              <button className="px-4 flex items-center justify-center gap-2 py-2 text-sm font-medium mx-4 text-white rounded-md bg-gradient-to-r w-full from-purple-500 to-blue-600">
+            <div className="flex items-center justify-between w-full p-2 mt-10 font-semibold">
+              <button className="flex items-center justify-center w-full gap-2 px-4 py-2 mx-4 text-sm font-medium text-white rounded-md bg-gradient-to-r from-purple-500 to-blue-600">
                 <Plus className="w-[22px] h-[22px] font-bold" />
                 <h1 className="text-xl font-medium poppins">New Client</h1>
               </button>
@@ -103,7 +106,7 @@ const IntekSpecialistSidebar = () => {
           </Link>
           {showAddClientModal && (
             <div
-              className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-60"
+              className="fixed inset-0 flex items-center justify-center bg-black z-60 bg-opacity-60"
               onClick={() => setShowAddClientModal(false)}
             >
               <div

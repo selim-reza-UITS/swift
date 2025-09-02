@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { FaBalanceScale } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
+import { logout } from "../../../Redux/feature/auth/authSlice";
 
 const SuperAdminSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -17,7 +19,7 @@ const SuperAdminSidebar = () => {
   const isActiveDashboard = location.pathname === "/dashboard/superadmin";
   const isActiveLawFirm = location.pathname.startsWith("/dashboard/law-Firm");
   const isActiveSettings = location.pathname === "/dashboard/settings";
-
+const dispatch = useDispatch();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -35,6 +37,7 @@ const SuperAdminSidebar = () => {
     };
   }, []);
   const handleLogout = () => {
+     dispatch(logout())
     localStorage.removeItem("accessToken"); // Remove token from localStorage
     navigate("/login", { replace: true }); // Redirect to login page
   };

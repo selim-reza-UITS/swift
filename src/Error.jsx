@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-// import error from "./assets/error.png";
+import error from "./assets/error.png";
+
 const Error = () => {
   return (
-    <div className="container mx-auto bg-white montserrat  ">
+    <div className="relative min-h-screen bg-black montserrat">
       <NavLink
         to="/"
-        className="absolute top-5 left-5 text-xl text-green-900 flex items-center gap-2"
+        className="absolute flex items-center gap-2 text-xl text-white top-5 left-5"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -20,11 +21,13 @@ const Error = () => {
             strokeLinejoin="round"
             d="M15.75 19.5L8.25 12l7.5-7.5"
           />
-        </svg>{" "}
+        </svg>
         Back To Home
       </NavLink>
-      <div className="flex items-center justify-center w-2/3  p-4 mt-28 container mx-auto ">
-        {/* <img src={error} alt="404 error" /> */}
+
+      <div className="flex flex-col items-center justify-center w-2/3 p-4 mx-auto ">
+        <img src={error} alt="404 error" />
+        <h1 className="text-4xl font-bold text-white">404 - Page Not Found</h1>
       </div>
     </div>
   );

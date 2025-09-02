@@ -34,6 +34,7 @@ import SetPassword from "./Components/Pages/SetPassword.jsx";
 import ConfirmNumber from "./Components/Pages/ConfirmNumber .jsx";
 import { Edit } from "lucide-react";
 import EditAndViewPart from "./Components/Dashboard/Admin/ChatWithDetails/EditAndViewPart.jsx";
+import { PrivateRoute } from "./Routes/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -70,7 +71,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Root />,
+    element: (
+      <PrivateRoute>
+        <Root />
+      </PrivateRoute>
+    ),
     errorElement: <Error></Error>,
     children: [
       {
@@ -80,68 +85,147 @@ const router = createBrowserRouter([
       // just superadmin  role  route will be here
       {
         path: "superadmin",
-        element: <SuperAdminDashboard></SuperAdminDashboard>,
+        element: (
+          <PrivateRoute allowedRoles={["superadmin"]}>
+            <SuperAdminDashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "law-Firm",
-        element: <LawFirm></LawFirm>,
+        element: (
+          <PrivateRoute allowedRoles={["superadmin"]}>
+            {" "}
+            <LawFirm></LawFirm>{" "}
+          </PrivateRoute>
+        ),
       },
       // just admin role route will be here
       {
         path: "admin",
-        element: <AdminDashboard />,
+        element: (
+          <PrivateRoute allowedRoles={["admin"]}>
+            <AdminDashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "adminClient",
-        element: <Client></Client>,
+        element: (
+          <PrivateRoute allowedRoles={["admin"]}>
+            {" "}
+            <Client></Client>{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "admin/:id",
-        element: <EditAndViewPart></EditAndViewPart>,
+        element: (
+          <PrivateRoute allowedRoles={["admin"]}>
+            {" "}
+            <EditAndViewPart></EditAndViewPart>{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "my-firm",
-        element: <MyFirm></MyFirm>,
+        element: (
+          <PrivateRoute allowedRoles={["admin"]}>
+            {" "}
+            <MyFirm></MyFirm>{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "settings",
-        element: <Settings></Settings>,
+        element: (
+          <PrivateRoute
+            allowedRoles={[
+              "admin",
+              "superadmin",
+              "IntekSpecialist",
+              "CaseManager",
+            ]}
+          >
+            {" "}
+            <Settings></Settings>{" "}
+          </PrivateRoute>
+        ),
       },
 
       // all Lawyer role route will be there
       {
         path: "caseManager",
-        element: <CaseMangerDashboard></CaseMangerDashboard>,
+        element: (
+          <PrivateRoute allowedRoles={["caseManager"]}>
+            {" "}
+            <CaseMangerDashboard></CaseMangerDashboard>{" "}
+          </PrivateRoute>
+        ),
       },
       //all intake specialist role route will be there
       {
         path: "caseManagerClients",
-        element: <CaseManagerClients />,
+        element: (
+          <PrivateRoute allowedRoles={["caseManager"]}>
+            {" "}
+            <CaseManagerClients />{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "caseManagerClients/:id",
-        element: <ClientDetails />,
-        
+        element: (
+          <PrivateRoute allowedRoles={["caseManager"]}>
+            {" "}
+            <ClientDetails />{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "caseManagerSettings",
-        element: <Settings></Settings>,
+        element: (
+          <PrivateRoute allowedRoles={["caseManager"]}>
+            {" "}
+            <Settings></Settings>{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "intakeSpecialist",
-        element: <IntakeSpecialistDashboard></IntakeSpecialistDashboard>,
+        element: (
+          <PrivateRoute allowedRoles={["intakeSpecialist"]}>
+            {" "}
+            <IntakeSpecialistDashboard></IntakeSpecialistDashboard>{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "intakeSpecialistClients",
-        element: <IntakeSpecialistClients />,
+        element: (
+          <PrivateRoute allowedRoles={["intakeSpecialist"]}>
+            {" "}
+            <IntakeSpecialistClients />{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "intakeSpecialistClients/:id",
-        element: <ClientDetails />,
+        element: (
+          <PrivateRoute allowedRoles={["intakeSpecialist"]}>
+            {" "}
+            <ClientDetails />{" "}
+          </PrivateRoute>
+        ),
       },
       {
         path: "intakeSpecialistSettings",
-        element: <Settings />,
+        element: (
+          <PrivateRoute allowedRoles={["intakeSpecialist"]}>
+            {" "}
+            <Settings />{" "}
+          </PrivateRoute>
+        ),
       },
     ],
   },
