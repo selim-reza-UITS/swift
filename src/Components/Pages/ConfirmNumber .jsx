@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-
+import { useSubmitConsentMutation } from "../../Redux/feature/Shared/Share";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const ConfirmNumber = () => {
   const [formData, setFormData] = useState({
     phoneNumber: "",
@@ -8,7 +10,8 @@ const ConfirmNumber = () => {
   const [updates, setUpdates] = useState(false);
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
-
+  const [submitConsent, { isLoading, isSuccess, isError }] =
+    useSubmitConsentMutation();
   // Phone formatter
   const handlePhoneChange = (e) => {
     const raw = e.target.value || "";
@@ -34,20 +37,34 @@ const ConfirmNumber = () => {
     return digits.length === 10;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validatePhone(formData.phoneNumber)) {
       setError("Enter a valid 10-digit US number.");
       return;
     }
     setError("");
-    alert(
-      `Phone: ${formData.phoneNumber}\nLaw Firm: ${formData.lawFirm}\nUpdates: ${updates}\nConsent: ${consent}`
-    );
+    const digits = formData.phoneNumber.replace(/\D/g, "");
+    const payload = {
+      phone_number: `+1${digits}`, // USA format (+1)
+      law_firm_name: formData.lawFirm,
+      language: "English", // fix for now
+      consent_checkbox: consent,
+      health_data_checkbox: updates,
+    };
+
+    try {
+      await submitConsent(payload).unwrap();
+      toast.success("✅ Consent submitted successfully!");
+    } catch (err) {
+      console.error("Submit failed:", err);
+      toast.error("❌ Failed to submit consent");
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-gray-900 to-black">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="bg-[#1a1a1a] text-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h2 className="mb-6 text-xl font-semibold">Confirm Your Number</h2>
         <p className="mb-6 text-sm text-gray-400">

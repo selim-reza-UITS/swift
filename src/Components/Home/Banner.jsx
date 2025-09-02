@@ -4,50 +4,41 @@ import { Link } from "react-router-dom";
 import { Slide } from "react-awesome-reveal";
 
 const messagesTop = [
+  "Hey Taylor! Just checking in—how’s the pain level this week on a scale of 1‑10?",
 
-   "Hey Taylor! Just checking in—how’s the pain level this week on a scale of 1‑10?",
-  
-      
-  
   "Got it. Have you been able to keep up with the physical‑therapy exercises?",
-  
-      
-  
+
   "No worries. Consistency speeds recovery; I’ll remind you tomorrow at 7 PM if that helps.",
-  
+
   "Anything new we should relay to your case manager?",
-  
-  
+
   "Perfect move, I’ve alerted Jenna (your case manager). Expect a call from her soon.",
-  
-  
+
   // Conversation 2:
-  
-  
+
   //      Client: I just got a $480 bill from the ER.
   //                   I Thought the other driver’s insurance
   //                   was covering that—should I pay it?
-  
-  // Ai: Thanks for letting me know. I’ve notified Jenna, your case manager, so she can review it first thing tomorrow.
-  
-  // Ai: Could you snap a clear photo of the bill and text it here? That’ll help Jenna confirm the charges and respond faster.
-  
-  //      Client: Sure, one sec
-  
-  //      Client: [sends photo of invoice]
-  
-  // Ai: That’s perfect. Jenna will look it over and reach out with the next steps. Feel free to keep me posted if anything else comes up.
-  
-  //      Client: Thanks for the help
-  
-  // Ai: Anytime—you can text me 24/7 if anything else comes up. Sleep easy; we’ve got it covered.
 
+  // Ai: Thanks for letting me know. I’ve notified Jenna, your case manager, so she can review it first thing tomorrow.
+
+  // Ai: Could you snap a clear photo of the bill and text it here? That’ll help Jenna confirm the charges and respond faster.
+
+  //      Client: Sure, one sec
+
+  //      Client: [sends photo of invoice]
+
+  // Ai: That’s perfect. Jenna will look it over and reach out with the next steps. Feel free to keep me posted if anything else comes up.
+
+  //      Client: Thanks for the help
+
+  // Ai: Anytime—you can text me 24/7 if anything else comes up. Sleep easy; we’ve got it covered.
 ];
 
 const messagesBottom = [
- "Probably a 6. Shoulder still stiff.",
- "I actually missed yesterday work ran late.",
- "The driver’s insurer called me directly. I wasn’t sure what to say so I hung up."
+  "Probably a 6. Shoulder still stiff.",
+  "I actually missed yesterday work ran late.",
+  "The driver’s insurer called me directly. I wasn’t sure what to say so I hung up.",
 ];
 
 const Banner = () => {
@@ -119,23 +110,25 @@ const Banner = () => {
   };
 
   return (
-    <div>
-      <div className="flex lg:flex-row flex-col-reverse items-center lg:items-center justify-between gap-10 container mx-auto">
+    <div id="home">
+      <div className="container flex flex-col-reverse items-center justify-between gap-10 mx-auto lg:flex-row lg:items-center">
         {/*  content  */}
         <Slide
           direction="left"
           triggerOnce
-          className="flex flex-col items-center lg:items-start  gap-6 lg:w-2/3 w-full"
+          className="flex flex-col items-center w-full gap-6 lg:items-start lg:w-2/3"
         >
           <div>
-            <h1 className="poppins text-3xl lg:text-6xl  font-bold  mt-2 mb-5 text-[#4B5563] leading-normal  ">
-              I Haven’t Heard From My  <br />
+            <h1 className="poppins text-3xl lg:text-6xl font-bold mt-6 mb-10 text-[#4B5563] !leading-normal">
+              The End of :
+              <br className="mb-4" />
+              ‘I Haven’t Heard From My
+              <br className="mb-4" />
               <span className="bg-gradient-to-r from-[#C084FC] to-[#06B6D4] bg-clip-text text-transparent">
-               Lawyer.
-              </span>{" "}
-              <br />
+                Lawyer.
+              </span>
+              ’
             </h1>
-          
 
             <div className="mt-9">
               <Link to="/login">
@@ -147,21 +140,21 @@ const Banner = () => {
           </div>
         </Slide>
         {/* img */}
-        <Slide className="lg:w-1/3 w-full " direction="right" triggerOnce>
+        <Slide className="w-full lg:w-1/3 " direction="right" triggerOnce>
           <div>
             <img src={banner} alt="banner" />
           </div>
         </Slide>
       </div>
 
-      <div className=" mt-20 container mx-auto">
-        <div className="flex flex-col lg:flex-row items-center  gap-1 mx-auto ">
-          <div className="relative w-full right-0 mb-10">
-            <div className="absolute w-full  max-w-xs">
+      <div className="container mx-auto mt-20 ">
+        <div className="flex flex-col items-center gap-1 mx-auto lg:flex-row ">
+          <div className="relative right-0 w-full mb-10">
+            <div className="absolute w-full max-w-xs">
               {/* Smooth sliding message card */}
               {/* target 2 ............................................................................................................................... */}
               <div className="relative w-full max-w-4xl">
-                <div className="relative left-80  max-w-xs">
+                <div className="relative max-w-xs left-80">
                   <div
                     className={`transition-all duration-[1500ms] ease-in-out transform ${getAnimationClasses(
                       bottomAnimationState
@@ -179,7 +172,7 @@ const Banner = () => {
           </div>
 
           <div className="relative w-full max-w-4xl m-t-12">
-            <div className="relative  max-w-xs">
+            <div className="relative max-w-xs">
               {/* tatget 1................................................................................................................. */}
               {/* Smooth sliding message card */}
               <div className="relative w-full max-w-4xl md:-mt-36">
