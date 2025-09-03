@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Search,
   Eye,
@@ -11,11 +11,16 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useGetAllClientsQuery } from "../../../Redux/api/intakeapi";
 import { useClientOptOutMutation } from "../../../Redux/api/caseapi";
+import {
+  useGetClientQuery,
+  useUpdateOptMutation,
+} from "../../../Redux/feature/Admin/admin";
 const CaseManagerClients = () => {
   const [activeView, setActiveView] = useState("");
   console.log(activeView);
-  const { data: clients = [], isLoading } = useGetAllClientsQuery(activeView);
-
+  const { data: clients = [] } = useGetAllClientsQuery(activeView);
+  const [updateOpt] = useUpdateOptMutation();
+  const { refetch } = useGetClientQuery();
   console.log(clients);
   const managingRef = useRef(null);
   const [clientOptOut] = useClientOptOutMutation();
@@ -38,8 +43,8 @@ const CaseManagerClients = () => {
     setShowDeleteModal(false);
 
     // Call your API to delete the client
-    const result = await clientOptOut(id);
-
+    // const result = await clientOptOut(id);
+    const result = await updateOpt({ id: id, opt_out: true });
     if (result) {
       Swal.fire({
         title: "Deleted!",
@@ -49,6 +54,7 @@ const CaseManagerClients = () => {
         color: "#fff",
         confirmButtonColor: "#6366F1",
       });
+      refetch();
     } else {
       Swal.fire({
         title: "Error!",

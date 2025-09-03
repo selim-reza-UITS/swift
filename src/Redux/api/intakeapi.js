@@ -44,6 +44,17 @@ export const intakeapi = api.injectEndpoints({
       query: () => `clients/stats/`, // Use the dynamic ID here
       providesTags: ["intake"],
     }),
+
+    optOutClient: builder.mutation({
+      query: (id) => ({
+        url: `clients/${id}/opt-out/`,
+        method: "POST",
+        body: {
+          opt_out: true,
+        },
+      }),
+      invalidatesTags: ["Client"],
+    }),
   }),
 });
 
@@ -56,4 +67,5 @@ export const {
   useCreateClientMutation,
   useUpdateClientMutation,
   useGetStatsQuery,
+  useOptOutClientMutation,
 } = intakeapi;

@@ -282,7 +282,7 @@ function ClientDetails() {
               Client Summary
             </button>
             <span className="inline-block px-3 py-1 text-sm bg-yellow-600 rounded">
-              Medium Risk
+              {clientData?.concern_level || ""} Risk
             </span>
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">

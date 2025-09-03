@@ -25,8 +25,9 @@ function ChatSection() {
     refetch: refetchChatDetails,
     isLoading,
   } = useGetChatDetailsQuery(clientId);
-  
+
   const { data: client, refetch } = useGetClientByIdQuery(clientId);
+  console.log(client)
   const [createChat] = useCreateChatMutation();
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
@@ -147,17 +148,45 @@ function ChatSection() {
           })}
 
           <div ref={messagesEndRef} />
+          {client.is_paused && !client.opt_out && (
+            <div className="flex items-end justify-center bg-opacity-80 backdrop-blur-sm ">
+              <p className="text-sm text-gray-300 ">
+                This client is paused. Activate the client first to send
+                messages.
+              </p>
+            </div>
+          )}
+          {client.opt_out && client.is_paused && (
+            <div className="flex items-end justify-center bg-opacity-80 backdrop-blur-sm">
+              <p className="text-sm text-gray-300">
+                This client,{" "}
+                <span className="font-medium">{client.full_name}</span>, has
+                already opted out. You cannot send messages or make changes for
+                this client.
+              </p>
+            </div>
+          )}
+          {client.opt_out && !client.is_paused && (
+            <div className="flex items-end justify-center bg-opacity-80 backdrop-blur-sm">
+              <p className="text-sm text-gray-300">
+                This client,{" "}
+                <span className="font-medium">{client.full_name}</span>, has
+                already opted out. You cannot send messages or make changes for
+                this client.
+              </p>
+            </div>
+          )}
         </div>
       )}
 
       {/* Input */}
       <div className="flex items-center p-4 space-x-3 bg-gray-800 border-t border-gray-700">
         <textarea
-          disabled={!client.consent_to_communicate}
+          disabled={!client.consent_to_communicate || !client?.is_active || client?.opt_out}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
-          className="flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${!client.consent_to_communicate || !client?.is_active || client?.opt_out ? 'cursor-not-allowed':''}`}
           rows={3}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {

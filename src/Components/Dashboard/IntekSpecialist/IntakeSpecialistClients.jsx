@@ -10,14 +10,17 @@ import {
 import Swal from "sweetalert2";
 import ViewClientDetails from "../Admin/Client/ViewClientDetails";
 import EditClientDetails from "./EditClientDetails";
-import { useClientOptOutMutation } from "../../../Redux/api/caseapi";
 import {
   useGetAllClientsQuery,
   useGetClientByIdQuery,
+  useOptOutClientMutation,
 } from "../../../Redux/api/intakeapi";
 import Loader from "../../../Redux/feature/Shared/Loader";
+import { useUpdateOptMutation } from "../../../Redux/api/caseapi";
 const IntakeSpecialistClients = () => {
-  const [clientOptOut] = useClientOptOutMutation();
+  const [optOutClient] = useOptOutClientMutation();
+  const [updateOpt] = useUpdateOptMutation();
+
   const [clientId, setClientId] = useState(null);
   const {
     data: clientData,
@@ -114,8 +117,9 @@ const IntakeSpecialistClients = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedEditClient, setEditSelectedClient] = useState(null);
   const itemsPerPage = 7;
+  console.log(activeView);
   const { data: clients = [], isLoading } = useGetAllClientsQuery(activeView);
-  console.log(clients)
+  console.log(clients);
   const filteredClients = clients.filter((client) => {
     const matchesSearch = client.full_name
       ?.toLowerCase()
@@ -123,7 +127,6 @@ const IntakeSpecialistClients = () => {
 
     return matchesSearch;
   });
-  console.log(isEditModalOpen);
   const totalPages = Math.ceil(clients.length / itemsPerPage);
   const currentClients = filteredClients.slice(
     (currentPage - 1) * itemsPerPage,
@@ -169,7 +172,7 @@ const IntakeSpecialistClients = () => {
 
   const handleDeleteClient = (id) => {
     const client = clients.find((user) => user.id === id);
-console.log(client)
+    console.log(client);
     if (client) {
       Swal.fire({
         title: "Are you sure?",
@@ -191,29 +194,31 @@ console.log(client)
 
   const handleDeleteConfirm = async (id) => {
     // setShowDeleteModal(false);
-
-    // Call your API to delete the client
-    const result = await clientOptOut(id);
-    console.log(result);
-
-    if (result) {
-      Swal.fire({
-        title: "Deleted!",
-        text: "Client has been Opted Out.",
-        icon: "success",
-        background: "#1f2937",
-        color: "#fff",
-        confirmButtonColor: "#6366F1",
-      });
-    } else {
-      Swal.fire({
-        title: "Error!",
-        text: "There was an error deleting the client.",
-        icon: "error",
-        background: "#1f2937",
-        color: "#fff",
-        confirmButtonColor: "#6366F1",
-      });
+    try {
+      // Call your API to delete the client
+      const result = await updateOpt({ id: id, opt_out: true });
+      console.log(result);
+      if (result) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Client has been Opted Out.",
+          icon: "success",
+          background: "#1f2937",
+          color: "#fff",
+          confirmButtonColor: "#6366F1",
+        });
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "There was an error deleting the client.",
+          icon: "error",
+          background: "#1f2937",
+          color: "#fff",
+          confirmButtonColor: "#6366F1",
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -315,7 +320,7 @@ console.log(client)
 
                 <div className="flex items-center space-x-3">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                    className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(
                       client.status
                     )} text-white`}
                   >
@@ -323,7 +328,7 @@ console.log(client)
                   </span>
 
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(
+                    className={`px-3 py-1 rounded-full text-sm font-medium border ${getPriorityColor(
                       client.priority
                     )}`}
                   >

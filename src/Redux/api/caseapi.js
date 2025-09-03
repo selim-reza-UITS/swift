@@ -16,7 +16,14 @@ export const caseapi = api.injectEndpoints({
       query: () => "flagged-clients/",
       providesTags: ["case"],
     }),
-
+    updateOpt: builder.mutation({
+      query: ({ id, opt_out }) => ({
+        url: `clients/${id}/update/`,
+        method: "PATCH",
+        body: { opt_out },
+      }),
+      invalidatesTags: ["case"], // cache refresh
+    }),
     createClient: builder.mutation({
       query: (body) => ({
         url: "clients/create/",
@@ -25,10 +32,10 @@ export const caseapi = api.injectEndpoints({
       }),
       invalidatesTags: ["case"],
     }),
-    
+
     clientOptOut: builder.mutation({
       query: (id) => ({
-        url: `/clients/${id}/opt-out/`,
+        url: `clients/${id}/opt-out/`,
         method: "POST",
       }),
       invalidatesTags: ["case"],
@@ -85,4 +92,5 @@ export const {
   useGetMicroInsightsQuery,
   useClientOptOutMutation,
   useGetAllMessagesQuery,
+  useUpdateOptMutation
 } = caseapi;
