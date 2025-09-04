@@ -165,6 +165,7 @@ const AddLawFirm = ({ onClose }) => {
               name="firmName"
               value={formData.firmName}
               onChange={handleChange}
+              placeholder="ex: My Firm"
               className="w-full px-3 py-2 rounded-lg bg-[#1e293b] text-white text-sm outline-none"
             />
           </div>
@@ -177,7 +178,7 @@ const AddLawFirm = ({ onClose }) => {
               name="areaCode"
               value={formData.areaCode}
               onChange={handleChange}
-                placeholder="123....."
+              placeholder="123....."
               className={`w-full px-3 py-2 rounded-lg text-sm outline-none ${
                 errors.areaCode
                   ? "border border-red-500 bg-[#1e293b]"
@@ -228,7 +229,7 @@ const AddLawFirm = ({ onClose }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-                placeholder="example@gmail.com"
+              placeholder="example@gmail.com"
               className={`w-full px-3 py-2 rounded-lg text-sm outline-none ${
                 errors.email
                   ? "border border-red-500 bg-[#1e293b]"
@@ -248,7 +249,7 @@ const AddLawFirm = ({ onClose }) => {
               name="manager"
               value={formData.manager}
               onChange={handleChange}
-              placeholder="Enter admin name"
+              placeholder="ex: John Doe"
               className="w-full px-3 py-2 rounded-lg bg-[#1e293b] text-white text-sm outline-none"
             />
           </div>
@@ -263,7 +264,7 @@ const AddLawFirm = ({ onClose }) => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-                placeholder="ex: San Francisco, CA 94105"
+              placeholder="ex: San Francisco, CA 94105"
               className="w-full px-3 py-2 rounded-lg bg-[#1e293b] text-white text-sm outline-none"
             />
           </div>
