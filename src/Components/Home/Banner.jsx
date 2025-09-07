@@ -152,7 +152,7 @@ const Banner = () => {
           <div className="relative right-0 w-full mb-10">
             <div className="absolute w-full max-w-xs">
               {/* Smooth sliding message card */}
-              {/* target 2 ............................................................................................................................... */}
+              {/* target 2  */}
               <div className="relative w-full max-w-4xl">
                 <div className="relative max-w-xs left-80">
                   <div
@@ -173,7 +173,7 @@ const Banner = () => {
 
           <div className="relative w-full max-w-4xl m-t-12">
             <div className="relative max-w-xs">
-              {/* tatget 1................................................................................................................. */}
+              {/* target 1*/}
               {/* Smooth sliding message card */}
               <div className="relative w-full max-w-4xl md:-mt-36">
                 <div className="relative max-w-xs">
