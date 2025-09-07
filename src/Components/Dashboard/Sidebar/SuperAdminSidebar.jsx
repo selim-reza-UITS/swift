@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../../assets/logo.png";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { FaBalanceScale } from "react-icons/fa";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { logout } from "../../../Redux/feature/auth/authSlice";
 
 const SuperAdminSidebar = () => {
@@ -19,7 +19,7 @@ const SuperAdminSidebar = () => {
   const isActiveDashboard = location.pathname === "/dashboard/superadmin";
   const isActiveLawFirm = location.pathname.startsWith("/dashboard/law-Firm");
   const isActiveSettings = location.pathname === "/dashboard/settings";
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -37,7 +37,7 @@ const dispatch = useDispatch();
     };
   }, []);
   const handleLogout = () => {
-     dispatch(logout())
+    dispatch(logout());
     localStorage.removeItem("accessToken"); // Remove token from localStorage
     navigate("/login", { replace: true }); // Redirect to login page
   };
@@ -51,7 +51,7 @@ const dispatch = useDispatch();
           className="flex items-center justify-center w-full gap-2 mt-2 text-xl font-extrabold md:text-xl lg:text-2xl "
         >
           <a className="block text-2xl text-teal-60 " href="#">
-            <img src={logo} alt="" className="w-[50px] h-[50px]" />
+            <img src={logo} alt="" className="w-[60px] h-[60px]" />
           </a>
         </NavLink>
         {/* Menu Items */}

@@ -8,7 +8,7 @@ import { IoMdSettings } from "react-icons/io";
 import { Plus } from "lucide-react";
 import AddClientForm from "../../Shared/AddClientForm";
 import "./sidebar.css";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { logout } from "../../../Redux/feature/auth/authSlice";
 const CaseMangerSidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -16,7 +16,7 @@ const CaseMangerSidebar = () => {
   const [showAddClientModal, setShowAddClientModal] = useState(false);
 
   const navigate = useNavigate();
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   const isActiveDashboard = location.pathname === "/dashboard/admin";
   const isActiveClient = location.pathname.startsWith("/dashboard/client");
@@ -36,7 +36,7 @@ const dispatch = useDispatch();
     };
   }, []);
   const handleLogout = () => {
-       dispatch(logout())
+    dispatch(logout());
     localStorage.removeItem("accessToken"); // Remove token from localStorage
     navigate("/login", { replace: true }); // Redirect to login page
   };
@@ -44,17 +44,15 @@ const dispatch = useDispatch();
   return (
     <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen flex flex-col justify-between  open-sns">
       {/* Logo Section */}
-      <div className="flex flex-col py-4">
-        <Link to={"/"}>
-          <div className="flex items-center justify-center w-full gap-2 text-xl font-extrabold md:text-xl lg:text-2xl mt-9">
-            <Link
-              to={"/dashboard/caseManager"}
-              href="#"
-            >
-            <img src={logo} alt="" className="w-[50px] h-[50px]" />
-            </Link>
-          </div>
-        </Link>
+      <div className="flex flex-col pt-2 pb-4">
+        <NavLink
+          to="/dashboard/admin"
+          className="flex items-center justify-center w-full gap-2 mt-2 text-xl font-extrabold md:text-xl lg:text-2xl "
+        >
+          <a className="block text-2xl text-teal-60 " href="#">
+            <img src={logo} alt="" className="w-[60px] h-[60px]" />
+          </a>
+        </NavLink>
         {/* Menu Items */}
         <nav className="flex flex-col  text-[#9CA3AF] mt-9">
           <NavLink
@@ -102,14 +100,20 @@ const dispatch = useDispatch();
               </div>
             </div>
           </NavLink>
-          <Link onClick={() => setShowAddClientModal(true)}>
-            <div className="flex items-center justify-between w-full p-2 mt-10 font-semibold">
-              <button className="flex items-center justify-center w-full gap-2 px-4 py-2 mx-4 text-sm font-medium text-white rounded-md bg-gradient-to-r from-purple-500 to-blue-600">
+          <NavLink
+            onClick={() => setShowAddClientModal(true)}
+            className="flex items-center justify-between "
+          >
+            <div className="flex items-center justify-between p-2 pl-6 font-semibold">
+              <div
+                className={`flex items-center  justify-center gap-2    pl-2 pr-4 py-2 text-center bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg
+                        `}
+              >
                 <Plus className="w-[22px] h-[22px] font-bold" />
-                <h1 className="text-xl font-medium poppins">New Client</h1>
-              </button>
+                <h1 className="text-lg font-medium poppins">New Client</h1>
+              </div>
             </div>
-          </Link>
+          </NavLink>
           {showAddClientModal && (
             <div
               className="fixed inset-0 flex items-center justify-center bg-black z-60 bg-opacity-60"

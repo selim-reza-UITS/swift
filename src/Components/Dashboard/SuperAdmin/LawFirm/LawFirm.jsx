@@ -97,9 +97,9 @@ const LawFirmCard = ({ item, onEdit, onDelete, onEditBilling }) => {
         </h3>
 
         {billingLoading ? (
-        <div className="h-[86vh] flex items-center justify-center bg-gray-900">
-        <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
-      </div>
+          <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+            <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+          </div>
         ) : billing ? (
           <div className="grid grid-cols-1 gap-2 text-sm text-gray-300">
             <div className="flex justify-between">
@@ -159,11 +159,14 @@ const LawFirm = () => {
     setBillingModalOpen(true);
   };
 
-  if (isLoading) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+  if (isLoading)
+    return (
+      <div className="h-[86vh] flex items-center justify-center bg-gray-900">
         <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
-      </div>;
+      </div>
+    );
 
-  const filteredFirms = (lawfirms || []).filter(
+  const filteredFirms = (lawfirms?.results || []).filter(
     (firm) =>
       firm.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       firm.contact_email.toLowerCase().includes(searchTerm.toLowerCase())

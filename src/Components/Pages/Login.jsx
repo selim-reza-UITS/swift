@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi"; // 👈 Import eye icons
 import loginImage from "../../assets/loginpage.png";
 import loginPage from "../../assets/login-banner.png";
-import logo from "../../assets/loginlogo.png";
+import logo from "../../assets/loginlogo2.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../Redux/feature/auth/authSlice";
@@ -66,7 +66,7 @@ export default function Login() {
       );
 
       setMessage(`Logged in as ${role}`);
-      
+
       navigate("/dashboard");
       window.location.reload();
     } catch (error) {
@@ -88,7 +88,7 @@ export default function Login() {
           <div className="flex flex-col justify-center w-full h-full">
             <div className="flex flex-col items-center mb-8">
               <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
-              <Link to="/">
+                <Link to="/">
                   <img src={logo} alt="" />
                 </Link>
                 {/* <h1 className="text-white poppins">Arviso</h1> */}

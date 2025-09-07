@@ -58,13 +58,13 @@ const AdminSidebar = () => {
   return (
     <div className="bg-[#161E2F]  border-r-2  border-r-[#161E2F]  min-h-screen flex flex-col justify-between  open-sns">
       {/* Logo Section */}
-      <div className="flex flex-col py-4">
+      <div className="flex flex-col pt-2 pb-4">
         <NavLink
           to="/dashboard/admin"
           className="flex items-center justify-center w-full gap-2 mt-2 text-xl font-extrabold md:text-xl lg:text-2xl "
         >
           <a className="block text-2xl text-teal-60 " href="#">
-            <img src={logo} alt="" className="w-[50px] h-[50px]" />
+            <img src={logo} alt="" className="w-[60px] h-[60px]" />
           </a>
         </NavLink>
         {/* Menu Items */}
@@ -140,15 +140,15 @@ const AdminSidebar = () => {
           </NavLink>
           <NavLink
             onClick={() => setShowAddClientModal(true)}
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between "
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between p-2 pl-6 font-semibold">
               <div
-                className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center bg-gradient-to-r from-[#5d35bb] to-[#8A2BE2] text-white rounded-xl
+                className={`flex items-center  justify-center gap-2    pl-2 pr-4 py-2 text-center bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg
                   `}
               >
                 <Plus className="w-[22px] h-[22px] font-bold" />
-                <h1 className="text-xl font-medium poppins">New Client</h1>
+                <h1 className="text-lg font-medium poppins">New Client</h1>
               </div>
             </div>
           </NavLink>
