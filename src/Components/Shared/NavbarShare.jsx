@@ -58,7 +58,7 @@ const NavbarShare = () => {
           <Link to={"/"}>
             <div className="flex items-center gap-2 text-xl font-extrabold md:text-xl lg:text-2xl">
               <a className="block text-teal-600" href="#">
-                <img src={logo} alt="" className="" />
+                <img src={logo} alt="" className="w-[70px] h-[70px]" />
               </a>
               {/* <h1 className="text-black ">Arviso</h1> */}
             </div>

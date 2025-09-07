@@ -3,15 +3,30 @@ import logo from "../../assets/loginlogo.png";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSetPasswordMutation } from "../../Redux/api/authapi";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 export default function SetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState({
+    newPassword: false,
+    confirmPassword: false,
+  });
+
   const params = useParams();
   const navigate = useNavigate();
   const [setPassword, { isLoading }] = useSetPasswordMutation();
 
+  const toggleShowPassword = (field) => {
+    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
   const handleSubmit = async () => {
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
@@ -21,17 +36,14 @@ export default function SetPassword() {
       toast.error("Invalid reset link. Please check your email.");
       return;
     }
-    console.log("neeeee");
+
     try {
       const response = await setPassword({
         password: newPassword,
         uuid: params.uuid,
         token: params.token,
       });
-      // if (response?.error) {
-      //   toast.error(response?.error?.data?.password[0]);
-      // }
-      console.log(response);
+
       if (response.data) {
         toast.success("Password set successfully!");
         navigate("/login");
@@ -42,13 +54,40 @@ export default function SetPassword() {
     }
   };
 
+  const renderPasswordField = (
+    label,
+    value,
+    setValue,
+    showField,
+    fieldName
+  ) => (
+    <div className="relative">
+      <label className="block mb-2 text-sm font-medium text-white">
+        {label}
+      </label>
+      <input
+        type={showField ? "text" : "password"}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={`Enter ${label.toLowerCase()}`}
+        className="w-full px-4 py-3 pr-10 text-white transition-all duration-200 border rounded-lg bg-slate-700/50 border-slate-600 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+      <span
+        className="absolute -translate-y-1/2 cursor-pointer right-3 top-[65%] text-white/70"
+        onClick={() => toggleShowPassword(fieldName)}
+      >
+        {showField ? <IoEyeOffOutline /> : <IoEyeOutline />}
+      </span>
+    </div>
+  );
+
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800">
       <div className="w-full max-w-md">
         <div className="p-8 border bg-slate-800/60 backdrop-blur-sm rounded-2xl border-slate-700/50">
           {/* Logo */}
           <div className="flex justify-center mb-6">
-            <img src={logo} alt="" />
+            <img src={logo} alt="" className="w-[70px] h-[70px]" />
           </div>
 
           {/* Header */}
@@ -63,37 +102,27 @@ export default function SetPassword() {
 
           {/* Form */}
           <div className="space-y-6">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-white">
-                New Password
-              </label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password"
-                className="w-full px-4 py-3 text-white transition-all duration-200 border rounded-lg bg-slate-700/50 border-slate-600 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block mb-2 text-sm font-medium text-white">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm password"
-                className="w-full px-4 py-3 text-white transition-all duration-200 border rounded-lg bg-slate-700/50 border-slate-600 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+            {renderPasswordField(
+              "New Password",
+              newPassword,
+              setNewPassword,
+              showPassword.newPassword,
+              "newPassword"
+            )}
+            {renderPasswordField(
+              "Confirm Password",
+              confirmPassword,
+              setConfirmPassword,
+              showPassword.confirmPassword,
+              "confirmPassword"
+            )}
 
             <button
               onClick={handleSubmit}
+              disabled={isLoading}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800"
             >
-              Set Password
+              {isLoading ? "Setting..." : "Set Password"}
             </button>
           </div>
 
