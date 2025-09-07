@@ -8,7 +8,7 @@ const PaymentSuccess = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-purple-900 via-gray-900 to-black">
-      <div className="max-w-md p-10 text-center bg-[#1a1a1a] shadow-lg rounded-xl">
+      <div className="max-w-md p-10 text-center border shadow-lg bg-slate-800/60 backdrop-blur-sm border-slate-700/50 rounded-xl">
         {/* Logo */}
         <img
           src={logo}

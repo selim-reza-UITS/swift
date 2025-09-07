@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect, useRef } from "react";
 import { Plus, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
