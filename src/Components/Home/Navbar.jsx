@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/home.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -59,7 +59,7 @@ const Navbar = () => {
           <Link to={"/"}>
             <div className="flex items-center gap-2 text-xl font-extrabold md:text-xl lg:text-2xl">
               <a className="block text-teal-600" href="#">
-                <img src={logo} alt="" className="" />
+                <img src={logo} alt="" className="w-[50px] h-[50px]" />
               </a>
             </div>
           </Link>
