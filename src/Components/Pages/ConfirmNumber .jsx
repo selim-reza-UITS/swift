@@ -46,11 +46,8 @@ const ConfirmNumber = () => {
     setError("");
     const digits = formData.phoneNumber.replace(/\D/g, "");
     const payload = {
-      phone_number: `+1${digits}`, // USA format (+1)
+      phone_number: `${digits}`, // USA format (+1)
       law_firm_name: formData.lawFirm,
-      language: "English", // fix for now
-      consent_checkbox: consent,
-      health_data_checkbox: updates,
     };
 
     try {
