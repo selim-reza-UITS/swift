@@ -71,9 +71,9 @@ const AdminSidebar = () => {
         <nav className="flex flex-col  text-[#364636] mt-4">
           <NavLink
             to="/dashboard/admin"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2 ">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2 ">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
@@ -88,9 +88,9 @@ const AdminSidebar = () => {
           </NavLink>
           <NavLink
             to="/dashboard/adminClient"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
@@ -106,9 +106,9 @@ const AdminSidebar = () => {
 
           <NavLink
             to="/dashboard/my-firm"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
@@ -123,9 +123,9 @@ const AdminSidebar = () => {
           </NavLink>
           <NavLink
             to="/dashboard/settings"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}

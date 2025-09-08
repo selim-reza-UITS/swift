@@ -66,12 +66,12 @@ const Client = ({ managers }) => {
   const handleDeleteUser = async (client) => {
     Swal.fire({
       title: "Are you sure?",
-      text: `Do you really want to opt-out ${client.full_name}?`,
+      text: `Do you really want to delete ${client.full_name}?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#8A2BE2",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Opt-out",
+      confirmButtonText: "Yes, delete!",
       background: "#1e293b",
       color: "#f8fafc",
       customClass: {
@@ -88,8 +88,8 @@ const Client = ({ managers }) => {
 
           Swal.fire({
             icon: "success",
-            title: "Opt-out Successful",
-            text: `${client.full_name} has been opted out successfully!`,
+            title: "Delete Successful",
+            text: `${client.full_name} has been deleted successfully!`,
             confirmButtonColor: "#8A2BE2",
             background: "#1e293b",
             color: "#f8fafc",

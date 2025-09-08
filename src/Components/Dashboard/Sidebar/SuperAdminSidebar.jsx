@@ -58,9 +58,9 @@ const SuperAdminSidebar = () => {
         <nav className="flex flex-col  text-[#364636] mt-9">
           <NavLink
             to="/dashboard/superadmin"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2 ">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2 ">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
@@ -75,9 +75,9 @@ const SuperAdminSidebar = () => {
           </NavLink>
           <NavLink
             to="/dashboard/law-Firm"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
@@ -92,9 +92,9 @@ const SuperAdminSidebar = () => {
           </NavLink>
           <NavLink
             to="/dashboard/settings"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}

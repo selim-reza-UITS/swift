@@ -57,9 +57,9 @@ const CaseMangerSidebar = () => {
         <nav className="flex flex-col  text-[#9CA3AF] mt-9">
           <NavLink
             to="/dashboard/caseManager"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2 ">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2 ">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
@@ -74,9 +74,9 @@ const CaseMangerSidebar = () => {
           </NavLink>
           <NavLink
             to="/dashboard/caseManagerClients"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
                   `}
@@ -88,9 +88,9 @@ const CaseMangerSidebar = () => {
           </NavLink>
           <NavLink
             to="/dashboard/caseManagerSettings"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               <div
                 className={`flex items-center space-x-2 justify-start gap-2 w-[250px] h-[50px]  p-5 text-center
                   `}

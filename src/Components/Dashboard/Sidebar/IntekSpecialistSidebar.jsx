@@ -64,9 +64,9 @@ const IntekSpecialistSidebar = () => {
         <nav className="flex flex-col mt-9">
           <NavLink
             to="/dashboard/intakeSpecialist"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2 ">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2 ">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
@@ -82,9 +82,9 @@ const IntekSpecialistSidebar = () => {
 
           <NavLink
             to="/dashboard/intakeSpecialistSettings"
-            className="flex items-center justify-between w-[280px]"
+            className="flex items-center justify-between w-[230px]"
           >
-            <div className="flex items-center justify-between w-[280px] font-semibold  p-2">
+            <div className="flex items-center justify-between w-[230px] font-semibold  p-2">
               {/* Left Indicator Bar */}
 
               {/* Main Button Area */}
