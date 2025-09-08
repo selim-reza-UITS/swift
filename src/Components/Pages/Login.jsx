@@ -156,9 +156,7 @@ export default function Login() {
             </form>
 
             {message && (
-              <p className="mt-4 text-sm text-center text-green-400">
-                {message}
-              </p>
+              <p className="mt-4 text-sm text-center text-red-400">{message}</p>
             )}
           </div>
         </div>
