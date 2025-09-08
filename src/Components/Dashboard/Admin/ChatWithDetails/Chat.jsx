@@ -184,9 +184,7 @@ const Chat = () => {
         {!client.consent_to_communicate && (
           <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
             <p className="max-w-xl text-gray-300">
-              It looks like this client hasn’t completed the consent form. For
-              messaging to be enabled, please have them complete the quick
-              permission form.
+             Messaging is locked until this client completes the consent form. Please have them scan the QR code below to enable messaging.
             </p>
           </div>
         )}

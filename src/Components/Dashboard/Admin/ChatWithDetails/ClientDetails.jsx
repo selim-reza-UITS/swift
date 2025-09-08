@@ -44,8 +44,11 @@ const ClientDetails = () => {
         gender: client?.gender || "Female",
         dateOfIncident: client?.date_of_incident || "2024/01/15",
         lawyerName: client?.lawyer?.id || "",
-        injuriesSustained: client?.injuries_sustained || "Lower back pain and stiffness.",
-        generalCaseInfo: client?.general_case_info || "Client reported back pain after accident.",
+        injuriesSustained:
+          client?.injuries_sustained || "Lower back pain and stiffness.",
+        generalCaseInfo:
+          client?.general_case_info ||
+          "Client reported back pain after accident.",
         consentToCommunicate: client?.consent_to_communicate || false,
         sentiment: client?.sentiment || "Positive",
         concernLevel: client?.concern_level || "High",
@@ -56,7 +59,7 @@ const ClientDetails = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[700px] text-white gap-3">
+      <div className="flex flex-col items-center justify-center gap-3 text-white">
         <div className="w-10 h-10 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
       </div>
     );
@@ -70,14 +73,16 @@ const ClientDetails = () => {
     );
   }
 
-
-
   const lawyerOptions = Array.isArray(lawyersData)
-    ? lawyersData.map((l) => ({ id: l?.id, name: l?.name })).filter((x) => x.id && x.name)
+    ? lawyersData
+        .map((l) => ({ id: l?.id, name: l?.name }))
+        .filter((x) => x.id && x.name)
     : [];
 
   const managingUserOptions = Array.isArray(usersData)
-    ? usersData.map((u) => ({ id: u?.id, name: u?.name })).filter((x) => x.id && x.name)
+    ? usersData
+        .map((u) => ({ id: u?.id, name: u?.name }))
+        .filter((x) => x.id && x.name)
     : [];
 
   return (
@@ -113,7 +118,9 @@ const ClientDetails = () => {
             <User className="w-8 h-8 text-gray-300" />
           </div>
           <div>
-            <h2 className="mb-1 text-xl font-semibold text-center">{client?.full_name}</h2>
+            <h2 className="mb-1 text-xl font-semibold text-center">
+              {client?.full_name}
+            </h2>
             <p className="text-center text-gray-400">{client?.phone_number}</p>
           </div>
         </div>
@@ -135,7 +142,9 @@ const ClientDetails = () => {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Client Status:</span>
-            <span className="px-2 py-1 text-sm bg-blue-600 rounded">{client?.status}</span>
+            <span className="px-2 py-1 text-sm bg-blue-600 rounded">
+              {client?.status}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Gender:</span>
@@ -143,7 +152,11 @@ const ClientDetails = () => {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Managing User(s):</span>
-            <span>{client?.managing_users?.length > 0 ? client.managing_users.map((u) => u.name).join(", ") : "—"}</span>
+            <span>
+              {client?.managing_users?.length > 0
+                ? client.managing_users.map((u) => u.name).join(", ")
+                : "—"}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Lawyer:</span>
@@ -162,7 +175,9 @@ const ClientDetails = () => {
             <div className="flex justify-between">
               <span className="text-gray-400">Scheduled Next Send:</span>
               <span className="px-2 py-1 text-sm bg-blue-600 rounded">
-                {client?.scheduled_time ? new Date(client.scheduled_time).toISOString().split("T")[0] : "—"}
+                {client?.scheduled_time
+                  ? new Date(client.scheduled_time).toISOString().split("T")[0]
+                  : "—"}
               </span>
             </div>
             <div className="flex justify-between">
@@ -180,7 +195,9 @@ const ClientDetails = () => {
         <div>
           <h3 className="mb-4 text-lg font-semibold">General Case Info</h3>
           <div className="p-4 bg-gray-700 rounded-lg">
-            <p className="text-sm text-gray-300">{client?.general_case_info || "No case info"}</p>
+            <p className="text-sm text-gray-300">
+              {client?.general_case_info || "No case info"}
+            </p>
           </div>
         </div>
       </div>
