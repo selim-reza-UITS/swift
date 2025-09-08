@@ -23,7 +23,7 @@ const Forgot = () => {
     }
 
     try {
-      const response = await forgotPassword({ email })
+      const response = await forgotPassword({ email });
       console.log("OTP Sent:", response);
 
       localStorage.setItem("email", email);
@@ -68,9 +68,8 @@ const Forgot = () => {
                 <div className="flex flex-col items-center mb-8">
                   <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
                     <Link className="block text-teal-600" href="/">
-                      <img src={logo} alt="" className="" />
+                      <img src={logo} alt="" className="w-[65px] h-[65px]" />
                     </Link>
-                    <h1 className="text-black poppins">Arviso</h1>
                   </div>
                   <p className="mb-2 text-4xl font-bold text-blue-400 poppin poppins">
                     Reset Your Password
