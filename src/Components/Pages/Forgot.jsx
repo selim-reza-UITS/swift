@@ -67,8 +67,8 @@ const Forgot = () => {
                 {" "}
                 <div className="flex flex-col items-center mb-8">
                   <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
-                    <Link className="block text-teal-600" href="/">
-                      <img src={logo} alt="" className="w-[65px] h-[65px]" />
+                    <Link to="/login" className="block text-teal-600" href="/">
+                      <img src={logo} alt="" className="w-[120px] h-[120px]" />
                     </Link>
                   </div>
                   <p className="mb-2 text-4xl font-bold text-blue-400 poppin poppins">

@@ -92,7 +92,7 @@ const router = createBrowserRouter([
         index: true,
         element: <DashboardContent />,
       },
-      // just superadmin  role  route will be here
+      // just super admin  role  route will be here
       {
         path: "superadmin",
         element: (

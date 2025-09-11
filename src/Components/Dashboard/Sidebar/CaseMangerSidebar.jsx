@@ -100,12 +100,10 @@ const CaseMangerSidebar = () => {
               </div>
             </div>
           </NavLink>
-          <NavLink
-            onClick={() => setShowAddClientModal(true)}
-            className="flex items-center justify-between "
-          >
+          <NavLink className="flex items-center justify-between ">
             <div className="flex items-center justify-between p-2 pl-6 font-semibold">
               <div
+                onClick={() => setShowAddClientModal(true)}
                 className={`flex items-center  justify-center gap-2    pl-2 pr-4 py-2 text-center bg-gradient-to-r from-purple-500 to-blue-600 text-white rounded-lg
                         `}
               >
