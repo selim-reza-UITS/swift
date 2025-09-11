@@ -35,6 +35,8 @@ import ConfirmNumber from "./Components/Pages/ConfirmNumber .jsx";
 import { Edit } from "lucide-react";
 import EditAndViewPart from "./Components/Dashboard/Admin/ChatWithDetails/EditAndViewPart.jsx";
 import { PrivateRoute } from "./Routes/PrivateRoute.jsx";
+import PaymentSuccess from "./Components/Shared/PaymentSuccess.jsx";
+import PaymentCancel from "./Components/Shared/PaymentCancel.jsx";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +50,14 @@ const router = createBrowserRouter([
   {
     path: "/wa-health-data",
     element: <ConfirmNumber></ConfirmNumber>,
+  },
+  {
+    path: "/payment-success",
+    element: <PaymentSuccess></PaymentSuccess>,
+  },
+  {
+    path: "/payment-cancel",
+    element: <PaymentCancel></PaymentCancel>,
   },
   {
     path: "/terms",

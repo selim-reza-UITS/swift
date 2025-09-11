@@ -56,7 +56,7 @@ const Root = () => {
   return (
     <div className="flex h-screen bg-[#101725] dark:bg-[#101725]">
       {/* Sidebar - Fixed Position */}
-      <div className="w-[280px] fixed left-0 top-0 h-screen">
+      <div className="w-[230px] fixed left-0 top-0 h-screen">
         {role === "superadmin" && <SuperAdminSidebar></SuperAdminSidebar>}
 
         {role === "admin" && <AdminSidebar />}
@@ -67,7 +67,7 @@ const Root = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col ml-[280px]">
+      <div className="flex-1 flex flex-col ml-[230px]">
         {/* Header */}
         <Header />
 

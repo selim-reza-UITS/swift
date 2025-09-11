@@ -39,7 +39,7 @@ const MemberCard = ({ data, managers = [], onView, onEdit }) => {
       return;
     }
 
-    // Payload structure backend অনুযায়ী
+    // Payload structure backend 
     const payload = {
       user_id: data.id,
       reassignment_option:

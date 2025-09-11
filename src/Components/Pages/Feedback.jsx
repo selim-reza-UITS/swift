@@ -31,6 +31,7 @@ const Feedback = ({ onClose }) => {
         title: "Feedback Submitted!",
         text: "Thank you for sharing your thoughts.",
         background: "#000",
+        color: "#f1f5f9",
         confirmButtonColor: "#3085d6",
         showClass: {
           popup: "animate__animated animate__zoomIn",
