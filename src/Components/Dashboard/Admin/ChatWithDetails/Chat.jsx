@@ -29,7 +29,7 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
-
+  const chatAreaRef = useRef(null);
   const [updateStatus, { isLoading: isUpdating }] =
     useUpdateClientStatusMutation();
 
@@ -112,6 +112,12 @@ const Chat = () => {
       });
     }
   };
+  // Always force scroll to top if consent is false
+  useEffect(() => {
+    if (chatAreaRef.current && !client?.consent_to_communicate) {
+      chatAreaRef.current.scrollTop = 0;
+    }
+  }, [client?.consent_to_communicate, chatDetails]);
 
   return (
     <div className="w-full lg:w-2/3 bg-[#0f172a] text-white flex flex-col rounded-md h-[700px]">
@@ -162,7 +168,12 @@ const Chat = () => {
       </div>
 
       {/* Messages */}
-      <div className={`relative flex-1 p-6 space-y-4 overflow-y-auto`}>
+      <div
+        className={`relative flex-1 p-6 space-y-4  ${
+          client?.consent_to_communicate ? "overflow-y-auto" : "overflow-hidden"
+        }`}
+        ref={chatAreaRef}
+      >
         {/* <div
         className={`relative flex-1 p-6 space-y-4 ${
           !client?.consent_to_communicate
@@ -170,6 +181,13 @@ const Chat = () => {
             : "overflow-y-auto"
         }`}
       > */}
+        {!client.consent_to_communicate && (
+          <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
+            <p className="max-w-xl text-gray-300">
+             Messaging is locked until this client completes the consent form. Please have them scan the QR code below to enable messaging.
+            </p>
+          </div>
+        )}
         {chatDetails?.map((msg) => {
           const isClient = msg.sender === "client";
           const isFirm = msg.sender === "firm";
@@ -226,7 +244,7 @@ const Chat = () => {
         )} */}
       </div>
       {/* Overlay if client is inactive */}
-      {client.is_paused && !client.opt_out && (
+      {client.is_paused && !client.opt_out && client?.consent_to_communicate && (
         <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm ">
           <p className="text-sm text-gray-300 ">
             This client is paused. Activate the client first to send messages.

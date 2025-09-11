@@ -93,9 +93,9 @@ const Verification = () => {
                 <div className="flex flex-col items-center ">
                   <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
                     <a className="block text-teal-600" href="#">
-                      <img src={logo} alt="" className="" />
+                      <img src={logo} alt="" className="w-[65px] h-[65px]" />
                     </a>
-                    <h1 className="text-black poppins">Arviso</h1>
+                 
                   </div>
                   <p className="text-4xl font-bold text-blue-400 poppin poppins">
                     OTP code verification

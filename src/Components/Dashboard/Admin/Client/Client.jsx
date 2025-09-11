@@ -44,9 +44,12 @@ const Client = ({ managers }) => {
     refetch,
   } = useGetClientQuery();
   const [optOutClient] = useOptOutClientMutation();
-  if (isLoading) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+  if (isLoading)
+    return (
+      <div className="h-[86vh] flex items-center justify-center bg-gray-900">
         <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
-      </div>;
+      </div>
+    );
   if (isError) return <p>Error loading clients!</p>;
 
   const filteredClients = clients.filter((client) => {
@@ -63,12 +66,12 @@ const Client = ({ managers }) => {
   const handleDeleteUser = async (client) => {
     Swal.fire({
       title: "Are you sure?",
-      text: `Do you really want to opt-out ${client.full_name}?`,
+      text: `Do you really want to delete ${client.full_name}?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#8A2BE2",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Opt-out",
+      confirmButtonText: "Yes, delete!",
       background: "#1e293b",
       color: "#f8fafc",
       customClass: {
@@ -85,8 +88,8 @@ const Client = ({ managers }) => {
 
           Swal.fire({
             icon: "success",
-            title: "Opt-out Successful",
-            text: `${client.full_name} has been opted out successfully!`,
+            title: "Delete Successful",
+            text: `${client.full_name} has been deleted successfully!`,
             confirmButtonColor: "#8A2BE2",
             background: "#1e293b",
             color: "#f8fafc",
@@ -115,10 +118,10 @@ const Client = ({ managers }) => {
       <div className="flex items-center justify-end gap-5 mb-5 -mt-4 rounded-md poppins">
         <button
           onClick={() => setShowAddClientModal(true)}
-          className="flex items-center gap-2 w-[250px] h-[50px] p-5 text-white bg-gradient-to-r from-[#5d35bb] to-[#8A2BE2] rounded-xl"
+          className="flex items-center justify-center gap-2 py-2 pl-2 pr-4 -mt-2 text-center text-white rounded-lg bg-gradient-to-r from-purple-500 to-blue-600"
         >
           <Plus className="w-6 h-6" />
-          <h1 className="text-xl font-medium poppins">New Client</h1>
+          <h1 className="text-lg font-medium poppins">New Client</h1>
         </button>
       </div>
 
