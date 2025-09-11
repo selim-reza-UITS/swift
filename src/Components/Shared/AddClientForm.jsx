@@ -21,16 +21,11 @@ export default function AddClientForm({ setShowAddClientModal }) {
     phoneNumber: "",
     injurySustained: "",
     generalCaseInfo: "",
-    consentToCommunicate: true,
   });
-  const {
-    data: clients = [],
-    isLoading,
-    isError,
-    refetch,
-  } = useGetClientQuery();
-  // Fetch dynamic dropdown data (skip until token is available)
+
+  const { data: clients = [], refetch } = useGetClientQuery();
   const accessToken = useSelector(selectAccessToken);
+
   let persistedToken = null;
   try {
     const authString = localStorage.getItem("auth");
@@ -43,22 +38,20 @@ export default function AddClientForm({ setShowAddClientModal }) {
   }
   const hasToken = Boolean(accessToken || persistedToken);
 
-  const { data: lawyersData, isLoading: isLawyersLoading } =
-    useGetAllLawyerQuery(undefined, { skip: !hasToken });
-  const { data: usersData, isLoading: isUsersLoading } = useGetAllUserQuery(
-    undefined,
-    { skip: !hasToken }
-  );
+  const { data: lawyersData } = useGetAllLawyerQuery(undefined, {
+    skip: !hasToken,
+  });
+  const { data: usersData } = useGetAllUserQuery(undefined, {
+    skip: !hasToken,
+  });
+
   const [createClient, { isLoading: isCreating }] = useCreateClientMutation();
-  console.log(usersData);
-  console.log(lawyersData);
 
   const lawyerOptions = Array.isArray(lawyersData)
     ? lawyersData
         .map((l) => ({ id: l?.id, name: l?.name }))
         .filter((x) => x.id && x.name)
     : [];
-  console.log(lawyerOptions);
 
   const managingUserOptions = Array.isArray(usersData)
     ? usersData
@@ -109,17 +102,11 @@ export default function AddClientForm({ setShowAddClientModal }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if Consent to Communicate is checked
-    if (!formData.consentToCommunicate) {
-      toast.error("You must give consent to communicate before submitting.");
-      return;
-    }
-
-    // Validate if Managing Users are assigned
-    if (!formData.managingUsers || formData.managingUsers.length === 0) {
-      toast.error("Please assign at least one managing user.");
-      return;
-    }
+    // Validate Managing Users
+    // if (!formData.managingUsers || formData.managingUsers.length === 0) {
+    //   toast.error("Please assign at least one managing user.");
+    //   return;
+    // }
 
     try {
       const normalizedDate = (formData.dateOfIncident || "").replaceAll(
@@ -129,11 +116,11 @@ export default function AddClientForm({ setShowAddClientModal }) {
       const payload = {
         full_name: formData.fullName,
         gender: String(formData.gender || "").toLowerCase(),
-        lawyer: Number(formData.lawyerName),
+        lawyer: formData.lawyerName ? Number(formData.lawyerName) : null,
         phone_number: formData.phoneNumber?.replace(/\D/g, "") || "",
         injuries_sustained: formData.injurySustained,
         general_case_info: formData.generalCaseInfo,
-        date_of_incident: normalizedDate,
+        date_of_incident: normalizedDate || null,
         managing_users: formData.managingUsersIds || [],
       };
 
@@ -142,10 +129,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
       if (res?.data) {
         toast.success(res.data?.message || "Client created successfully");
         refetch();
-        // Ensure client list refreshes
-        try {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        } catch (_) {}
+        window.scrollTo({ top: 0, behavior: "smooth" });
 
         setFormData({
           fullName: "",
@@ -156,7 +140,6 @@ export default function AddClientForm({ setShowAddClientModal }) {
           phoneNumber: "",
           injurySustained: "",
           generalCaseInfo: "",
-          consentToCommunicate: false,
         });
         setShowAddClientModal(false);
       } else {
@@ -182,7 +165,6 @@ export default function AddClientForm({ setShowAddClientModal }) {
       phoneNumber: "",
       injurySustained: "",
       generalCaseInfo: "",
-      consentToCommunicate: false,
     });
     setShowAddClientModal(false);
   };
@@ -219,10 +201,10 @@ export default function AddClientForm({ setShowAddClientModal }) {
             />
           </div>
 
-          {/* Lawyer Name */}
+          {/* Lawyer Name (Not Required) */}
           <div>
             <label className="block mb-2 text-sm font-medium text-white">
-              Lawyer Name<span className="text-red-400">*</span>
+              Assigned Attorney
             </label>
             <div className="relative">
               <select
@@ -231,9 +213,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                 onChange={handleInputChange}
                 className="w-full bg-[#475569] text-white border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 appearance-none"
               >
-                <option value="" disabled>
-                  Select a lawyer
-                </option>
+                <option value="">Select a lawyer</option>
                 {lawyerOptions.map(({ id, name }) => (
                   <option key={id} value={id}>
                     {name}
@@ -258,10 +238,10 @@ export default function AddClientForm({ setShowAddClientModal }) {
             </div>
           </div>
 
-          {/* Date of Incident */}
+          {/* Date of Incident (Not Required) */}
           <div>
             <label className="block mb-2 text-sm font-medium text-white">
-              Date of Incident<span className="text-red-400">*</span>
+              Date of Incident
             </label>
             <input
               type="text"
@@ -273,10 +253,10 @@ export default function AddClientForm({ setShowAddClientModal }) {
             />
           </div>
 
-          {/* Gender */}
+          {/* Gender (Not Required) */}
           <div>
             <label className="block mb-2 text-sm font-medium text-white">
-              Gender<span className="text-red-400">*</span>
+              Gender
             </label>
             <div className="flex gap-4">
               <label className="flex items-center">
@@ -290,6 +270,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                 />
                 <span className="text-sm text-white">Female</span>
               </label>
+
               <label className="flex items-center">
                 <input
                   type="radio"
@@ -301,7 +282,7 @@ export default function AddClientForm({ setShowAddClientModal }) {
                 />
                 <span className="text-sm text-white">Male</span>
               </label>
-              {/* <label className="flex items-center">
+              <label className="flex items-center">
                 <input
                   type="radio"
                   name="gender"
@@ -311,14 +292,14 @@ export default function AddClientForm({ setShowAddClientModal }) {
                   className="mr-2 text-purple-400 focus:ring-purple-400"
                 />
                 <span className="text-sm text-white">Prefer not to say</span>
-              </label> */}
+              </label>
             </div>
           </div>
 
-          {/* Select Managing User(s) */}
+          {/* Managing User(s) */}
           <div ref={managingRef}>
             <label className="block mb-2 text-sm font-medium text-white">
-              Select Managing User(s)<span className="text-red-400">*</span>
+              Managing User(s)<span className="text-red-400"></span>
             </label>
             <div className="relative">
               <button
@@ -413,29 +394,6 @@ export default function AddClientForm({ setShowAddClientModal }) {
               placeholder="e.g., Rear-ended at a stoplight..."
               className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 resize-none"
             />
-          </div>
-
-          {/* Consent to Communicate */}
-          <div>
-            <label className="flex items-center gap-2 text-white">
-              <input
-                type="checkbox"
-                name="consentToCommunicate"
-                checked={formData.consentToCommunicate}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    consentToCommunicate: e.target.checked,
-                  }))
-                }
-                className="w-4 h-4 text-purple-500 focus:ring-purple-400"
-                required
-              />
-              <span>Client Consented to Communication</span>
-            </label>
-            <p className="mt-1 text-xs text-gray-400">
-              Required to enable messaging in Client Details.
-            </p>
           </div>
 
           {/* Buttons */}

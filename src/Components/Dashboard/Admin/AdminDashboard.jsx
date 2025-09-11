@@ -124,7 +124,7 @@ const AdminDashboard = () => {
         <div className="bg-[#1e293b] p-4 rounded-lg">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white">
-              Clients at High Risk
+              High Risk Clients
             </h3>
             <button
               onClick={() => setShowAllHighRisk(!showAllHighRisk)}
@@ -139,30 +139,38 @@ const AdminDashboard = () => {
               showAllHighRisk ? "max-h-none" : "max-h-64"
             }`}
           >
-            {displayedHighRisk.map((client) => (
-              <div
-                key={client.id}
-                className="p-3 bg-transparent border rounded-lg border-[#F3F4F6] flex items-center justify-between hover:bg-[#374151] transition-colors duration-200"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#8C15FF] text-white font-bold">
-                    {getInitials(client.full_name)}
+            {highRiskClients.length > 0 ? (
+              displayedHighRisk.map((client) => (
+                <div
+                  key={client.id}
+                  className="p-3 bg-transparent border rounded-lg border-[#F3F4F6] flex items-center justify-between hover:bg-[#374151] transition-colors duration-200"
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#8C15FF] text-white font-bold">
+                      {getInitials(client.full_name)}
+                    </div>
+                    <div>
+                      <p className="font-medium text-white">
+                        {client.full_name}
+                      </p>
+                      <p className="text-sm text-[#FFFFFF]">
+                        Added {client.days_since_added} days ago
+                      </p>
+                      <p className="text-xs text-[#CBD5E1]">
+                        {client.phone_number}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-white">{client.full_name}</p>
-                    <p className="text-sm text-[#FFFFFF]">
-                      Added {client.days_since_added} days ago
-                    </p>
-                    <p className="text-xs text-[#CBD5E1]">
-                      {client.phone_number}
-                    </p>
+                  <div className="px-2 py-1 text-xs font-semibold text-red-900 bg-red-200 rounded-full">
+                    High Risk
                   </div>
                 </div>
-                <div className="px-2 py-1 text-xs font-semibold text-red-900 bg-red-200 rounded-full">
-                  High Risk
-                </div>
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full p-4 font-medium text-center text-green-400 rounded-lg">
+                All clients tracking low risk
               </div>
-            ))}
+            )}
           </div>
         </div>
 
@@ -214,45 +222,53 @@ const AdminDashboard = () => {
           </div>
 
           <div className="space-y-4">
-            {displayedFlagged.map((client, idx) => (
-              <div
-                key={idx}
-                className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA] transition"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#DC2626] text-white font-bold">
-                      {getInitials(client?.full_name)}
+            {flaggedClients.length > 0 ? (
+              displayedFlagged.map((client, idx) => (
+                <div
+                  key={idx}
+                  className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA] transition"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#DC2626] text-white font-bold">
+                        {getInitials(client?.full_name)}
+                      </div>
+                      <div>
+                        <p className="font-medium text-[#FFFFFF]">
+                          {client?.full_name}
+                        </p>
+                        <p className="text-sm font-normal text-white">
+                          Last contact:{" "}
+                          {client?.last_contacted
+                            ? new Date(
+                                client.last_contacted
+                              ).toLocaleDateString()
+                            : "N/A"}
+                        </p>
+                        <p className="text-[12px] text-[#FFFFFF]">
+                          {client?.general_case_info}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-[#FFFFFF]">
-                        {client?.full_name}
-                      </p>
-                      <p className="text-sm font-normal text-white">
-                        Last contact:{" "}
-                        {client?.last_contacted
-                          ? new Date(client.last_contacted).toLocaleDateString()
-                          : "N/A"}
-                      </p>
-                      <p className="text-[12px] text-[#FFFFFF]">
-                        {client?.general_case_info}
-                      </p>
-                    </div>
+                    <span
+                      className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                        client.risk_level === "High"
+                          ? "bg-[#EF444433] text-white"
+                          : client.risk_level === "Medium"
+                          ? "bg-[#EAB30833] text-white"
+                          : "bg-[#22C55E33] text-white"
+                      }`}
+                    >
+                      {client?.risk_level}
+                    </span>
                   </div>
-                  <span
-                    className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                      client.risk_level === "High"
-                        ? "bg-[#EF444433] text-white"
-                        : client.risk_level === "Medium"
-                        ? "bg-[#EAB30833] text-white"
-                        : "bg-[#22C55E33] text-white"
-                    }`}
-                  >
-                    {client?.risk_level}
-                  </span>
                 </div>
+              ))
+            ) : (
+              <div className="p-4 font-medium text-center text-green-400 rounded-lg ">
+                All conversations look good
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

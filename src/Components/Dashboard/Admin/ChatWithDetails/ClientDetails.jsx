@@ -86,8 +86,8 @@ const ClientDetails = () => {
     : [];
 
   return (
-    <aside className="w-full max-w-xs overflow-y-auto h-[700px] lg:max-w-sm bg-[#0f172a] text-white p-5 rounded-md border border-slate-800 shadow-[0_0_0_1px_rgba(2,6,23,0.4),0_10px_30px_rgba(2,6,23,0.45)] flex flex-col gap-4">
-      <div className="p-6 mr-4 overflow-y-auto bg-gray-800 w-80 rounded-xl">
+    <aside className="w-full max-w-xs overflow-y-auto  lg:max-w-xs bg-[#0f172a] text-white rounded-md border border-slate-800 shadow-[0_0_0_1px_rgba(2,6,23,0.4),0_10px_30px_rgba(2,6,23,0.45)] flex flex-col gap-4">
+      <div className="p-6 overflow-y-auto bg-gray-800 rounded-xl">
         {/* Back Button */}
         <div className="flex items-center justify-between space-x-2 ">
           <button
@@ -186,7 +186,21 @@ const ClientDetails = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Risk Level:</span>
-              <span className="text-red-400">{client?.concern_level}</span>
+              <span
+                className={
+                  client?.concern_level === "High"
+                    ? "text-red-500"
+                    : client?.concern_level === "Medium"
+                    ? "text-yellow-500"
+                    : "text-green-500"
+                }
+              >
+                {client?.concern_level === "High"
+                  ? "High Risk (Negative)"
+                  : client?.concern_level === "Medium"
+                  ? "Medium Risk (Neutral)"
+                  : "Low Risk (Positive)"}
+              </span>
             </div>
           </div>
         </div>

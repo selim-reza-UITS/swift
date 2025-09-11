@@ -67,9 +67,8 @@ const Reset = () => {
             <div className="flex flex-col items-center mb-8">
               <div className="flex items-center gap-4 mb-4 text-xl font-extrabold md:text-2xl lg:text-6xl">
                 <a className="block text-teal-600" href="#">
-                  <img src={logo} alt="Logo" className="w-[65px] h-[65px]" />
+                  <img src={logo} alt="Logo" />
                 </a>
-         
               </div>
               <p className="text-4xl font-bold text-blue-400 poppins">
                 Reset Your Password

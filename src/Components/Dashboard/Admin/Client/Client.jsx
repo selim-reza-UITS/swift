@@ -19,9 +19,9 @@ const statusColors = {
 };
 
 const priorityColors = {
-  "High Risk": "bg-[#DBEAFE] text-[#1E40AF]",
-  "Medium Risk": "bg-[#FFEDD5] text-[#9A3412]",
-  "Low Risk": "bg-[#FEE2E2] text-[#991B1B]",
+  "High Risk": "bg-[#fedbdb] text-[#c92c2c]",
+  "Medium Risk": "bg-[#FFEDD5] text-[#d6ff41]",
+  "Low Risk": "bg-[#f2fee2] text-[#69c204]",
 };
 
 const getClientStatus = (client) => {

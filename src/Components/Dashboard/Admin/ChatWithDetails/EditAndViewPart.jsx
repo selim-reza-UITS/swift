@@ -15,13 +15,13 @@ const EditAndViewPart = () => {
 
   if (clientLoading || chatLoading) {
     return (
-      <div className="h-[90vh] flex items-center justify-center bg-gray-900">
+      <div className="flex items-center justify-center bg-gray-900">
         <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
       </div>
     );
   }
   return (
-    <div className="h-[90vh] bg-gray-900 text-white flex relative">
+    <div className="relative flex h-[87vh] text-white bg-gray-900 gap-4 w-full ">
       {/* Left side - Client Details */}
       <ClientDetails />
       {/* Right side - Chat */}

@@ -120,9 +120,9 @@ const Chat = () => {
   }, [client?.consent_to_communicate, chatDetails]);
 
   return (
-    <div className="w-full lg:w-2/3 bg-[#0f172a] text-white flex flex-col rounded-md h-[700px]">
+    <div className="w-full lg:w-full bg-[#0f172a] text-white flex flex-col rounded-md ">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-700">
+      <div className="flex items-center justify-between p-4 border-b border-gray-700 ">
         <div className="flex items-center">
           <div className="flex items-center justify-center w-8 h-8 mr-3 bg-blue-600 rounded-full">
             <MessageSquare className="w-4 h-4" />
@@ -138,9 +138,9 @@ const Chat = () => {
           </button>
           <button
             className={`px-3 py-1 text-sm rounded ${
-              client?.concern_level === "High"
+              client?.concern_level === "high"
                 ? "bg-red-600 text-white"
-                : client?.concern_level === "Medium"
+                : client?.concern_level === "medium"
                 ? "bg-yellow-600 text-black"
                 : "bg-green-600 text-white"
             }`}
@@ -169,7 +169,7 @@ const Chat = () => {
 
       {/* Messages */}
       <div
-        className={`relative flex-1 p-6 space-y-4  ${
+        className={`relative flex-1 p-6 space-y-4  h-[50vh] ${
           client?.consent_to_communicate ? "overflow-y-auto" : "overflow-hidden"
         }`}
         ref={chatAreaRef}
@@ -184,7 +184,8 @@ const Chat = () => {
         {!client.consent_to_communicate && (
           <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
             <p className="max-w-xl text-gray-300">
-             Messaging is locked until this client completes the consent form. Please have them scan the QR code below to enable messaging.
+              Messaging is locked until this client completes the consent form.
+              Please have them scan the QR code below to enable messaging.
             </p>
           </div>
         )}
@@ -244,13 +245,15 @@ const Chat = () => {
         )} */}
       </div>
       {/* Overlay if client is inactive */}
-      {client.is_paused && !client.opt_out && client?.consent_to_communicate && (
-        <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm ">
-          <p className="text-sm text-gray-300 ">
-            This client is paused. Activate the client first to send messages.
-          </p>
-        </div>
-      )}
+      {client.is_paused &&
+        !client.opt_out &&
+        client?.consent_to_communicate && (
+          <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm ">
+            <p className="text-sm text-gray-300 ">
+              This client is paused. Activate the client first to send messages.
+            </p>
+          </div>
+        )}
       {client.opt_out && client.is_paused && (
         <div className="flex items-end justify-center bg-gray-900 bg-opacity-80 backdrop-blur-sm">
           <p className="text-sm text-gray-300">
@@ -270,15 +273,15 @@ const Chat = () => {
         </div>
       )}
       {/* Input */}
-      <div className="flex items-center p-4 mt-2 space-x-3 bg-gray-800 border-t border-gray-700">
+      <div className="flex items-center p-2 mt-2 space-x-3 bg-gray-800 border-t border-gray-700">
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
           //   disabled={!client?.is_active || client?.opt_out || !client?.consentToCommunicate} // disable if inactive
           disabled={!client?.is_active || client?.opt_out}
-          className="flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          rows={3}
+          className="flex-1 p-2 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          rows={2}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();

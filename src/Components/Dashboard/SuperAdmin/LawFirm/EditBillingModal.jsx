@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import { TbXboxXFilled } from "react-icons/tb";
 import Swal from "sweetalert2";
@@ -35,12 +36,12 @@ const EditBillingModal = ({ onClose, billingData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("Submitting form data:", formData);
     try {
       await updateBilling({
         firmId: billingData.firm_id || 16, // fallback firmId = 16
         body: {
-          ...formData,
+          formData,
           // Convert date to proper format
           next_billing_date: new Date(formData.next_billing_date).toISOString(),
         },
