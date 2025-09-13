@@ -253,7 +253,7 @@ function ClientDetails() {
   if (error) return <div>Error loading client details.</div>;
 
   return (
-    <div className="h-[86vh] bg-gray-900 text-white flex relative">
+    <div className="h-[89vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
 
       <ClientSidebar

@@ -3,7 +3,7 @@ import { User, Edit } from "lucide-react";
 
 function ClientSidebar({ clientData, onBack, onEdit }) {
   return (
-    <div className="w-80 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto h-[90vh]">
+    <div className="w-80 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto h-[90vh] shadow-md shadow-gray-700">
       {/* Back Button and Edit Client Button */}
       <div className="flex items-center justify-between space-x-2 ">
         <button
@@ -33,7 +33,9 @@ function ClientSidebar({ clientData, onBack, onEdit }) {
           <User className="w-8 h-8 text-gray-300" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-center">{clientData?.full_name}</h2>
+          <h2 className="text-xl font-semibold text-center">
+            {clientData?.full_name}
+          </h2>
           <p className="text-gray-400 text-center">
             {clientData?.phone_number}
           </p>
@@ -93,11 +95,31 @@ function ClientSidebar({ clientData, onBack, onEdit }) {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Client Sentiment:</span>
-            <span className="text-green-400">{clientData?.sentiment}</span>
+            <span
+              className={`${
+                clientData?.sentiment === "Negative"
+                  ? "text-red-500 "
+                  : clientData?.sentiment === "Neutral"
+                  ? "text-yellow-400 "
+                  : "text-green-400 "
+              }`}
+            >
+              {clientData?.sentiment}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Risk Level:</span>
-            <span className="text-red-400">{clientData?.concern_level}</span>
+            <span
+              className={`${
+                clientData?.concern_level === "High"
+                  ? "text-red-500 "
+                  : clientData?.concern_level === "Medium"
+                  ? "text-yellow-400 "
+                  : "text-green-400 "
+              }`}
+            >
+              {clientData?.concern_level}
+            </span>
           </div>
         </div>
       </div>

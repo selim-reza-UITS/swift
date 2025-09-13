@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Bot, User, Send } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Send } from "lucide-react";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useGetAllMessagesQuery } from "../../Redux/api/caseapi";
+import qr from "../../assets/qr.png";
+
 import {
   useCreateChatMutation,
   useGetChatDetailsQuery,
   useGetClientByIdQuery,
-  useGetMicroInsightsQuery,
-  useUpdateClientStatusMutation,
 } from "../../Redux/feature/Admin/admin";
 import dayjs from "dayjs";
 import avatar from "../../assets/5856.jpg";
@@ -27,13 +26,10 @@ function ChatSection() {
   } = useGetChatDetailsQuery(clientId);
 
   const { data: client, refetch } = useGetClientByIdQuery(clientId);
-  console.log(client)
   const [createChat] = useCreateChatMutation();
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const messagesEndRef = useRef(null);
-  console.log(client);
-  // WebSocket connection
   useEffect(() => {
     if (!TOKEN) return;
     const socket = new window.WebSocket(
@@ -81,7 +77,7 @@ function ChatSection() {
   }, [client?.consent_to_communicate, chatDetails]);
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-800 rounded-xl h-[83vh]">
+    <div className="flex-1 flex flex-col bg-gray-800 rounded-xl h-[90vh]">
       {/* Messages */}
       {isLoading ? (
         <Loader />
@@ -94,15 +90,16 @@ function ChatSection() {
           }`}
           ref={chatAreaRef}
         >
-          {!client.consent_to_communicate && (
-            <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
+          {/* {!client.consent_to_communicate && (
+            <div className="absolute inset-0 flex flex-col gap-6 items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
               <p className="max-w-xl text-gray-300">
-                It looks like this client hasn’t completed the consent form. For
-                messaging to be enabled, please have them complete the quick
-                permission form.
+                Messaging is locked until this client completes the consent
+                form. Please have them scan the QR code below to enable
+                messaging.
               </p>
+              <img className="w-40" src={qr} alt="" />
             </div>
-          )}
+          )} */}
           {chatDetails?.map((msg) => {
             const isClient = msg.sender === "client";
             const isFirm = msg.sender === "firm";
@@ -182,11 +179,21 @@ function ChatSection() {
       {/* Input */}
       <div className="flex items-center p-4 space-x-3 bg-gray-800 border-t border-gray-700">
         <textarea
-          disabled={!client.consent_to_communicate || !client?.is_active || client?.opt_out}
+          disabled={
+            // !client.consent_to_communicate ||
+            !client?.is_active ||
+            client?.opt_out
+          }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
-          className={`flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${!client.consent_to_communicate || !client?.is_active || client?.opt_out ? 'cursor-not-allowed':''}`}
+          className={`flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            // !client.consent_to_communicate ||
+            !client?.is_active ||
+            client?.opt_out
+              ? "cursor-not-allowed"
+              : ""
+          }`}
           rows={3}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
