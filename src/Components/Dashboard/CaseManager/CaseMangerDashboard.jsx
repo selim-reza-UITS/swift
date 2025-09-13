@@ -148,7 +148,7 @@ const CaseMangerDashboard = () => {
         {/* High Risk Clients */}
         <div className="bg-[#1e293b] p-4 rounded-lg">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Clients at High Risk</h3>
+            <h3 className="text-lg font-semibold">High Risk Clients</h3>
             <button
               className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
               onClick={() => setShowAllClients(!showAllClients)}
@@ -163,7 +163,7 @@ const CaseMangerDashboard = () => {
           >
             {highRiskClients?.length === 0 ? (
               <p className="text-center h-full flex items-center justify-center">
-                No high risk clients found.
+               All clients tracking low risk.
               </p>
             ) : (
               highRiskClients?.map((client, idx) => (
@@ -249,7 +249,7 @@ const CaseMangerDashboard = () => {
           >
             {flaggedClientsData?.length === 0 ? (
               <p className="text-center h-full flex items-center justify-center">
-                No flagged clients found.
+               All conversations look good.
               </p>
             ) : (
               flaggedClientsData?.map((client, idx) => (
