@@ -243,14 +243,33 @@ export default function AddClientForm({ setShowAddClientModal }) {
             <label className="block mb-2 text-sm font-medium text-white">
               Date of Incident
             </label>
-            <input
-              type="text"
-              name="dateOfIncident"
-              placeholder="YYYY-MM-DD"
-              value={formData.dateOfIncident}
-              onChange={handleInputChange}
-              className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
-            />
+         
+<input
+  type="text"
+  name="dateOfIncident"
+  placeholder="MM-DD-YYYY"
+  value={formData.dateOfIncident}
+  onChange={(e) => {
+    // Auto-format MM-DD-YYYY
+    let raw = e.target.value.replace(/\D/g, "").slice(0, 8);
+    let formatted = "";
+    if (raw.length === 0) {
+      formatted = "";
+    } else if (raw.length <= 2) {
+      formatted = raw;
+    } else if (raw.length <= 4) {
+      formatted = `${raw.slice(0, 2)}-${raw.slice(2)}`;
+    } else {
+      formatted = `${raw.slice(0, 2)}-${raw.slice(2, 4)}-${raw.slice(4)}`;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      dateOfIncident: formatted,
+    }));
+  }}
+  className="w-full bg-[#475569] text-white placeholder-gray-400 border border-slate-500 rounded-md px-3 py-2 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+/>
+
           </div>
 
           {/* Gender (Not Required) */}
