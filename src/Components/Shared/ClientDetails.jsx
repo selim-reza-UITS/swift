@@ -253,7 +253,7 @@ function ClientDetails() {
   if (error) return <div>Error loading client details.</div>;
 
   return (
-    <div className="h-[89vh] bg-gray-900 text-white flex relative">
+    <div className="h-[89.3vh] bg-gray-900 text-white flex relative">
       {/* Left Sidebar - Client Info */}
 
       <ClientSidebar
@@ -281,7 +281,15 @@ function ClientDetails() {
             >
               Client Summary
             </button>
-            <span className="inline-block px-3 py-1 text-sm bg-yellow-600 rounded">
+            <span
+              className={`inline-block px-3 py-1 text-sm rounded ${
+                clientData?.concern_level === "High"
+                  ? "bg-red-600 "
+                  : clientData?.concern_level === "Medium"
+                  ? "bg-yellow-600 "
+                  : "bg-green-600 "
+              }`}
+            >
               {clientData?.concern_level || ""} Risk
             </span>
             <div className="flex items-center space-x-3">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -21,65 +21,6 @@ import {
   useGetCaseStatsQuery,
   useGetFirmScoresQuery,
 } from "../../../Redux/api/caseapi";
-import moment from "moment";
-
-const flaggedClients = [
-  {
-    name: "Sarah Johnson",
-    lastContact: "2 hours ago",
-    alert: "Missed appointment alert",
-    priority: "High",
-  },
-  {
-    name: "Michael Chen",
-    lastContact: "1 day ago",
-    alert: "Follow-up required",
-    priority: "Medium",
-  },
-  {
-    name: "Emily Davis",
-    lastContact: "3 days ago",
-    alert: "Case progressing well",
-    priority: "Low",
-  },
-  {
-    name: "Robert Wilson",
-    lastContact: "4 hours ago",
-    alert: "Payment overdue",
-    priority: "High",
-  },
-  {
-    name: "Lisa Anderson",
-    lastContact: "2 days ago",
-    alert: "Document review needed",
-    priority: "Medium",
-  },
-  {
-    name: "David Brown",
-    lastContact: "5 days ago",
-    alert: "Case update required",
-    priority: "High",
-  },
-  {
-    name: "Jennifer Martinez",
-    lastContact: "1 week ago",
-    alert: "Client satisfaction survey",
-    priority: "Low",
-  },
-  {
-    name: "Christopher Lee",
-    lastContact: "3 days ago",
-    alert: "Contract renewal pending",
-    priority: "Medium",
-  },
-];
-
-const sentimentData = [
-  { week: "Week 1", value: 30 },
-  { week: "Week 2", value: 40 },
-  { week: "Week 3", value: 50 },
-  { week: "Week 4", value: 60 },
-];
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -114,7 +55,7 @@ const CaseMangerDashboard = () => {
   const { data: flaggedClientsData } = useGetAllFlaggedClientsQuery();
   const { data: caseStats } = useGetCaseStatsQuery();
   const { data: firmScores } = useGetFirmScoresQuery();
-
+  console.log(highRiskClients);
   const statsData = [
     { title: "Active Clients", value: caseStats?.active_clients },
     { title: "Issues", value: caseStats?.issues },
@@ -216,38 +157,44 @@ const CaseMangerDashboard = () => {
             </button>
           </div>
           <div
-            className={`space-y-4 ${
+            className={`space-y-4 h-[400px] ${
               showAllClients ? "overflow-y-auto max-h-[400px] pr-2" : ""
             }`}
           >
-            {highRiskClients?.map((client, idx) => (
-              <div
-                key={idx}
-                className="p-3 bg-transparent border rounded-lg border-[#F3F4F6] flex items-center justify-between hover:bg-[#374151] transition-colors duration-200"
-              >
-                {/* left */}
-                <div className="flex items-center space-x-4">
-                  {/* img
-                   */}
-                  <div>
-                    <img src={div} alt="" />
-                  </div>
-                  {/* content */}
-                  <div>
-                    <p className="font-medium">{client.full_name}</p>
-                    <p className="text-sm font-normal text-[#FFFFFF]">
-                      Added {client?.days_since_added} days ago
-                    </p>
-                  </div>
-                </div>
-                {/* right */}
+            {highRiskClients?.length === 0 ? (
+              <p className="text-center h-full flex items-center justify-center">
+                No high risk clients found.
+              </p>
+            ) : (
+              highRiskClients?.map((client, idx) => (
                 <div
-                  className={`mt-1 inline-block px-2 py-1 rounded-full bg-red-200 text-red-900 text-xs font-semibold`}
+                  key={idx}
+                  className="p-3 bg-transparent border rounded-lg border-[#F3F4F6] flex items-center justify-between hover:bg-[#374151] transition-colors duration-200"
                 >
-                  High Risk
+                  {/* left */}
+                  <div className="flex items-center space-x-4">
+                    {/* img
+                     */}
+                    <div>
+                      <img src={div} alt="" />
+                    </div>
+                    {/* content */}
+                    <div>
+                      <p className="font-medium">{client.full_name}</p>
+                      <p className="text-sm font-normal text-[#FFFFFF]">
+                        Added {client?.days_since_added} days ago
+                      </p>
+                    </div>
+                  </div>
+                  {/* right */}
+                  <div
+                    className={`mt-1 inline-block px-2 py-1 rounded-full bg-red-200 text-red-900 text-xs font-semibold`}
+                  >
+                    High Risk
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
@@ -296,48 +243,54 @@ const CaseMangerDashboard = () => {
             </button>
           </div>
           <div
-            className={`space-y-4 ${
+            className={`space-y-4 h-[400px] ${
               showAllFlaggedClients ? "overflow-y-auto max-h-[400px] pr-2" : ""
             }`}
           >
-            {flaggedClientsData?.map((client, idx) => (
-              <div
-                key={idx}
-                className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA]"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="font-medium text-[#FFFFFF]">
-                    {client?.full_name}
+            {flaggedClientsData?.length === 0 ? (
+              <p className="text-center h-full flex items-center justify-center">
+                No flagged clients found.
+              </p>
+            ) : (
+              flaggedClientsData?.map((client, idx) => (
+                <div
+                  key={idx}
+                  className="p-3 rounded-lg bg-gradient-to-r from-[#747DE9] to-[#926CEA]"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium text-[#FFFFFF]">
+                      {client?.full_name}
+                    </p>
+                    <span
+                      className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                        client.priority === "High"
+                          ? "bg-[#EF444433] text-white"
+                          : client.priority === "Medium"
+                          ? "bg-[#EAB30833] text-white"
+                          : "bg-[#22C55E33] text-white"
+                      }`}
+                    >
+                      {client.risk_level}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm font-normal text-white">
+                    Last contact:
+                    {new Date(client.last_contacted)
+                      .toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })
+                      .replace(",", " at")}
                   </p>
-                  <span
-                    className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                      client.priority === "High"
-                        ? "bg-[#EF444433] text-white"
-                        : client.priority === "Medium"
-                        ? "bg-[#EAB30833] text-white"
-                        : "bg-[#22C55E33] text-white"
-                    }`}
-                  >
-                    {client.risk_level}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm font-normal text-white">
-                  Last contact:
-                  {new Date(client.last_contacted)
-                    .toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                    .replace(",", " at")}
-                </p>
 
-                <p className="text-[12px] text-[#FFFFFF]">{client.alert}</p>
-              </div>
-            ))}
+                  <p className="text-[12px] text-[#FFFFFF]">{client.alert}</p>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

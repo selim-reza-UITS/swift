@@ -3,7 +3,7 @@ import { User, Edit } from "lucide-react";
 
 function ClientSidebar({ clientData, onBack, onEdit }) {
   return (
-    <div className="w-84 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto h-[90vh] shadow-md shadow-gray-700">
+    <div className="w-84 bg-gray-800 p-4 mr-4 rounded-xl overflow-y-auto h-[90vh] shadow-md shadow-gray-700">
       {/* Back Button and Edit Client Button */}
       <div className="flex items-center justify-between space-x-2 ">
         <button
@@ -49,7 +49,7 @@ function ClientSidebar({ clientData, onBack, onEdit }) {
         <span>Edit Client</span>
       </div>
       {/* Case Details */}
-      <div className="space-y-4 mb-8">
+      <div className="space-y-4 mb-4">
         <div className="flex justify-between">
           <span className="text-gray-400">Incident Date:</span>
           <span>{clientData?.date_of_incident}</span>
@@ -72,7 +72,7 @@ function ClientSidebar({ clientData, onBack, onEdit }) {
         </div>
         <div className="flex justify-between">
           <span className="text-gray-400">Lawyer:</span>
-          <span>{clientData?.lawyer?.name}</span>
+          <span>{clientData?.lawyer?.name || "N/A"}</span>
         </div>
         {/* <div className="flex justify-between">
           <span className="text-gray-400">Injury's Sustained:</span>
