@@ -3,7 +3,7 @@ import { User, Edit } from "lucide-react";
 
 function ClientSidebar({ clientData, onBack, onEdit }) {
   return (
-    <div className="w-80 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto h-[90vh] shadow-md shadow-gray-700">
+    <div className="w-84 bg-gray-800 p-6 mr-4 rounded-xl overflow-y-auto h-[90vh] shadow-md shadow-gray-700">
       {/* Back Button and Edit Client Button */}
       <div className="flex items-center justify-between space-x-2 ">
         <button
@@ -74,22 +74,30 @@ function ClientSidebar({ clientData, onBack, onEdit }) {
           <span className="text-gray-400">Lawyer:</span>
           <span>{clientData?.lawyer?.name}</span>
         </div>
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <span className="text-gray-400">Injury's Sustained:</span>
           <span> {clientData?.injuries_sustained}</span>
-        </div>
+        </div> */}
       </div>
       {/* Communication Status */}
-      <div className="mb-8">
+      <div className="mb-4">
         <h3 className="text-lg font-semibold mb-4">Communication Status</h3>
         <div className="space-y-3">
           <div className="flex justify-between">
             <span className="text-gray-400">Scheduled Next Send:</span>
             <span className="bg-blue-600 px-2 py-1 rounded text-sm">
               {clientData?.scheduled_time
-                ? new Date(clientData?.scheduled_time)
-                    .toISOString()
-                    .split("T")[0]
+                ? new Date(clientData.scheduled_time).toLocaleString(
+                    undefined,
+                    {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    }
+                  )
                 : ""}
             </span>
           </div>
@@ -125,7 +133,15 @@ function ClientSidebar({ clientData, onBack, onEdit }) {
       </div>
       {/* Case Notes */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">General Case Info</h3>
+        <h3 className="text-lg font-semibold my-2 ">Injury's Sustained</h3>
+        <div className="bg-gray-700 p-4 rounded-lg">
+          <p className="text-gray-300 text-sm">
+            {clientData?.injuries_sustained}
+          </p>
+        </div>
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold mb-2 mt-4">General Case Info</h3>
         <div className="bg-gray-700 p-4 rounded-lg">
           <p className="text-gray-300 text-sm">
             {clientData?.general_case_info}

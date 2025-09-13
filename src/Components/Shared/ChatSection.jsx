@@ -113,7 +113,7 @@ function ChatSection() {
                 } items-end`}
               >
                 {isClient && (
-                  <img 
+                  <img
                     src={avatar}
                     alt="Client"
                     className="w-8 h-8 mr-2 rounded-full"
@@ -129,7 +129,26 @@ function ChatSection() {
                 >
                   <p>{msg.content}</p>
                   <span className="block mt-1 text-xs text-gray-400">
-                    {dayjs(msg.received_at).format("hh:mm A")}
+                    {(() => {
+                      const msgDate = dayjs(msg.received_at);
+                      const now = dayjs();
+                      let dateText = "";
+                      if (msgDate.isSame(now, "day")) {
+                        dateText = `${msgDate.format("hh:mm A")} • Today`;
+                      } else if (
+                        msgDate.isSame(now.subtract(1, "day"), "day")
+                      ) {
+                        dateText = `${msgDate.format("hh:mm A")} • Yesterday`;
+                      } else {
+                        dateText = `${msgDate.format(
+                          "hh:mm A"
+                        )} • ${msgDate.format("DD/MM/YYYY")}`;
+                      }
+                      if (msg.sender === "ai") {
+                        dateText += " • sent from AI";
+                      }
+                      return dateText;
+                    })()}
                   </span>
                 </div>
 
@@ -181,18 +200,14 @@ function ChatSection() {
         <textarea
           disabled={
             !client.consent_to_communicate ||
-            !client?.is_active ||
-            client?.opt_out
+            !client?.is_active || client?.opt_out
           }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
           className={`flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             !client.consent_to_communicate ||
-            !client?.is_active ||
-            client?.opt_out
-              ? "cursor-not-allowed"
-              : ""
+            !client?.is_active || client?.opt_out ? "cursor-not-allowed" : ""
           }`}
           rows={3}
           onKeyDown={(e) => {

@@ -191,9 +191,12 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
 
   // Loading and error states
 
-  if (isLoading) return <div className="h-[86vh] flex items-center justify-center bg-gray-900">
+  if (isLoading)
+    return (
+      <div className="h-[86vh] flex items-center justify-center bg-gray-900">
         <div className="w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
-      </div>;
+      </div>
+    );
   if (error) return <div>Error loading client details.</div>;
 
   return (
@@ -323,6 +326,17 @@ const EditClientDetails = ({ clientId, onClose, onUpdate }) => {
                 className="mr-2 text-purple-400 focus:ring-purple-400"
               />
               <span className="text-sm text-white">Male</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="gender"
+                value="Prefer not to say"
+                checked={formData.gender === "Prefer not to say"}
+                onChange={handleInputChange}
+                className="mr-2 text-purple-400 focus:ring-purple-400"
+              />
+              <span className="text-sm text-white">Prefer not to say</span>
             </label>
           </div>
         </div>
