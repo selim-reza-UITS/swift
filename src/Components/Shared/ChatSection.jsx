@@ -90,7 +90,7 @@ function ChatSection() {
           }`}
           ref={chatAreaRef}
         >
-          {/* {!client.consent_to_communicate && (
+          {!client.consent_to_communicate && (
             <div className="absolute inset-0 flex flex-col gap-6 items-center justify-center px-6 text-center bg-gray-900 bg-opacity-80">
               <p className="max-w-xl text-gray-300">
                 Messaging is locked until this client completes the consent
@@ -99,7 +99,7 @@ function ChatSection() {
               </p>
               <img className="w-40" src={qr} alt="" />
             </div>
-          )} */}
+          )}
           {chatDetails?.map((msg) => {
             const isClient = msg.sender === "client";
             const isFirm = msg.sender === "firm";
@@ -113,7 +113,7 @@ function ChatSection() {
                 } items-end`}
               >
                 {isClient && (
-                  <img
+                  <img 
                     src={avatar}
                     alt="Client"
                     className="w-8 h-8 mr-2 rounded-full"
@@ -180,7 +180,7 @@ function ChatSection() {
       <div className="flex items-center p-4 space-x-3 bg-gray-800 border-t border-gray-700">
         <textarea
           disabled={
-            // !client.consent_to_communicate ||
+            !client.consent_to_communicate ||
             !client?.is_active ||
             client?.opt_out
           }
@@ -188,7 +188,7 @@ function ChatSection() {
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
           className={`flex-1 p-3 text-white bg-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            // !client.consent_to_communicate ||
+            !client.consent_to_communicate ||
             !client?.is_active ||
             client?.opt_out
               ? "cursor-not-allowed"
